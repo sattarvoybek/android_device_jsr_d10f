@@ -221,7 +221,7 @@ on post-fs-data
     restorecon /sys/devices/platform/kcal_ctrl.0/kcal_val
     restorecon /sys/devices/platform/kcal_ctrl.0/kcal_cont
 
-service irsc_util /system/bin/logwrapper /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
     oneshot
