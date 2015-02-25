@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Inherit from the proprietary version
--include vendor/jsr/d10f/BoardConfigVendor.mk 
+-include vendor/jsr/d10f/BoardConfigVendor.mk
 
 LOCAL_PATH := device/jsr/d10f
 
@@ -55,8 +55,8 @@ BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 an
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
-TARGET_KERNEL_SOURCE := kernel/jsr/msm8226
-TARGET_KERNEL_CONFIG := jsr_d10f_defconfig 
+#TARGET_KERNEL_SOURCE := kernel/jsr/msm8226
+#TARGET_KERNEL_CONFIG := jsr_d10f_defconfig 
 BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000 --tags_offset 0x01e00000
 
@@ -64,9 +64,6 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000 --tags_offset 0x01e00000
 # TARGET_INIT_VENDOR_LIB := libinit_msm
 # TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_d10f.c
 # TARGET_UNIFIED_DEVICE := true
-
-# Chromium
-PRODUCT_PREBUILT_WEBVIEWCHROMIUM := yes
 
 # ANT+
 #BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
@@ -208,4 +205,14 @@ WIFI_DRIVER_FW_PATH_AP := "ap"
 WIFI_DRIVER_FW_PATH_P2P := "p2p"
 TARGET_USES_WCNSS_CTRL := true
 TARGET_USES_QCOM_WCNSS_QMI := true
+
+# Developer's config
+board_config_dev := \
+	$(strip $(wildcard \
+		$(SRC_TARGET_DIR)/board/$(TARGET_DEVICE)/BoardConfigDev.mk \
+		$(shell test -d device && find device -maxdepth 4 -path '*/$(TARGET_DEVICE)/BoardConfigDev.mk') \
+	))
+ifeq ($(words $(board_config_dev)),1)
+-include device/jsr/d10f/BoardConfigDev.mk
+endif
 

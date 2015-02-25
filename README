@@ -55,5 +55,5 @@ cd ~/cm11
 source build/envsetup.sh
 
 --------------------------
-lunch jsr_d10f-userdebug dist
-mka otapackage
+lunch jsr_d10f-eng dist
+mka otapackage / mka bootimage / mka clean
