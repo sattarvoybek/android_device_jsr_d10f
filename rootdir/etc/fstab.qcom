@@ -18,4 +18,4 @@
 /devices/msm_sdcc.1/mmc_host                        auto           auto      defaults                                                     voldmanaged=sdcard0:16
 /devices/msm_sdcc.2/mmc_host                        auto           auto      defaults                                                     voldmanaged=sdcard1:auto
 
-#/devices/platform/msm_hsusb_host/usb1               /storage/udisk    vfat   nosuid,nodev                                                 voldmanaged=udisk:auto
+/devices/platform/msm_hsusb_host/usb1               /storage/usbdisk    vfat   nosuid,nodev                                               voldmanaged=usbdisk:auto
