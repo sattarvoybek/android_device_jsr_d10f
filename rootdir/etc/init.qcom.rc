@@ -98,19 +98,15 @@ on boot
     chown system system /sys/class/leds/lcd-backlight/brightness    
     chown system system /sys/class/leds/button-backlight/brightness
     chown system system /sys/class/leds/jogball-backlight/brightness
-    #chown system system /sys/class/leds/red/brightness
-    #chown system system /sys/class/leds/green/brightness
-    #chown system system /sys/class/leds/blue/brightness
-    #chown system system /sys/class/leds/red/device/grpfreq
-    #chown system system /sys/class/leds/red/device/grppwm
-    #chown system system /sys/class/leds/red/device/blink
-    #chown system system /sys/class/leds/red/brightness
-    #chown system system /sys/class/leds/green/brightness
-    #chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/blue/brightness
     #chown system system /sys/class/leds/red/device/grpfreq
     #chown system system /sys/class/leds/red/device/grppwm
     #chown system system /sys/class/leds/red/device/blink
     #chown system system /sys/class/timed_output/vibrator/enable
+    
+    # support tricolor led bct3253
+    chown system system /sys/class/leds/button-backlight/blink
+    chown system system /sys/class/leds/blue/blink
     
     chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
