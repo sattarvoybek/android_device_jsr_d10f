@@ -125,15 +125,17 @@ PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.fm.sh:system/etc/init.
 
 # GPS
 PRODUCT_PACKAGES += \
-    gps.msm8226 \
-    libgps.utils \
-    libloc_adapter \
-    libloc_eng
+    gps.msm8226
 
-PRODUCT_PROPERTY_OVERRIDES += ro.gps.agps_provider=1
-PRODUCT_PROPERTY_OVERRIDES += persist.gps.qc_nlp_in_use=0
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/gps.conf:system/etc/gps.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/izat.conf:system/etc/izat.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/lowi.conf:system/etc/lowi.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/msap.conf:system/etc/msap.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/quipc.conf:system/etc/quipc.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/sap.conf:system/etc/sap.conf
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/gps/xtwifi.conf:system/etc/xtwifi.conf
 
-PRODUCT_COPY_FILES += $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf
 
 # IRSC
 PRODUCT_COPY_FILES += \
