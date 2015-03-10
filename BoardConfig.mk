@@ -104,6 +104,9 @@ BOARD_HAVE_QCOM_FM := true
 # CMHW (Hardware tunables)
 BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw/
 
+# GPS
+TARGET_PROVIDES_GPS_LOC_API := true
+
 # Display
 BOARD_EGL_CFG := $(LOCAL_PATH)/configs/egl.cfg
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
