@@ -383,6 +383,12 @@ service time_daemon /system/bin/time_daemon
     user root
     group root
 
+service mpdecision /system/bin/mpdecision --no_sleep --avg_comp
+    class main
+    user root
+    group root system
+    disabled
+
 service thermal-engine /system/bin/thermal-engine
     class main
     user root
@@ -432,7 +438,7 @@ service charger /charger
     class charger
 
 on property:sys.boot_completed=1
-    # Enable Power modes    
+    # Enable Power modes
     write /sys/module/lpm_levels/enable_low_power/l2 4
     write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
     write /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled 1
@@ -453,40 +459,64 @@ on property:sys.boot_completed=1
     write /sys/module/msm_pm/modes/cpu0/retention/idle_enabled 1
     write /sys/module/msm_pm/modes/cpu1/retention/idle_enabled 1
     write /sys/module/msm_pm/modes/cpu2/retention/idle_enabled 1
-    write /sys/module/msm_pm/modes/cpu3/retention/idle_enabled 1
+    write /sys/module/msm_pm/modes/cpu3/retention/idle_enabled 1    
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
 
 on property:init.svc.bootanim=stopped
-    write /sys/block/mmcblk0/queue/scheduler deadline
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
-    ### AeroKernel Changes (begin) ###
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "30000 1094000:40000 1190000:20000"
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1094000:80 1190000:95"
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate "30000 1094000:20000 1190000:10000"
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_slack+ "50000 1094000:30000"
-    ### AeroKernel Changes (end) ###
+    # Switch to ROW and balanced mode after boot for better UX
+    write /sys/block/mmcblk0/queue/scheduler row    
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold 90
+    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate 50000
+    write /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy 1
+    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor 2
+    write /sys/devices/system/cpu/cpufreq/ondemand/down_differential 10
+    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core 70
+    write /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core 3
+    write /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq 300000
+    write /sys/devices/system/cpu/cpufreq/ondemand/sync_freq 300000
+    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load 80
     write /dev/cpuctl/apps/cpu.notify_on_migrate 1
+    start mpdecision
 
 # CM Performance Profiles
 
 # Powersave
 on property:sys.perf.profile=0
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
-    write /sys/class/devfreq/qcom,cpubw.55 powersave
+    stop mpdecision
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor conservative
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor conservative
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor conservative
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor conservative
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1190400
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1190400
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1190400
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1190400
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    start mpdecision
 
 # Balanced
 on property:sys.perf.profile=1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
+    stop mpdecision
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1401600
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1401600
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1401600
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1401600
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
-    write /sys/class/devfreq/qcom,cpubw.55 msm_cpufreq
+    start mpdecision
 
 # Performance
 on property:sys.perf.profile=2
+    stop mpdecision
     write /sys/devices/system/cpu/cpu0/online 1
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
@@ -495,5 +525,8 @@ on property:sys.perf.profile=2
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor performance
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor performance
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1593600
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1593600
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1593600
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1593600
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
-    write /sys/class/devfreq/qcom,cpubw.55 performance
