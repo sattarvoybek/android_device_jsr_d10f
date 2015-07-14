@@ -52,7 +52,9 @@ on init
     mkdir /storage/sdcard1 0700 root root
     mkdir /storage/usbdisk 0700 root root
 
+    # Primary storage   (EXTERNAL_STORAGE equ PRIMARY_EXTERNAL_STORAGE)
     export EXTERNAL_STORAGE /storage/sdcard0
+    # Secondary storage (SECONDARY_STORAGE equ SECONDARY_EXTERNAL_STORAGE)
     export SECONDARY_STORAGE /storage/sdcard1
 
     #export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
@@ -62,10 +64,10 @@ on init
     # for backwards compatibility
     symlink /storage/sdcard0 /sdcard
     symlink /storage/sdcard0 /mnt/sdcard
-    symlink /storage/sdcard1 /internal_sd
-    symlink /storage/sdcard1 /mnt/internal_sd
-    #symlink /storage/usbdisk /usbdisk
-    #symlink /storage/usbdisk /mnt/usbdisk
+    symlink /storage/sdcard1 /external_sd
+    symlink /storage/sdcard1 /mnt/external_sd
+    symlink /storage/usbdisk /usbdisk
+    symlink /storage/usbdisk /mnt/usbdisk
     
 on fs
     mount_all ./fstab.qcom
