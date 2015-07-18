@@ -37,6 +37,14 @@ on fs
     mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
     write /sys/class/android_usb/android0/f_ffs/aliases adb
 
+on post-fs-data
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun0/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun0/file
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/cdrom 0
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun1/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun1/file
+    write /sys/class/android_usb/android0/f_mass_storage/lun1/cdrom 1
+
 #service qcom-usb-sh /system/bin/sh /init.qcom.usb.sh
 #    class core
 #    user root
