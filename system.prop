@@ -75,3 +75,6 @@ persist.sys.usb.config=mtp,adb
 # CPU for 8x26
 ro.min_freq=300000
 ro.opti_freq=787200
+
+# OTA
+cm.updater.uri=http://ota.smylink.org/api
