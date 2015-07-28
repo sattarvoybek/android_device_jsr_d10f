@@ -199,6 +199,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.d10f \
+    fstab.int \
+    fstab.sd \
     init.d10f.rc \
     init.d10f.usb.rc \
     ueventd.d10f.rc
