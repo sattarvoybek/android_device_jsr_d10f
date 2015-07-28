@@ -212,10 +212,13 @@ PRODUCT_PACKAGES += \
 
 # Ramdisk
 #PRODUCT_PACKAGES += chargeonlymode
-PRODUCT_PACKAGES += fstab.qcom
+PRODUCT_PACKAGES += fstab.d10f
+PRODUCT_PACKAGES += fstab.int
+PRODUCT_PACKAGES += fstab.sd
 PRODUCT_PACKAGES += init.qcom.rc
 PRODUCT_PACKAGES += init.qcom.usb.rc
 PRODUCT_PACKAGES += ueventd.qcom.rc
+PRODUCT_PACKAGES += init.qcom.usb.sh
 
 # Recovery
 PRODUCT_PROPERTY_OVERRIDES += ro.cwm.enable_key_repeat=true

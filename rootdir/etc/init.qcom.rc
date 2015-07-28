@@ -79,7 +79,7 @@ on init
     #export BOOTCLASSPATH ${BOOTCLASSPATH}:/system/framework/qcom.fmradio.jar
 
 on fs
-    mount_all ./fstab.qcom
+    mount_all ./fstab.d10f
     restorecon /persist
     setprop ro.crypto.fuse_sdcard true
 
