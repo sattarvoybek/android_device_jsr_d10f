@@ -210,6 +210,9 @@ PRODUCT_PACKAGES += \
     qrngd \
     qrngp
 
+# Custom APK
+PRODUCT_PACKAGES += JSR_Settings    
+    
 # Ramdisk
 #PRODUCT_PACKAGES += chargeonlymode
 PRODUCT_PACKAGES += fstab.d10f

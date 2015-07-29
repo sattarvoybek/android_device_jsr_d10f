@@ -18,6 +18,7 @@
 #define DEVICE_PERMS_H
 
 #define PROPERTY_PERMS_APPEND \
+    { "persist.storages.",AID_SYSTEM,   0 }, \
     { "persist.audio.",   AID_SYSTEM,   0 }, \
     { "tcmd.",            AID_MOT_TCMD, AID_MOT_WHISPER }, \
     { "hw.whisper",       AID_MOT_WHISPER, 0 }, \
