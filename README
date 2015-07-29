@@ -14,6 +14,7 @@ sudo apt-get install numlockx
 sudo apt-get install schedtool
 sudo apt-get install p7zip-rar p7zip-full
 sudo apt-get install device-tree-compiler
+sudo apt-get install xmlstarlet
 
 sudo apt-get install gcc-4.7
 sudo apt-get install openjdk-7-jdk
@@ -52,8 +53,10 @@ repo sync --no-clone-bundle
 --------------------------
 cd ~/cm11
 source build/envsetup.sh
-cd ~/cm11/vendor/cm
-. get-prebuilts
+mkdir ~/cm11/vendor/cm/proprietary
+cd ~/cm11/vendor/cm/proprietary
+curl -L -o Term.apk -O -L https://jackpal.github.com/Android-Terminal-Emulator/downloads/Term.apk
+unzip -o Term.apk lib/*
 cd ~/cm11
 source build/envsetup.sh
 
