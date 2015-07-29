@@ -196,6 +196,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true \
     ro.vendor.extension_library=/vendor/lib/libqc-opt.so
 
+# Custom APK
+PRODUCT_PACKAGES += JSR_Settings    
+    
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.d10f \

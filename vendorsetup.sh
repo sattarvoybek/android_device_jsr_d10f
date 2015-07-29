@@ -10,3 +10,5 @@ else
 fi
 
 croot
+
+sh device/jsr/d10f/update-overlay.sh
