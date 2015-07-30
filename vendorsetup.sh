@@ -8,7 +8,15 @@ else
     git am ../../device/jsr/d10f/patches/frameworks-base-1.patch || git am --abort
     git am ../../device/jsr/d10f/patches/frameworks-base-2.patch || git am --abort
 fi
+croot
 
+cd build
+if grep -q "UTC%z" tools/buildinfo.sh
+then
+    echo '[build] buildinfo.sh already patched';
+else
+    git am ../device/jsr/d10f/patches/build-date-format-utc.patch || git am --abort
+fi
 croot
 
 sh device/jsr/d10f/update-overlay.sh
