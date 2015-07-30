@@ -7,6 +7,13 @@ import os, sys
 def mangle_build_prop_hook(prop, overrides):
   """call mangle_build_prop_hook"""
   prop.put("ro.com.android.dateformat", "yyyy-MM-dd")
+  cm_device = "d10f"
+  val = prop.get("ro.cm.version")
+  prop.put("ro.cm.version", val+cm_device)
+  val = prop.get("ro.modversion")
+  prop.put("ro.modversion", val+cm_device)
+  val = prop.get("ro.cm.display.version")
+  prop.put("ro.cm.display.version", val+cm_device)
   pass
 
 # Put the modifications that you need to make into the /system/build.prop into this
