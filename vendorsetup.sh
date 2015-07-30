@@ -11,9 +11,9 @@ fi
 croot
 
 
-add_lunch_combo jsr_d10f-eng
-add_lunch_combo jsr_d10f-user
-add_lunch_combo jsr_d10f-userdebug
+add_lunch_combo cm_d10f-eng
+add_lunch_combo cm_d10f-user
+add_lunch_combo cm_d10f-userdebug
 
 cd frameworks/base
 if grep -q "ro.storage_list.override" services/java/com/android/server/MountService.java

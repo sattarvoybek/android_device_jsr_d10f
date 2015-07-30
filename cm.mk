@@ -1,1 +1,1 @@
-$(call inherit-product, device/jsr/d10f/jsr_d10f.mk)
+$(call inherit-product, device/jsr/d10f/cm_d10f.mk)

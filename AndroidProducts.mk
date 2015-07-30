@@ -14,4 +14,4 @@
 # limitations under the License.
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/jsr_d10f.mk
+    $(LOCAL_DIR)/cm_d10f.mk
