@@ -1,3 +1,16 @@
+/bin/cp device/jsr/d10f/post_process_props_hook.py build/tools/
+chmod  0775 build/tools/post_process_props_hook.py
+
+cd build
+if grep -q "post_process_props_hook" tools/post_process_props.py
+then
+    echo '[build] post_process_props.py already patched';
+else
+    git am ../device/jsr/d10f/patches/build-post_process_props.patch || git am --abort
+fi
+croot
+
+
 add_lunch_combo jsr_d10f-eng
 add_lunch_combo jsr_d10f-user
 add_lunch_combo jsr_d10f-userdebug
