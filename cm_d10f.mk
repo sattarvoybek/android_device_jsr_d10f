@@ -30,7 +30,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from d10f device
 $(call inherit-product, device/jsr/d10f/device.mk)
 $(call inherit-product-if-exists, device/jsr/d10f/sepolicy.mk)
-$(call inherit-product-if-exists, vendor/cm/sepolicy/sepolicy.mk)
+#$(call inherit-product-if-exists, vendor/cm/sepolicy/sepolicy.mk)
 $(call inherit-product-if-exists, vendor/jsr/d10f/d10f-vendor.mk)
 
 # Override bootanimation
