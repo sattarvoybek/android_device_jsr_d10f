@@ -3,7 +3,7 @@ Device tree for JSR D10F (msm8228)
 --------------------------
 ROM for JSR D10F (HighScreen Boost 2 SE)
 
-Kernel based on CAF LNX.LA.3.5.1-10110-8x26.0 (2015-02-16)
+Kernel based on CAF AU_LINUX_ANDROID_KK_3.5.04.04.04.003 (2015-03-06)
 
 --------------------------
 Install Ubuntu 14.04 x64
@@ -57,9 +57,10 @@ mkdir ~/cm11/vendor/cm/proprietary
 cd ~/cm11/vendor/cm/proprietary
 curl -L -o Term.apk -O -L https://jackpal.github.com/Android-Terminal-Emulator/downloads/Term.apk
 unzip -o Term.apk lib/*
-cd ~/cm11
-source build/envsetup.sh
 
 --------------------------
-lunch jsr_d10f-eng dist
-mka otapackage / mka bootimage / mka clean
+cd ~/cm11
+source build/envsetup.sh
+lunch cm_d10f-userdebug dist
+
+mka otapackage
