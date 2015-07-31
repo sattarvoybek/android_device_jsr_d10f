@@ -211,8 +211,11 @@ PRODUCT_PACKAGES += \
     qrngp
 
 # Custom APK
-PRODUCT_PACKAGES += JSR_Settings    
-    
+PRODUCT_PACKAGES += JSR_Settings
+
+# OpenDelta
+PRODUCT_PACKAGES += OpenDelta
+
 # Ramdisk
 #PRODUCT_PACKAGES += chargeonlymode
 PRODUCT_PACKAGES += fstab.d10f
