@@ -10,6 +10,6 @@
   <project name="remittor/android_kernel_jsr_msm8226"               path="kernel/jsr/msm8226"             remote="github" revision="cm-11.0" />
   <project name="remittor/android_vendor_jsr_d10f"                  path="vendor/jsr/d10f"                remote="github" revision="cm-11.0" />
   
-  <project name="omnirom/android_packages_apps_OpenDelta"           path="packages/apps/OpenDelta"        remote="github" revision="android-4.4" />
+  <project name="remittor/android_packages_apps_OpenDelta"          path="packages/apps/OpenDelta"        remote="github" revision="cm-11.0" />
 
  </manifest>

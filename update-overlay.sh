@@ -25,3 +25,8 @@ xmlstarlet ed \
 --insert '/preference-headers/header[not(@android:id)]' \
 --type attr -n android:id -v "@+id/device_settings" \
 ../../../packages/apps/Settings/res/xml/settings_headers.xml > overlay/packages/apps/Settings/res/xml/settings_headers.xml
+
+xmlstarlet ed \
+-u '/PreferenceScreen/PreferenceScreen[@android:key="cm_updates"]/intent/@android:targetPackage' -v "eu.chainfire.opendelta" \
+-u '/PreferenceScreen/PreferenceScreen[@android:key="cm_updates"]/intent/@android:targetClass' -v "eu.chainfire.opendelta.MainActivity" \
+../../../packages/apps/Settings/res/xml/device_info_settings.xml > overlay/packages/apps/Settings/res/xml/device_info_settings.xml
