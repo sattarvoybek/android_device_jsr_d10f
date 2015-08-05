@@ -69,9 +69,7 @@ PRODUCT_COPY_FILES += $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_pat
 
 # Bluetooth
 PRODUCT_PROPERTY_OVERRIDES += bluetooth.hfp.client=1
-
-PRODUCT_PACKAGES += \
-    init.qcom.bt.sh
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.bt.sh:system/etc/init.qcom.bt.sh
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -120,8 +118,7 @@ PRODUCT_PACKAGES += \
     libqcomfm_jni \
     qcom.fmradio
 
-PRODUCT_PACKAGES += \
-    init.qcom.fm.sh
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.fm.sh:system/etc/init.qcom.fm.sh
 
 # GPS
 PRODUCT_PACKAGES += \
@@ -224,6 +221,8 @@ PRODUCT_PACKAGES += fstab.sd
 PRODUCT_PACKAGES += init.qcom.rc
 PRODUCT_PACKAGES += init.qcom.usb.rc
 PRODUCT_PACKAGES += ueventd.qcom.rc
+PRODUCT_PACKAGES += init.qcom.bt.sh
+PRODUCT_PACKAGES += init.qcom.fm.sh
 PRODUCT_PACKAGES += init.qcom.usb.sh
 
 # Recovery
@@ -245,6 +244,7 @@ PRODUCT_PACKAGES += \
 # USB
 PRODUCT_PACKAGES += com.android.future.usb.accessory
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += persist.sys.usb.config=mtp
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.usb.sh:system/etc/init.qcom.usb.sh
 
 # UTC date
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
