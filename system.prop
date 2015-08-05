@@ -69,15 +69,9 @@ persist.timed.enable=true
 # system prop for storage
 #ro.external.sd.path=/storage/sdcard1
 
-# uncomment for change Int & Ext SDCard
-#persist.storages.planned_swap=1
-
 # System prop for default USB configuration
 persist.sys.usb.config=mtp,adb
 
 # CPU for 8x26
 ro.min_freq=300000
 ro.opti_freq=787200
-
-# OTA
-cm.updater.uri=http://ota.smylink.org/api
