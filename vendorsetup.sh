@@ -32,3 +32,4 @@ fi
 croot
 
 sh device/jsr/d10f/update-overlay.sh
+rm -f out/target/product/d10f/system/build.prop
