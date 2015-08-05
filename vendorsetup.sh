@@ -38,3 +38,5 @@ sh device/jsr/d10f/update-overlay.sh
 
 #rm -f out/target/product/d10f/root/init.qcom.sdcard.rc
 #rm -rf out/target/product/d10f/obj/ETC/init.qcom.sdcard.rc_intermediates
+rm -rf out/target/product/d10f/obj/PACKAGING/target_files_intermediates
+rm -f out/target/product/d10f/system/build.prop
