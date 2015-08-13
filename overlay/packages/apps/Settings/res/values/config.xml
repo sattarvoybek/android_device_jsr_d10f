@@ -18,4 +18,9 @@
     <!-- Volume Rocker Wake Support. Some devices do not support (PMU) this.
          Setting to false will disable Volume Rocker Wake support -->
     <bool name="config_show_volumeRockerWake">true</bool>
+
+    <!-- This is used to determine whether to hide the
+         preferred application install location settings-->
+    <bool name="config_hide_app_install_location" translatable="false">false</bool>
+
 </resources>
