@@ -48,4 +48,11 @@
 
     <string name="pocket_gesture_title">Карман</string>
     <string name="pocket_gesture_summary">Показывать уведомления после извлечения телефона из кармана</string>
+
+    <string name="btn_func_category">Дополнительная кнопка</string>
+    <string name="btn_func_app">Действие на быстрое нажатие</string>
+    <string name="btn_func_hint">без действия</string>
+    <string name="btn_func_app2">Действие на длительное нажатие</string>
+    <string name="btn_func_hint2">без действия</string>
+
 </resources>

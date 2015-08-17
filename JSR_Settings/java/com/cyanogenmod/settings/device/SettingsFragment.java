@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.SystemProperties;
 import android.preference.SwitchPreference;
 import android.preference.ListPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
@@ -22,7 +23,13 @@ import java.util.Arrays;
  * Created by prodoomman on 19.02.15.
  */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+    
     private static final String TAG = "JSR";
+    private static final String BTN_FUNC_APP = "btn_func_app";
+    private static final String BTN_FUNC_APP2 = "btn_func_app2";
+    
+    EditTextPreferenceEx btn_func_app;
+    EditTextPreferenceEx btn_func_app2;
     
     private class SysfsValue {
         private String fileName;
@@ -72,10 +79,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         ListPreference main_storage = (ListPreference)findPreference("main_storage");
         main_storage.setOnPreferenceChangeListener(this);
 
-        String value = null;
-
         int planned_swap = SystemProperties.getInt("persist.storages.planned_swap", 0);
         main_storage.setValue(String.valueOf(planned_swap));
+        
+        btn_func_app = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP);
+        btn_func_app.setOnPreferenceChangeListener(this);
+
+        btn_func_app2 = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP2);
+        btn_func_app2.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -84,6 +95,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if (preference.getKey().equals("main_storage")) {
             SystemProperties.set("persist.storages.planned_swap", (String)newValue);
             Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
+        }
+        if (preference.getKey().equals(BTN_FUNC_APP)) {
+            Settings.System.putString(getActivity().getContentResolver(), preference.getKey(), (String)newValue);
+        }
+        if (preference.getKey().equals(BTN_FUNC_APP2)) {
+            Settings.System.putString(getActivity().getContentResolver(), preference.getKey(), (String)newValue);
         }
         return true;
     }

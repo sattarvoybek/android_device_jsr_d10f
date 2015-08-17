@@ -50,4 +50,11 @@
 
     <string name="pocket_gesture_title">Pocket</string>
     <string name="pocket_gesture_summary">Pulse notifications on removal from pocket</string>
+
+    <string name="btn_func_category">Extra button</string>
+    <string name="btn_func_app">Short down action</string>
+    <string name="btn_func_hint">nothing</string>
+    <string name="btn_func_app2">Long down action</string>
+    <string name="btn_func_hint2">nothing</string>
+
 </resources>
