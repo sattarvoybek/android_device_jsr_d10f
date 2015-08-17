@@ -2,7 +2,7 @@
 <device name="Android">
     <item name="none">0</item>
     <item name="screen.on">86</item>
-    <item name="screen.full">230</item>
+    <item name="screen.full">150</item>
     <item name="bluetooth.active">25.2</item>
     <item name="bluetooth.on">1.2</item>
     <item name="wifi.on">2</item>
@@ -15,7 +15,7 @@
     <item name="radio.scanning">10</item>
     <array name="radio.on">
         <value>4</value>
-        <value>2</value>
+        <value>3</value>
     </array>
     <array name="cpu.speeds">
         <value>300000</value>
