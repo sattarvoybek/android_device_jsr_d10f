@@ -12,4 +12,27 @@
             >
         </ListPreference>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/btn_func_category">
+        <com.cyanogenmod.settings.device.EditTextPreferenceEx
+            android:key="btn_func_app"
+            android:title="@string/btn_func_app"
+            android:dialogTitle="@string/btn_func_app"
+            android:hint="@string/btn_func_hint"
+            android:singleLine="true"
+            android:inputType="text"
+            android:defaultValue=""
+            android:summary="%s"
+            />
+        <com.cyanogenmod.settings.device.EditTextPreferenceEx
+            android:key="btn_func_app2"
+            android:title="@string/btn_func_app2"
+            android:dialogTitle="@string/btn_func_app2"
+            android:hint="@string/btn_func_hint2"
+            android:singleLine="true"
+            android:inputType="text"
+            android:defaultValue=""
+            android:summary="%s"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>
