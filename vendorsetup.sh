@@ -34,6 +34,15 @@ else
 fi
 croot
 
+cd bionic
+if grep -q "tzdata2015a" libc/zoneinfo/tzdata
+then
+    echo '[tzdata] tzdata already patched';
+else
+    git am ../device/jsr/d10f/patches/bionic-tzdata.patch || git am --abort
+fi
+croot
+
 sh device/jsr/d10f/update-overlay.sh
 
 #rm -f out/target/product/d10f/root/init.qcom.sdcard.rc
