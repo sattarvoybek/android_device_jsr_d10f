@@ -5,7 +5,6 @@ BOARD_SEPOLICY_DIRS += \
 
 BOARD_SEPOLICY_UNION += \
     file.te \
-    device.te \
     app.te \
     file_contexts
 
