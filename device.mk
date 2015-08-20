@@ -39,6 +39,9 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
+# init.d
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/etc/init.d/80tzdata_updater:/system/etc/init.d/80tzdata_updater
+
 # ANT+
 #PRODUCT_PACKAGES += \
 #    AntHalService \

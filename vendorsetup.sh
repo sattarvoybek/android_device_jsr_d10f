@@ -35,9 +35,9 @@ fi
 croot
 
 cd bionic
-if grep -q "tzdata2015a" libc/zoneinfo/tzdata
+if grep -q "tzdata2015e" libc/zoneinfo/tzdata
 then
-    echo '[tzdata] tzdata already patched';
+    echo '[bionic] tzdata already patched';
 else
     git am ../device/jsr/d10f/patches/bionic-tzdata.patch || git am --abort
 fi
