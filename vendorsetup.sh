@@ -43,11 +43,7 @@ else
 fi
 croot
 
-sh device/jsr/d10f/update-icu.sh
-croot
-
 sh device/jsr/d10f/update-overlay.sh
-croot
 
 #rm -f out/target/product/d10f/root/init.qcom.sdcard.rc
 #rm -rf out/target/product/d10f/obj/ETC/init.qcom.sdcard.rc_intermediates
