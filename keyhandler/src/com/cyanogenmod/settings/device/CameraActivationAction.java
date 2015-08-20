@@ -28,6 +28,7 @@ import android.content.pm.ResolveInfo;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.os.UserHandle;
 import android.provider.MediaStore;
 import android.util.Slog;
 
@@ -79,16 +80,30 @@ public class CameraActivationAction implements SensorAction {
     }
 
     private void launchApp(String uri) {
+        if (uri == null) return;
+        if (uri.length() < 2) return;
+        char prefix = uri.charAt(0);
+        if (prefix < 'A')
+            uri = uri.substring(1);
         Intent intent = mPackageManager.getLaunchIntentForPackage(uri);
+        if (intent == null)
+            intent = new Intent(uri);
         if (intent == null) {
-            Slog.e(TAG, "App '"+ uri+ "' not found !");
+            Slog.e(TAG, "App or action '" + uri + "' not found !");
             return;
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
-        if (getBestActivityInfo(intent) != null) {
-            // Only launch if we can succeed, but let the user pick the action
+        if (prefix == '#') {
+            mContext.sendBroadcastAsUser(intent, UserHandle.CURRENT_OR_SELF);
+        } else
+        if (prefix == '@') {
             mContext.startActivity(intent);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
+            if (getBestActivityInfo(intent) != null) {
+                // Only launch if we can succeed, but let the user pick the action
+                mContext.startActivity(intent);
+            }
         }
     }
 
