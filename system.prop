@@ -47,6 +47,7 @@ persist.radio.msgtunnel.start=false
 persist.radio.multisim.config=dsds
 ro.telephony.call_ring.multiple=false
 telephony.lteOnCdmaDevice=0
+ro.telephony.default_network=0,1
 
 # Enable/disable cabl (Content Adaptive Backlight)
 ro.qualcomm.cabl=0
