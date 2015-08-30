@@ -296,3 +296,6 @@ PRODUCT_PROPERTY_OVERRIDES += wifi.interface=wlan0
 #  $(LOCAL_PATH)/configs/quipc.conf:system/etc/quipc.conf \
 #  $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf \
 #  $(LOCAL_PATH)/configs/qlog-conf.xml:system/etc/qlog-conf.xml 
+
+# Signing keys
+PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/security/releasekey
