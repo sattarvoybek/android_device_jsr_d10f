@@ -26,17 +26,17 @@ else
 fi
 croot
 
-cd bionic
-if grep -q "tzdata2015f" libc/zoneinfo/tzdata
-then
-    echo '[bionic] tzdata already patched';
-else
-    git am ../device/jsr/d10f/patches/bionic/0001-PATCH-Update-tzdata-to-2015f.patch || git am --abort
-fi
-croot
-
-sh device/jsr/d10f/update-icu.sh
-croot
+# cd bionic
+# if grep -q "tzdata2015f" libc/zoneinfo/tzdata
+# then
+#     echo '[bionic] tzdata already patched';
+# else
+#     git am ../device/jsr/d10f/patches/bionic/0001-PATCH-Update-tzdata-to-2015f.patch || git am --abort
+# fi
+# croot
+# 
+# sh device/jsr/d10f/update-icu.sh
+# croot
 
 sh device/jsr/d10f/update-overlay.sh
 croot
