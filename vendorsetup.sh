@@ -13,7 +13,7 @@ fi
 croot
 
 cd frameworks/base
-if grep -q "ro.storage_list.override" services/java/com/android/server/MountService.java
+if grep -q "ro.storage_list.override" services/core/java/com/android/server/MountService.java
 then
     echo '[storages] Frameworks/base already patched';
 else

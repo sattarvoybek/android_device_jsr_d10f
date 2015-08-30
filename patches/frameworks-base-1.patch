@@ -9,14 +9,14 @@ either emulated or non-emulated sdcard0.
 
 Change-Id: Ia44ef6243563a69cb8d38a7b87bd81cd37f1df63
 ---
- services/java/com/android/server/MountService.java    | 19 +++++++++++++++++++
+ services/core/java/com/android/server/MountService.java:    | 19 +++++++++++++++++++
  1 file changed, 19 insertions(+)
 
-diff --git a/services/java/com/android/server/MountService.java b/services/java/com/android/server/MountService.java
-index 0b04bb0..f24c01c 100755
---- a/services/java/com/android/server/MountService.java
-+++ b/services/java/com/android/server/MountService.java
-@@ -1366,6 +1366,25 @@ private void readStorageListLocked() {
+diff --git a/services/core/java/com/android/server/MountService.java b/services/core/java/com/android/server/MountService.java
+index dcb13c3..d2a7d89 100755
+--- a/services/core/java/com/android/server/MountService.java
++++ b/services/core/java/com/android/server/MountService.java
+@@ -1377,6 +1377,25 @@ class MountService extends IMountService.Stub
          Resources resources = mContext.getResources();
  
          int id = com.android.internal.R.xml.storage_list;
@@ -41,4 +41,4 @@ index 0b04bb0..f24c01c 100755
 +        }
          XmlResourceParser parser = resources.getXml(id);
          AttributeSet attrs = Xml.asAttributeSet(parser);
- 
+
