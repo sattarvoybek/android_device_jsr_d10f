@@ -256,3 +256,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     persist.debug.wfd.enable=1 \
     persist.sys.wfd.virtual=0
+
+# Signing keys
+PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/security/releasekey
