@@ -14,6 +14,12 @@ then
 else
     git am ../device/jsr/d10f/patches/build/0002-Add-hook-functions-to-post_process_props.py.patch || git am --abort
 fi
+if grep -vq -- "--block" core/Makefile
+then
+    echo '[build] post_process_props.py already patched';
+else
+    git am ../device/jsr/d10f/patches/build/0003-Disable-block-zip-building-build-standard-file-based.patch || git am --abort
+fi
 croot
 
 cd frameworks/base
