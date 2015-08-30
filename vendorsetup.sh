@@ -1,4 +1,4 @@
-/bin/cp device/jsr/d10f/post_process_props_hook.py build/tools/
+s/bin/cp device/jsr/d10f/post_process_props_hook.py build/tools/
 chmod  0775 build/tools/post_process_props_hook.py
 
 cd build
@@ -16,7 +16,7 @@ add_lunch_combo cm_d10f-user
 add_lunch_combo cm_d10f-userdebug
 
 cd frameworks/base
-if grep -q "ro.storage_list.override" services/java/com/android/server/MountService.java
+if grep -q "ro.storage_list.override" services/core/java/com/android/server/MountService.java
 then
     echo '[storages] Frameworks/base already patched';
 else
@@ -35,7 +35,7 @@ fi
 croot
 
 cd bionic
-if grep -q "tzdata2015e" libc/zoneinfo/tzdata
+if grep -q "tzdata2015f" libc/zoneinfo/tzdata
 then
     echo '[bionic] tzdata already patched';
 else

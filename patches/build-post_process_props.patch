@@ -8,7 +8,7 @@ Subject: [PATCH] Add hook functions to post_process_props.py
  1 file changed, 3 insertions(+)
 
 diff --git a/tools/post_process_props.py b/tools/post_process_props.py
-index fc61621..adf41aa 100755
+index 82c92a8..70c9a94 100755
 --- a/tools/post_process_props.py
 +++ b/tools/post_process_props.py
 @@ -15,6 +15,7 @@
@@ -17,10 +17,10 @@ index fc61621..adf41aa 100755
  import os, sys
 +from post_process_props_hook import *
  
- # Put the modifications that you need to make into the /system/build.prop into this
- # function. The prop object has get(name) and put(name,value) methods.
-@@ -82,8 +83,10 @@ def main(argv):
-   properties = PropFile(lines)
+ # Usage: post_process_props.py file.prop [blacklist_key, ...]
+ # Blacklisted keys are removed from the property file, if present
+@@ -140,8 +141,10 @@ def main(argv):
+ 
    if filename.endswith("/build.prop"):
      mangle_build_prop(properties, extraargs)
 +    mangle_build_prop_hook(properties, extraargs)
