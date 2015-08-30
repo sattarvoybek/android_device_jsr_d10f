@@ -19,7 +19,7 @@ def mangle_build_prop_hook(prop, overrides):
   build_type = prop.get("ro.build.type")
   time_utc = time.gmtime(float(prop.get("ro.build.date.utc")))
   time_str = time.strftime("%Y%m%d-%H%M", time_utc)
-  rom_name = "cm-" + cm_ver_arr[0] + "-" + time_str + "-" + prod_dev
+  rom_name = "cm-" + cm_ver_arr[0] + "-" + time_str + "-" + prod_dev + "-NIGHTLY"
   prop.put("ro.ota.current_rom", rom_name)
   
   txt = open(outdir + "ro_ota_current_rom", "w")
