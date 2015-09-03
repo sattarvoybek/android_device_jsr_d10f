@@ -989,6 +989,34 @@ int do_write_reliability_set(int nargs, char **argv)
 	return 0;
 }
 
+int do_dump_extcsd(int nargs, char **argv)
+{
+	__u8 ext_csd[512];
+	int fd, ret;
+	char *device;
+
+	CHECK(nargs != 2, "Usage: mmc extcsd dump </path/to/mmcblkX>\n",
+			  exit(1));
+
+	device = argv[1];
+
+	fd = open(device, O_RDWR);
+	if (fd < 0) {
+		perror("open");
+		exit(1);
+	}
+
+	ret = read_extcsd(fd, ext_csd);
+	if (ret) {
+		fprintf(stderr, "Could not read EXT_CSD from %s\n", device);
+		exit(1);
+	}
+
+	fwrite(ext_csd, sizeof(ext_csd), 1, stdout);
+
+	return ret;
+}
+
 int do_read_extcsd(int nargs, char **argv)
 {
 	__u8 ext_csd[512], ext_csd_rev, reg;

@@ -50,6 +50,11 @@ static struct Command commands[] = {
 	/*
 	 *	avoid short commands different for the case only
 	 */
+	{ do_dump_extcsd, -1,
+	  "extcsd dump", "<device>\n"
+		"Dump extcsd data from <device>.",
+	  NULL
+	},
 	{ do_read_extcsd, -1,
 	  "extcsd read", "<device>\n"
 		"Print extcsd data from <device>.",

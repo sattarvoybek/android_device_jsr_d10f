@@ -154,6 +154,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     lights.msm8226
 
+# MMC Utils
+PRODUCT_PACKAGES += mmc
+    
 # KeyHandler
 PRODUCT_PACKAGES += \
     com.cyanogenmod.keyhandler
