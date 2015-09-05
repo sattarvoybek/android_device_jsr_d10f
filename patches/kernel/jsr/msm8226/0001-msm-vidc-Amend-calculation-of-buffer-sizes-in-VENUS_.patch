@@ -1,0 +1,44 @@
+From 69c840133c8183828d395c79823ea22111fc727b Mon Sep 17 00:00:00 2001
+From: Deva Ramasubramanian <dramasub@codeaurora.org>
+Date: Mon, 14 Apr 2014 20:20:44 -0700
+Subject: [PATCH 001/802] msm: vidc: Amend calculation of buffer sizes in
+ VENUS_BUFFER_SIZE
+
+Add 8KB worth of padding for extradata. This is required to accommodate
+some of the larger extradata types that didn't fit into the residual
+space between the actual buffer size and its aligned size.
+
+CRs-Fixed: 647378
+Change-Id: I550f806079dfbdece229f68ffdfc5c0e20b3c9e1
+Signed-off-by: Deva Ramasubramanian <dramasub@codeaurora.org>
+---
+ include/media/msm_media_info.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/media/msm_media_info.h b/include/media/msm_media_info.h
+index ddf9c8e..663809e 100644
+--- a/include/media/msm_media_info.h
++++ b/include/media/msm_media_info.h
+@@ -158,8 +158,8 @@ invalid_input:
+ static inline unsigned int VENUS_BUFFER_SIZE(
+ 	int color_fmt, int width, int height)
+ {
+-	unsigned int uv_alignment;
+-	unsigned int size = 0;
++	const unsigned int extra_size = 8*1024;
++	unsigned int uv_alignment = 0, size = 0;
+ 	unsigned int y_plane, uv_plane, y_stride,
+ 		uv_stride, y_sclines, uv_sclines;
+ 	if (!width || !height)
+@@ -175,7 +175,7 @@ static inline unsigned int VENUS_BUFFER_SIZE(
+ 		uv_alignment = 4096;
+ 		y_plane = y_stride * y_sclines;
+ 		uv_plane = uv_stride * uv_sclines + uv_alignment;
+-		size = y_plane + uv_plane;
++		size = y_plane + uv_plane + extra_size;
+ 		size = MSM_MEDIA_ALIGN(size, 4096);
+ 		break;
+ 	default:
+-- 
+1.9.1
+

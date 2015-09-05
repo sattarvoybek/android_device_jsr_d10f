@@ -32,6 +32,16 @@ else
 fi
 croot
 
+cd kernel/jsr/msm8226
+if grep -q "VENUS_EXTRADATA_SIZE" include/media/msm_media_info.h
+then
+    echo '[kernel] include/media/msm_media_info.h already patched';
+else
+    git am ../../../device/jsr/d10f/patches/kernel/jsr/msm8226/0001-msm-vidc-Amend-calculation-of-buffer-sizes-in-VENUS_.patch || git am --abort
+    git am ../../../device/jsr/d10f/patches/kernel/jsr/msm8226/0002-msm-vidc-Expose-extradata-size-to-userspace.patch || git am --abort
+fi
+croot
+
 sh device/jsr/d10f/update-overlay.sh
 rm -f out/target/product/d10f/system/build.prop
 
