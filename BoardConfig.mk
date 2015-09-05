@@ -164,6 +164,7 @@ TARGET_USES_QCOM_BSP := true
 
 # Recovery
 # TARGET_NO_RECOVERY := true
+# RECOVERY_VARIANT := twrp
 TARGET_NO_SEPARATE_RECOVERY := false
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_RECOVERY_SWIPE := true
@@ -176,13 +177,31 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/recovery.fstab
 
 # TWRP
-# HAVE_SELINUX := true
-# DEVICE_RESOLUTION := 720x1280
-# TW_IGNORE_MAJOR_AXIS_0 := true
-# TW_INTERNAL_STORAGE_PATH := "/storage/sdcard1"
-# TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard1"
-# TW_EXTERNAL_STORAGE_PATH := "/storage/sdcard0"
-# TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard0"
+ifeq ($(RECOVERY_VARIANT),twrp)
+BUILD_TINY_ANDROID := true
+HAVE_SELINUX := true
+DEVICE_RESOLUTION := 720x1280
+# TW_INCLUDE_JB_CRYPTO := true
+TW_IGNORE_MAJOR_AXIS_0 := true
+TW_INTERNAL_STORAGE_PATH := "/sdcard"
+TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard"
+TW_EXTERNAL_STORAGE_PATH := "/external_sd"
+TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
+TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
+TW_INCLUDE_L_CRYPTO := true
+RECOVERY_GRAPHICS_USE_LINELENGTH := true
+PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE="D10A_HighScreen"
+TARGET_RECOVERY_INITRC := device/jsr/d10f/twrp/init.rc
+
+# Using prebuilt stock JB 4.3 kernel and modified for pram DT (workaround for Aroma installer BSOD reboot issue with JSR-Kernel)
+TARGET_PREBUILT_KERNEL := device/jsr/d10f/recovery/kernel.zImage
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 lpj=192000 debug ignore_loglevel pmemlog=9 panic_restart=4 log_no_ring=0
+BOARD_KERNEL_BASE := 0x00000000
+BOARD_KERNEL_PAGESIZE := 2048
+BOARD_KERNEL_SEPARATED_DT := true
+BOARD_MKBOOTIMG_ARGS := --dt device/jsr/d10f/recovery/dt.img --kernel_offset 0x00008000 --ramdisk_offset 0x02000000 --tags_offset 0x01e00000
+endif
 
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true
