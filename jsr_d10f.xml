@@ -8,5 +8,6 @@
   <project name="remittor/android_vendor_jsr_d10f"                  path="vendor/jsr/d10f"                remote="github" revision="cm-12.1" />
   
   <project name="omnirom/android_packages_apps_OpenDelta"           path="packages/apps/OpenDelta"        remote="github" revision="android-5.1" />
+  <project name="omnirom/android_bootable_recovery"                 path="bootable/recovery-twrp"         remote="github" revision="android-5.1" />
 
  </manifest>
