@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Output some debug strings -->
-    <item type="bool" name="debug_output">true</item>
-
     <!-- Property to read for ROM version -->
     <string name="property_version">ro.ota.current_rom</string>
 
@@ -11,9 +8,6 @@
 
     <!-- %s is expanded to property_version value. .zip, .delta, .update, .sign extensions added when needed -->
     <string name="filename_base">%s</string>
-
-    <!-- Path deltas are stored, relative to sdcard root -->
-    <string name="path_base">OpenDelta</string>
 
     <!-- URL base to find .delta files, %s is expanded to property_device value. Path is suffixed by (expanded) filename_base -->
     <string name="url_base_delta">http://net2ftp.ru/node0/s-trace@list.ru/ota/%s/delta/</string>
@@ -26,30 +20,7 @@
 
     <!-- URL base to fetch all builds -->
     <string name="url_base_json">http://net2ftp.ru/node0/s-trace@list.ru/ota/builds.json"</string>
-
-    <!-- Applies whole-file signature delta. Adds one extra delta step. Required if recovery verifies signatures -->
-    <item type="bool" name="apply_signature">true</item>
-    
-    <!-- (TWRP) Set this to false if the keys below aren't your ROM's -->
-    <item type="bool" name="inject_signature_enable">true</item>
     
     <!-- (TWRP) Verification signatures to inject. Produced by 'dumpkey.jar' (out/host) of the platform.x509 key used to sign the ZIP file -->
     <string name="inject_signature_keys"><![CDATA[v2 {64,0xea7d19ef,{2793196273,789290124,217795634,3212180097,248304296,3148968938,3358369147,3926322707,465719822,3955961338,1710567107,759262335,1369178777,1516509708,565270384,1094284415,215466353,3287351377,1139008941,4011010761,3971502821,1652168535,3005525025,2928064231,59391195,268995474,3193390335,1204654846,1790646966,766342455,1632402844,1050629027,3320531497,751662452,2486594489,2382291930,3229342702,867835114,1667950474,1065498183,2476725668,273968857,2412956437,2223927306,3852818309,4146354847,2608803298,532271606,1643176332,3560584017,797589924,1691796025,2416019704,3331059682,3641153533,1002253185,564613962,4032675305,2063340154,4131881203,2699812956,204871056,3064681014,2874513434},{864798806,3510681033,2726475621,783160819,1314937193,1253643380,1936127115,2000492257,3723391404,3520845873,2197906439,2884432599,318197352,2535289817,3474479933,1867567961,3991657164,2157227941,2919945566,458026839,2929606224,2291791409,2319591747,329533538,3158709737,38149531,3366024729,3743717867,3464652878,3412360289,1329628858,2739151348,626435012,653484068,1731255795,2514222895,2617374512,1761853321,2240267397,2782367829,2440814528,613954716,2421975705,172763759,2365931415,875050137,2276085897,4175073054,3698737289,234697902,3046469611,4215268101,1134059091,4170035366,3366258424,3012768732,4243164433,638530807,3078136853,3229893536,2581190910,2064406083,1621184205,1787063611}}]]></string>
-    
-    <!-- (TWRP) Add secure mode setting. Requires 'apply_signature' and 'inject_signature_enable'. Limits flashing to TWRP only, verifies ZIP signature in TWRP, disables auto-flashing of additional ZIPs -->
-    <item type="bool" name="secure_mode_enable">true</item>
-
-    <!-- (TWRP) Requires 'secure_mode_enable'. Decides whether the default setting for secure mode is enabled (true) or disabled (false) -->
-    <item type="bool" name="secure_mode_default">true</item>
-    
-    <!-- 
-    	Devices (detected using property_device) which may crash while downloading/patching/verifying when the screen is off.
-    	This appears to be an issue with the fuse daemon, but the cause has not yet been found or fixed. Until the issue is
-    	repaired, this is a stop-gap solution.
-    -->
-    <string-array name="keep_screen_on_devices">
-        <item>i9100</item>
-        <item>n7000</item>
-        <item>i777</item>
-    </string-array>
 </resources>
