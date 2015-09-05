@@ -16,13 +16,13 @@
     <string name="path_base">OpenDelta</string>
 
     <!-- URL base to find .delta files, %s is expanded to property_device value. Path is suffixed by (expanded) filename_base -->
-    <string name="url_base_delta">http://s-trace.url.ph/ota/%s/delta/</string>
+    <string name="url_base_delta">http://net2ftp.ru/node0/s-trace@list.ru/ota/%s/delta/</string>
 
     <!-- URL base to find .update and .sign files, %s is expanded to property_device value. Path is suffixed by (expanded) filename_base -->
-    <string name="url_base_update">http://s-trace.url.ph/ota/%s/delta/</string>
+    <string name="url_base_update">http://net2ftp.ru/node0/s-trace@list.ru/ota/%s/delta/</string>
 
     <!-- URL base to find the full zip files, %s is expanded to property_device value. Path is suffixed by (expanded) filename_base -->
-    <string name="url_base_full">http://s-trace.url.ph/ota/%s/full/</string>
+    <string name="url_base_full">http://net2ftp.ru/node0/s-trace@list.ru/ota/%s/full/</string>
 
     <!-- Applies whole-file signature delta. Adds one extra delta step. Required if recovery verifies signatures -->
     <item type="bool" name="apply_signature">true</item>
