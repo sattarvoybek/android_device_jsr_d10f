@@ -56,9 +56,11 @@ public class KeyHandler implements DeviceKeyHandler
   public void updateSettings()
   {
     btn_func_app = System.getString(mContext.getContentResolver(), BTN_FUNC_APP);
-    btn_func_app = btn_func_app.trim();
+    if (btn_func_app != null)
+      btn_func_app = btn_func_app.trim();
     btn_func_app2 = System.getString(mContext.getContentResolver(), BTN_FUNC_APP2);
-    btn_func_app2 = btn_func_app2.trim();
+    if (btn_func_app2 != null)
+      btn_func_app2 = btn_func_app2.trim();
   }   
    
   public KeyHandler(Context context)
