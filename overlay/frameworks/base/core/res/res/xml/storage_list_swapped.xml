@@ -15,7 +15,7 @@
       android:primary="false"
       android:removable="false"
       android:emulated="false"
-      android:allowMassStorage="false"
+      android:allowMassStorage="true"
     />
 
     <storage android:mountPoint="/storage/usbdisk" 

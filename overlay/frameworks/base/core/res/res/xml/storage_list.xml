@@ -7,7 +7,7 @@
       android:primary="true"
       android:removable="false"
       android:emulated="false"
-      android:allowMassStorage="false"
+      android:allowMassStorage="true"
     />
 
     <storage android:mountPoint="/storage/sdcard1"
