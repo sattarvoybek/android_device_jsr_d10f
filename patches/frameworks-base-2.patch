@@ -16,7 +16,7 @@ Signed-off-by: Evisceration <alexander.martinz@nameless-rom.org>
  1 files changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/services/java/com/android/server/MountService.java b/services/java/com/android/server/MountService.java
-index f24c01c..a96014e 100755
+index f24c01c..a96014e 100644
 --- a/services/java/com/android/server/MountService.java
 +++ b/services/java/com/android/server/MountService.java
 @@ -1374,15 +1374,13 @@ private void readStorageListLocked() {
