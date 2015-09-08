@@ -30,7 +30,7 @@
   <string name="notify_checking">Поиск обновлений &#8230;</string>
   <string name="last_checked" formatted="false">%s в %s</string>
   <string name="last_checked_never">Обновления системы ещё не проверялись, может быть сейчас самое время сделать это?</string>
-  <string name="button_check_now">Проверить</string>
+  <string name="button_check_now">Проверить обновления</string>
   <string name="button_flash_now">Установить</string>
 
   <string name="action_secure_mode">Безопасный режим</string>
@@ -88,4 +88,8 @@
   <string name="category_flashing">Установка</string>
   <string name="secure_mode_title">Безопасный режим</string>
   <string name="state_error_connection">Нет подключения к Сети.</string>
+  <string name="category_admin">Техобслуживание</string>
+  <string name="clear_files_title">Удалить файлы обновлений</string>
+  <string name="clear_files_summary">Удалить существующие файлы обновлений, чтобы форсировать загрузку полного обновления</string>
+  <string name="clean_files_feedback" formatted="false">Удален(о) %d файл(а/ов). Теперь нажмите \'Проверить обновления\'</string>
 </resources>
