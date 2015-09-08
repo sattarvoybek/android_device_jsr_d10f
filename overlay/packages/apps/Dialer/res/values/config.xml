@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="call_recording_enabled">true</bool>
+    
+    <!-- 1 = MediaRecorder.AudioSource.MIC        => Microphone audio source
+         4 = MediaRecorder.AudioSource.VOICE_CALL => 4 Voice call uplink + downlink audio source -->
+    <integer name="call_recording_audio_source">4</integer>
+    
+    <!-- 0 = AMR_WB   => AMR (Wideband) audio codec
+         1 = HE_AAC   => High Efficiency AAC (HE-AAC) audio codec -->
+    <integer name="call_recording_audio_encoder">1</integer>
+    
+    <bool name="call_durationtype_enabled">true</bool>
+
+    <!-- An array of codes aliases, such as ##123# -->
+    <string-array name="special_code_aliases" translatable="true"/>
+
+    <!-- The mapping from aliases to secret codes, index-mapped to the
+         array above. For instance, if the alias is ##123# and the
+         mapping is 123, the system will trigger a special code akin to
+         typing *#*#123#*#* -->
+    <string-array name="special_code_mapping" translatable="true"/>
+
+</resources>
