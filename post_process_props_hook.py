@@ -11,7 +11,7 @@ def mangle_build_prop_hook(prop, overrides):
   
   ver_inc = prop.get("ro.build.version.incremental")
 
-  prod_dev = prop.get("ro.product.device")
+  prod_dev = prop.get("ro.cm.device")
   outdir = "out/target/product/" + prod_dev + "/"
   
   cm_ver = prop.get("ro.cm.version")
@@ -29,6 +29,11 @@ def mangle_build_prop_hook(prop, overrides):
   out_zip = "cm-" + cm_ver + ".zip"
   txt = open(outdir + "rom_out_package", "w")
   txt.write(out_zip)
+  txt.close()
+
+  out_ota_zip = rom_name + ".zip"
+  txt = open(outdir + "rom_ota_name", "w")
+  txt.write(out_ota_zip)
   txt.close()
   pass
 
