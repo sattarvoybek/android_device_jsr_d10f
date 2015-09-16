@@ -16,6 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_DEVICE),armani)
+ifeq ($(TARGET_DEVICE),d10f)
 include $(call all-subdir-makefiles,$(LOCAL_PATH))
 endif

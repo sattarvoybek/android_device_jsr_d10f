@@ -105,7 +105,7 @@ BOARD_HAVE_QCOM_FM := true
 BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw/
 
 # GPS
-TARGET_GPS_HAL_PATH := device/xiaomi/armani/gps
+TARGET_GPS_HAL_PATH := $(LOCAL_PATH)/gps
 TARGET_PROVIDES_GPS_LOC_API := true
 
 # Display
