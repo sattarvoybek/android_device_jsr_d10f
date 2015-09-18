@@ -1,0 +1,29 @@
+From 8708e207a2fc59c3f7ae5562f0971d558f224693 Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Mon, 7 Sep 2015 19:38:29 +0300
+Subject: [PATCH] Add menu "call_recording_format"
+
+---
+ res/xml/call_feature_setting_msim.xml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/res/xml/call_feature_setting_msim.xml b/res/xml/call_feature_setting_msim.xml
+index 22b5b72..74bb9c6 100644
+--- a/res/xml/call_feature_setting_msim.xml
++++ b/res/xml/call_feature_setting_msim.xml
+@@ -71,4 +71,12 @@
+         android:summary="@string/dtmf_tones_summary"
+         android:entries="@array/dtmf_tone_entries"
+         android:entryValues="@array/dtmf_tone_values"/>
++
++    <ListPreference
++        android:key="call_recording_format"
++        android:title="@string/call_recording_format"
++        android:summary="%s"
++        android:entries="@array/call_recording_encoder_entries"
++        android:entryValues="@array/call_recording_encoder_values"
++        android:persistent="false" />
+ </PreferenceScreen>
+-- 
+1.9.1
+

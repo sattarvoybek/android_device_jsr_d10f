@@ -64,6 +64,27 @@ else
 fi
 croot
 
+cd packages/apps/Dialer/
+if grep -q "persist.call_recording.enabled" src/com/android/services/callrecorder/CallRecorderService.java
+then
+    echo '[Dialer] CallRecorderService.java already patched';
+else
+    git am ../../../device/jsr/d10f/patches/packages/apps/Dialer/0001-Add-support-property-persist.call_recording.enabled.patch || git am --abort
+fi
+croot
+
+cd packages/services/Telephony
+if grep -q "call_recording_format" res/xml/call_feature_setting_msim.xml
+then
+    echo '[Telephony] msim_call_feature_setting.xml already patched';
+else
+    git am ../../../device/jsr/d10f/patches/packages/services/Telephony/0001-Add-menu-call_recording_format.patch || git am --abort
+fi
+croot
+
+# sh device/jsr/d10f/update-icu.sh
+# croot
+
 sh device/jsr/d10f/update-overlay.sh
 croot
 

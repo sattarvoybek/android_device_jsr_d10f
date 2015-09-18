@@ -16,7 +16,7 @@ Signed-off-by: Evisceration <alexander.martinz@nameless-rom.org>
  1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/services/core/java/com/android/server/MountService.java b/services/core/java/com/android/server/MountService.java
-index d2a7d89..3c98aa3 100755
+index d2a7d89..3c98aa3 100644
 --- a/services/core/java/com/android/server/MountService.java
 +++ b/services/core/java/com/android/server/MountService.java
 @@ -1385,15 +1385,13 @@ class MountService extends IMountService.Stub

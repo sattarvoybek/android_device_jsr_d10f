@@ -1,0 +1,39 @@
+From 8f2227f713a7abbb6befe4e0c4c09c47b6f076d0 Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Mon, 7 Sep 2015 14:48:39 +0300
+Subject: [PATCH] Add support property "persist.call_recording.enabled"
+
+---
+ src/com/android/services/callrecorder/CallRecorderService.java | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/com/android/services/callrecorder/CallRecorderService.java b/src/com/android/services/callrecorder/CallRecorderService.java
+index fe3064f..61079c7 100644
+--- a/src/com/android/services/callrecorder/CallRecorderService.java
++++ b/src/com/android/services/callrecorder/CallRecorderService.java
+@@ -50,6 +50,7 @@ public class CallRecorderService extends Service {
+     private RecorderState mState = RecorderState.IDLE;
+     private CallRecording mCurrentRecording = null;
+ 
++    private static final String ENABLE_PROPERTY = "persist.call_recording.enabled";
+     private static final String AUDIO_SOURCE_PROPERTY = "persist.call_recording.src";
+ 
+     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyMMdd_HHmmssSSS");
+@@ -213,11 +214,12 @@ public class CallRecorderService extends Service {
+         if (audioFormat == MediaRecorder.OutputFormat.AMR_WB) {
+             return number + "_" + timestamp + ".amr";
+         } else {
+-            return number + "_" + timestamp + ".m4a ";
++            return number + "_" + timestamp + ".m4a";
+         }
+     }
+ 
+     public static boolean isEnabled(Context context) {
+-        return context.getResources().getBoolean(R.bool.call_recording_enabled);
++        boolean defaultValue = context.getResources().getBoolean(R.bool.call_recording_enabled);                                                                                               
++        return SystemProperties.getBoolean(ENABLE_PROPERTY, defaultValue);                                                                                                                     
+     }
+ }
+-- 
+1.9.1
+
