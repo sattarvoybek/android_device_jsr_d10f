@@ -30,6 +30,12 @@ else
     git am ../../device/jsr/d10f/patches/frameworks/base/0001-MountService-allow-overriding-default-storage-list-w.patch || git am --abort
     git am ../../device/jsr/d10f/patches/frameworks/base/0002-frameworks-hardcode-package-name-to-android.patch || git am --abort
 fi
+if grep -q "enabling torch via sysfs" services/core/java/com/android/server/TorchService.java
+then
+    echo '[Torch] Frameworks/base already patched';
+else
+    git am ../../device/jsr/d10f/patches/frameworks/base/0003-TORCH-Use-sysfs-interface-for-system-wide-torch-serv.patch || git am --abort
+fi
 croot
 
 cd kernel/jsr/msm8226
