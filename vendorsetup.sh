@@ -60,16 +60,6 @@ croot
 # sh device/jsr/d10f/update-icu.sh
 # croot
 
-cd packages/apps/Torch
-if grep -vq android.hardware.ITorchService src/net/cactii/flash2/FlashDevice.java ; then
-    echo '[torch] src/net/cactii/flash2/FlashDevice.java already patched';
-else
-    git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0001-Revert-Torch-notify-TorchService-of-torch-state-when.patch || git am --abort
-    git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0002-Revert-Make-torch-shutdown-by-camera-usage-work-prop.patch || git am --abort
-    git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0003-Revert-Torch-signal-to-framework-TorchService-not-to.patch || git am --abort
-fi
-croot
-
 cd packages/apps/Dialer/
 if grep -q "persist.call_recording.enabled" src/com/android/services/callrecorder/CallRecorderService.java
 then
