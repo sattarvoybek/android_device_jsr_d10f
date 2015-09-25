@@ -156,6 +156,9 @@ PRODUCT_PACKAGES += \
 
 # MMC Utils
 PRODUCT_PACKAGES += mmc
+
+# ViewMem 
+PRODUCT_PACKAGES += viewmem
     
 # KeyHandler
 PRODUCT_PACKAGES += \
