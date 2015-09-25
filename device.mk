@@ -143,6 +143,9 @@ PRODUCT_PACKAGES += \
     LiveWallpapers \
     LiveWallpapersPicker \
 
+# ViewMem 
+PRODUCT_PACKAGES += viewmem
+    
 # KeyHandler
 PRODUCT_PACKAGES += \
     com.cyanogenmod.keyhandler
