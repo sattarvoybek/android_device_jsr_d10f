@@ -38,6 +38,15 @@ else
 fi
 croot
 
+cd frameworks/opt/net/wifi
+if grep -q "disabling Wifi AP due to Subscription change" service/java/com/android/server/wifi/WifiController.java
+then
+    git am ../../../../device/jsr/d10f/patches/frameworks/opt/opt/net/wifi/0001-Revert-wifi-disable-access-point-on-subscription-cha.patch || git am --abort
+else
+    echo '[WLAN] frameworks/opt/opt/net/wifi already patched';
+fi
+croot
+
 cd kernel/jsr/msm8226
 if grep -q "VENUS_EXTRADATA_SIZE" include/media/msm_media_info.h
 then

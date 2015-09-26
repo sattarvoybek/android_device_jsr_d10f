@@ -1,0 +1,65 @@
+From 590a9531f8ba731cc94ab9b021f36db9a092b93c Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Thu, 24 Sep 2015 01:48:52 +0300
+Subject: [PATCH] Revert "wifi: disable access point on subscription change"
+
+This reverts commit 5a4704de82e9f1f49c575dcae6e7bde0637ab2a1.
+---
+ .../com/android/server/wifi/WifiController.java    | 32 ----------------------
+ 1 file changed, 32 deletions(-)
+
+diff --git a/service/java/com/android/server/wifi/WifiController.java b/service/java/com/android/server/wifi/WifiController.java
+index 97406af..c244162 100644
+--- a/service/java/com/android/server/wifi/WifiController.java
++++ b/service/java/com/android/server/wifi/WifiController.java
+@@ -38,10 +38,8 @@ import android.os.Message;
+ import android.os.SystemClock;
+ import android.os.WorkSource;
+ import android.provider.Settings;
+-import android.telephony.SubscriptionManager;
+ import android.util.Slog;
+ 
+-import android.widget.Toast;
+ import com.android.internal.util.Protocol;
+ import com.android.internal.util.State;
+ import com.android.internal.util.StateMachine;
+@@ -606,36 +604,6 @@ class WifiController extends StateMachine {
+     }
+ 
+     class ApEnabledState extends State {
+-
+-        private SubscriptionManager.OnSubscriptionsChangedListener mSubListener;
+-
+-        @Override
+-        public void enter() {
+-            mSubListener = new SubscriptionManager.OnSubscriptionsChangedListener() {
+-                    boolean firstChange = true;
+-                    @Override
+-                    public void onSubscriptionsChanged() {
+-                        if (firstChange) {
+-                            // we always get a state change on registration.
+-                            firstChange = false;
+-                            return;
+-                        }
+-                        Toast.makeText(mContext,
+-                                com.android.internal.R.string.subscription_change_disabled_wifi_ap,
+-                                Toast.LENGTH_SHORT).show();
+-                        log("disabling Wifi AP due to Subscription change");
+-                        WifiController.this.obtainMessage(CMD_SET_AP, 0, 0, null).sendToTarget();
+-                    }
+-            };
+-            SubscriptionManager.from(mContext).addOnSubscriptionsChangedListener(mSubListener);
+-        }
+-
+-        @Override
+-        public void exit() {
+-            SubscriptionManager.from(mContext).removeOnSubscriptionsChangedListener(mSubListener);
+-            mSubListener = null;
+-        }
+-
+         @Override
+         public boolean processMessage(Message msg) {
+             switch (msg.what) {
+-- 
+1.9.1
+
