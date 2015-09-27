@@ -82,7 +82,9 @@
   <string name="scheduler_mode_title">Режим</string>
   <string name="scheduler_smart">Интеллектуально</string>
   <string name="scheduler_daily">Ежедневно</string>
+  <string name="scheduler_weekly">Еженедельно</string>
   <string name="scheduler_daily_time">Время выполнения</string>
+  <string name="scheduler_week_day">День недели</string>
   <string name="networks_title">Сети</string>
   <string name="networks_message">Загружать только через сети</string>
   <string name="category_flashing">Установка</string>
