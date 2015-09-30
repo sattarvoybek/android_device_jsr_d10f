@@ -15,6 +15,6 @@
 /dev/block/platform/msm_sdcc.1/by-name/boot         /boot          emmc      defaults                                                     defaults
 /dev/block/platform/msm_sdcc.1/by-name/recovery     /recovery      emmc      defaults                                                     defaults
 
-/devices/msm_sdcc.2/mmc_host                        auto           auto      uid=1023,gid=1023,dmask=0007,fmask=0007                      voldmanaged=sdcard0:auto,noemulatedsd
-/devices/msm_sdcc.1/mmc_host                        auto           auto      uid=1023,gid=1023,dmask=0007,fmask=0007                      voldmanaged=sdcard1:16,nonremovable
+/devices/msm_sdcc.2/mmc_host*                       auto           auto      uid=1023,gid=1023,dmask=0007,fmask=0007                      voldmanaged=sdcard0:auto,noemulatedsd
+/devices/msm_sdcc.1/mmc_host*                       auto           auto      uid=1023,gid=1023,dmask=0007,fmask=0007                      voldmanaged=sdcard1:16,nonremovable
 /devices/platform/msm_hsusb_host/usb1               /storage/usbdisk    auto   nosuid,nodev                                               voldmanaged=usbdisk:auto
