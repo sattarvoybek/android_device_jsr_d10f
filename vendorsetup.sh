@@ -57,6 +57,15 @@ else
 fi
 croot
 
+cd bionic
+if grep -q "tzdata2015g" libc/zoneinfo/tzdata
+then
+    echo '[bionic] tzdata already patched';
+else
+    git am ../device/jsr/d10f/patches/bionic/0001-TZDATA-Upgrade-tzdata-to-2015g.patch || git am --abort
+fi
+croot
+
 cd packages/apps/Torch
 if grep -q android.hardware.ITorchService src/net/cactii/flash2/FlashDevice.java ; then
     git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0001-Revert-Torch-notify-TorchService-of-torch-state-when.patch || git am --abort
