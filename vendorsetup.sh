@@ -73,8 +73,14 @@ else
 fi
 croot
 
-# sh device/jsr/d10f/update-icu.sh
-# croot
+cd external/icu
+if grep -q "2015g" icu4c/source/data/misc/zoneinfo64.txt
+then
+    echo '[icu] zoneinfo already patched';
+else
+    git am ../../device/jsr/d10f/patches/external/icu/0001-TZDATA-Update-tzdata-to-2015g.patch || git am --abort
+fi
+croot
 
 cd packages/apps/Torch
 if grep -q android.hardware.ITorchService src/net/cactii/flash2/FlashDevice.java ; then
