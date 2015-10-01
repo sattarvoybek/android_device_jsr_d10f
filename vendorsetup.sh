@@ -36,6 +36,12 @@ then
 else
     git am ../../device/jsr/d10f/patches/frameworks/base/0003-TORCH-Use-sysfs-interface-for-system-wide-torch-serv.patch || git am --abort
 fi
+if grep -q "/sys/class/power_supply/battery/charge_full_design" core/java/com/android/internal/os/PowerProfile.java
+then
+    echo '[Battery] Frameworks/base already patched';
+else
+    git am ../../device/jsr/d10f/patches/frameworks/base/0004-POWER-Read-battery-capacity-from-sysfs.patch || git am --abort
+fi
 croot
 
 cd frameworks/opt/net/wifi
