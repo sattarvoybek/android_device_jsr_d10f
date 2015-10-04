@@ -17,4 +17,4 @@
 
 /devices/msm_sdcc.1/mmc_host*                       auto           auto      uid=1023,gid=1023,dmask=0007,fmask=0007                      voldmanaged=sdcard0:16,nonremovable,noemulatedsd
 /devices/msm_sdcc.2/mmc_host*                       auto           auto      uid=1023,gid=1023,dmask=0007,fmask=0007                      voldmanaged=sdcard1:auto
-/devices/platform/msm_hsusb_host/usb1               auto           auto      nosuid,nodev                                                 voldmanaged=usbdisk:auto
+/devices/platform/msm_hsusb_host/usb1*              auto           auto      nosuid,nodev                                                 voldmanaged=usbdisk:auto
