@@ -36,12 +36,6 @@ then
 else
     git am ../../device/jsr/d10f/patches/frameworks/base/0003-TORCH-Use-sysfs-interface-for-system-wide-torch-serv.patch || git am --abort
 fi
-if grep -q ": DataConnectionRealTimeInfo.DC_POWER_STATE_LOW, timestampNanos, true);" services/core/java/com/android/server/NetworkManagementService.java
-then
-    echo '[Radioactive] Frameworks/base already patched';
-else
-    git am ../../device/jsr/d10f/patches/frameworks/base/0004-Fix-the-cell-standby-mobile-radio-active-issue.patch || git am --abort
-fi
 if grep -q "/sys/class/power_supply/battery/charge_full_design" core/java/com/android/internal/os/PowerProfile.java
 then
     echo '[Battery] Frameworks/base already patched';
