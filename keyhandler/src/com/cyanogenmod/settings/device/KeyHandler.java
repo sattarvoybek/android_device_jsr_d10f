@@ -73,8 +73,8 @@ public class KeyHandler implements DeviceKeyHandler
   public boolean handleKeyEvent(KeyEvent event)
   {
     boolean consumed = false;
-    switch (event.getKeyCode()) {
-    case KeyEvent.KEYCODE_FUNCTION:
+    switch (event.getScanCode()) {
+    case 249:
       if (event.getAction() == KeyEvent.ACTION_DOWN) {
         //Slog.i(TAG, "FUNC key down " + event.getRepeatCount());
         btn_func_timestamp = java.lang.System.currentTimeMillis();
