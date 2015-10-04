@@ -114,7 +114,7 @@ if grep -q "exfat.ko" Exfat.cpp
 then
     echo '[Vold] Exfat kernel driver support already patched';
 else
-    git am ../../device/jsr/d10f/patches/system/vold/0001-EXFAT-Use-kernel-driver-instead-of-FUSE-implementati.patch || git am --abort
+    git am ../../device/jsr/d10f/patches/system/vold/0001-EXFAT-Use-kernel-driver-instead-of-FUSE-driver.patch || git am --abort
 fi
 croot
 
