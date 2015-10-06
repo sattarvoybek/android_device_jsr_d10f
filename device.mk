@@ -197,10 +197,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Ramdisk
 PRODUCT_PACKAGES += \
-    fstab.armani \
-    init.armani.rc \
-    init.armani.usb.rc \
-    ueventd.armani.rc
+    fstab.d10f \
+    init.d10f.rc \
+    init.d10f.usb.rc \
+    ueventd.d10f.rc
 
 # Sensors
 PRODUCT_COPY_FILES += \
@@ -228,8 +228,8 @@ PRODUCT_PACKAGES += \
     WCNSS_qcom_wlan_nv.bin
 
 PRODUCT_COPY_FILES += \
-    kernel/xiaomi/armani/drivers/staging/prima/firmware_bin/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
-    kernel/xiaomi/armani/drivers/staging/prima/firmware_bin/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
+    kernel/jsr/d10f/drivers/staging/prima/firmware_bin/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
+    kernel/jsr/d10f/drivers/staging/prima/firmware_bin/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
 
 PRODUCT_PACKAGES += \
     dhcpcd.conf \

@@ -25,7 +25,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import init.armani.usb.rc
+import init.d10f.usb.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
@@ -65,11 +65,11 @@ on init
     symlink /storage/usbdisk /usb_storage
 
 on fs
-    mount_all fstab.armani
+    mount_all fstab.d10f
     restorecon_recursive /persist
 
     # Activate ZRAM
-    swapon_all fstab.armani
+    swapon_all fstab.d10f
     write /proc/sys/vm/page-cluster 0
 
     setprop ro.crypto.fuse_sdcard true
