@@ -70,6 +70,15 @@ else
 fi
 croot
 
+cd system/vold
+if grep -q "exfat.ko" Exfat.cpp
+then
+    echo '[Vold] exFAT kernel driver support already patched';
+else
+    git am ../../device/jsr/d10f/patches/vold-exfat.patch || git am --abort
+fi
+croot
+
 sh device/jsr/d10f/update-icu.sh
 croot
 
