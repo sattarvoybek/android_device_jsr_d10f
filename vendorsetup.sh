@@ -25,6 +25,15 @@ else
 fi
 croot
 
+cd frameworks/base
+if grep -q "/sys/class/power_supply/battery/charge_full_design" core/java/com/android/internal/os/PowerProfile.java
+then
+    echo '[Battery] Frameworks/base already patched';
+else
+    git am ../../device/jsr/d10f/patches/frameworks-base-battery.patch || git am --abort
+fi
+croot
+
 cd build
 if grep -q "UTC%z" tools/buildinfo.sh
 then
