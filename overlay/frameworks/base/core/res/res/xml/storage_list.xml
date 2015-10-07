@@ -2,11 +2,10 @@
 
 <StorageList xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Internal emulated storage -->
+    <!-- Internal dedicated storage -->
     <storage android:storageDescription="@string/storage_internal"
 	android:mountPoint="/storage/sdcard0"
 	android:primary="true"
-	android:emulated="true"
 	android:mtpReserve="100" />
     
     <!-- External SD card -->
