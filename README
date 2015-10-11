@@ -30,6 +30,7 @@ sudo apt-get install git gnupg flex bison gperf build-essential \
 sudo ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
 
 --------------------------
+# Install repo tool:
 sudo apt-get install curl
 sudo curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
@@ -37,31 +38,41 @@ echo 'PATH=~/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 
 --------------------------
-mkdir ~/cm11
-cd ~/cm11
+# Fetch the sources:
+mkdir ~/cm12.1
+cd ~/cm12.1
 git config --global user.email "user@gmail.com"
 git config --global user.name "github_account"
-repo init -u git://github.com/CyanogenMod/android.git -b cm-11.0
+repo init -u git://github.com/CyanogenMod/android.git -b cm-12.1
+mkdir -p .repo/local_manifests
+wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-12.1_reloaded/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
 repo sync
 
 --------------------------
-mkdir ~/cm11/.repo/local_manifests
-cd ~/cm11/.repo/local_manifests
-wget https://raw.github.com/remittor/android_device_jsr_d10f/master/jsr_d10f.xml
-cd ~/cm11
-repo sync
+# Generate keys:
+cd ~/cm12.1
+mkdir -p vendor/jsr/security/
+development/tools/make_key vendor/jsr/security/releasekey '/CN=Your Name'
+development/tools/make_key vendor/jsr/security/media '/CN=Your Name'
+development/tools/make_key vendor/jsr/security/platform '/CN=Your Name'
+development/tools/make_key vendor/jsr/security/shared '/CN=Your Name'
+development/tools/make_key vendor/jsr/security/superuser '/CN=Your Name'
+development/tools/make_key vendor/jsr/security/testkey '/CN=Your Name/'
 
 --------------------------
-cd ~/cm11
-source build/envsetup.sh
-mkdir ~/cm11/vendor/cm/proprietary
-cd ~/cm11/vendor/cm/proprietary
-curl -L -o Term.apk -O -L https://jackpal.github.com/Android-Terminal-Emulator/downloads/Term.apk
-unzip -o Term.apk lib/*
-
---------------------------
-cd ~/cm11
+# Update OTA configuration:
+cd ~/cm12.1
+# Dump public key:
 source build/envsetup.sh
 lunch cm_d10f-userdebug
+mka system/core/libmincrypt/tools
+java -jar out/host/linux-x86/framework/dumpkey.jar vendor/jsr/security/releasekey.x509.pem
+# Edit configuration:
+nano device/jsr/d10f/overlay/packages/apps/OpenDelta/res/values/config.xml
+# Edit OTA server URLs (url_*) and replace my OTA key in inject_signature_keys by your key (dumped by dumpkey.jar)
 
-mka bacon
+--------------------------
+# Build ROM:
+cd ~/cm12.1
+source build/envsetup.sh
+brunch cm_d10f-userdebug
