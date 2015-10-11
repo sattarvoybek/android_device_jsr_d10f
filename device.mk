@@ -205,7 +205,6 @@ PRODUCT_PACKAGES += JSR_Settings
     
 # Ramdisk
 PRODUCT_PACKAGES += \
-    fstab.d10f \
     fstab.int \
     fstab.sd \
     init.d10f.rc \
