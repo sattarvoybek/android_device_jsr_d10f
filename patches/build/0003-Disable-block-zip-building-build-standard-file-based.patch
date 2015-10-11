@@ -1,0 +1,25 @@
+From d241b9e01b34c40fa82de1fe6b45fa7b3a63bd58 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sat, 22 Aug 2015 03:21:25 +0300
+Subject: [PATCH] Disable block zip building, build standard file-based zip
+
+Change-Id: Idf77b40f398a69f9f0a55204e64841e5995f5f48
+---
+ core/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/core/Makefile b/core/Makefile
+index 382116d..8777a78 100644
+--- a/core/Makefile
++++ b/core/Makefile
+@@ -1717,7 +1717,6 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
+ 	@echo -e ${CL_YLW}"Package OTA:"${CL_RST}" $@"
+ 	$(hide) MKBOOTIMG=$(MKBOOTIMG) \
+ 	   $(OTA_FROM_TARGET_SCRIPT) -v \
+-	   --block \
+ 	   $(if $(WITH_LZMA_OTA), -z) \
+ 	   -p $(HOST_OUT) \
+ 	   -k $(KEY_CERT_PAIR) \
+-- 
+1.9.1
+
