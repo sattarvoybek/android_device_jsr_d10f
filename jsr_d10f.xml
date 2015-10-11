@@ -10,4 +10,5 @@
   <project name="omnirom/android_packages_apps_OpenDelta"           path="packages/apps/OpenDelta"        remote="github" revision="android-5.1" />
   <project name="omnirom/android_bootable_recovery"                 path="bootable/recovery-twrp"         remote="github" revision="android-5.1" />
 
- </manifest>
+  <project name="CyanogenMod/android_packages_apps_Torch"           path="packages/apps/Torch"            remote="github" revision="cm-12.0"/>
+</manifest>

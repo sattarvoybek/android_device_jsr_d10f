@@ -42,6 +42,16 @@ else
 fi
 croot
 
+cd packages/apps/Torch
+if grep -q android.hardware.ITorchService src/net/cactii/flash2/FlashDevice.java ; then
+    git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0001-Revert-Torch-notify-TorchService-of-torch-state-when.patch || git am --abort
+    git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0002-Revert-Make-torch-shutdown-by-camera-usage-work-prop.patch || git am --abort
+    git am ../../../device/jsr/d10f/patches/packages/apps/Torch/0003-Revert-Torch-signal-to-framework-TorchService-not-to.patch || git am --abort
+else
+    echo '[torch] src/net/cactii/flash2/FlashDevice.java already patched';
+fi
+croot
+
 sh device/jsr/d10f/update-overlay.sh
 rm -f out/target/product/d10f/system/build.prop
 
