@@ -91,6 +91,15 @@ else
 fi
 croot
 
+cd system/vold
+if grep -q "exfat.ko" Exfat.cpp
+then
+    echo '[Vold] Exfat kernel driver support already patched';
+else
+    git am ../../device/jsr/d10f/patches/system/vold/0001-EXFAT-Use-kernel-driver-instead-of-FUSE-driver.patch || git am --abort
+fi
+croot
+
 sh device/jsr/d10f/update-overlay.sh
 rm -f out/target/product/d10f/system/build.prop
 
