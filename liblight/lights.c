@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project.
- * Copyright (C) 2012-2014, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2014 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +15,30 @@
  */
 
 
-<<<<<<< HEAD
-// #define LOG_NDEBUG 0
-=======
 //#define LOG_NDEBUG 0
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 
 #include <cutils/log.h>
-
+#include <cutils/properties.h>
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <math.h>
 
 #include <sys/ioctl.h>
 #include <sys/types.h>
 
 #include <hardware/lights.h>
 
-#ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
-#endif
-#ifndef max
-#define max(a,b) ((a)<(b)?(b):(a))
-#endif
-
-<<<<<<< HEAD
 /******************************************************************************/
-=======
+
 #ifndef LIGHTS_HARDWARE_MODULE_ID
 #define LIGHTS_HARDWARE_MODULE_ID "lights"
 #endif
 
 #define MAX_PATH_SIZE 80
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -64,12 +51,6 @@ char const*const RED_LED_FILE
 
 char const*const GREEN_LED_FILE
         = "/sys/class/leds/green/brightness";
-<<<<<<< HEAD
-
-char const*const BLUE_LED_FILE
-        = "/sys/class/leds/blue/brightness";
-=======
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 
 char const*const BLUE_LED_FILE
         = "/sys/class/leds/blue/brightness";
@@ -77,47 +58,14 @@ char const*const BLUE_LED_FILE
 char const*const LCD_FILE
         = "/sys/class/leds/lcd-backlight/brightness";
 
-<<<<<<< HEAD
-=======
 char const*const BUTTON_FILE
         = "/sys/class/leds/button-backlight/brightness";
 
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 char const*const RED_BLINK_FILE
         = "/sys/class/leds/red/blink";
 
 char const*const GREEN_BLINK_FILE
         = "/sys/class/leds/green/blink";
-<<<<<<< HEAD
-
-char const*const BLUE_BLINK_FILE
-        = "/sys/class/leds/blue/blink";
-
-char const*const RED_RAMP_MS_FILE
-        = "/sys/class/leds/red/ramp_step_ms";
-
-char const*const GREEN_RAMP_MS_FILE
-        = "/sys/class/leds/green/ramp_step_ms";
-
-char const*const BLUE_RAMP_MS_FILE
-        = "/sys/class/leds/blue/ramp_step_ms";
-
-char const*const RED_DUTY_STEPS_FILE
-        = "/sys/class/leds/red/duty_pcts";
-
-char const*const GREEN_DUTY_STEPS_FILE
-        = "/sys/class/leds/green/duty_pcts";
-
-char const*const BLUE_DUTY_STEPS_FILE
-        = "/sys/class/leds/blue/duty_pcts";
-
-// Number of steps to use in the duty array
-#define LED_DUTY_STEPS       60
-
-// Brightness ramp up/down time for blinking
-#define LED_RAMP_MS          48
-
-=======
         
 char const*const BLUE_BLINK_FILE
         = "/sys/class/leds/blue/blink";
@@ -125,7 +73,6 @@ char const*const BLUE_BLINK_FILE
 char const*const BATTERY_STATUS
         = "/sys/class/power_supply/battery/status"; 
         
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 /**
  * device methods
  */
@@ -140,17 +87,18 @@ static int already_warned = 0;
 static int already_warn_2 = 0;
 
 static int
-write_string(const char *path, const char *buffer)
+write_int(char const* path, int value)
 {
     int fd = open(path, O_RDWR);
     if (fd >= 0) {
-        int bytes = strlen(buffer);
+        char buffer[20];
+        int bytes = sprintf(buffer, "%d\n", value);
         int amt = write(fd, buffer, bytes);
         close(fd);
         return amt == -1 ? -errno : 0;
     } else {
         if (already_warned == 0) {
-            ALOGE("write_string failed to open %s (%s)\n", path, strerror(errno));
+            ALOGE("write_int failed to open %s\n", path);
             already_warned = 1;
         }
         return -errno;
@@ -158,19 +106,6 @@ write_string(const char *path, const char *buffer)
 }
 
 static int
-<<<<<<< HEAD
-write_int(const char *path, int value)
-{
-    char buffer[20];
-    sprintf(buffer, "%d\n", value);
-    return write_string(path, buffer);
-}
-
-static int
-is_lit(struct light_state_t const* state)
-{
-    return state->color & 0x00ffffff;
-=======
 is_lit(void)
 {
     char buf[24];
@@ -194,7 +129,6 @@ is_lit(void)
     if (strcmp(buf, "Full") == 0)
       return 1;
     return 0;
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 }
 
 static int
@@ -224,13 +158,8 @@ static int
 set_speaker_light_locked(struct light_device_t* dev,
         struct light_state_t const* state)
 {
-<<<<<<< HEAD
-    int len;
-    int red, green, blue;
-=======
     int red, green, blue;
     int blink;
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
     int onMS, offMS;
     unsigned int colorRGB;
 
@@ -248,60 +177,13 @@ set_speaker_light_locked(struct light_device_t* dev,
 
     colorRGB = state->color;
 
-<<<<<<< HEAD
-#if 0
-    ALOGD("set_speaker_light_locked mode %d, colorRGB=%08X, onMS=%d, offMS=%d\n",
-            state->flashMode, colorRGB, onMS, offMS);
-#endif
-=======
     ALOGD("set_speaker_light_locked: mode %d, colorRGB=%08X, onMS=%d, offMS=%d\n",
             state->flashMode, colorRGB, onMS, offMS);
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 
     red = (colorRGB >> 16) & 0xFF;
     green = (colorRGB >> 8) & 0xFF;
     blue = colorRGB & 0xFF;
 
-<<<<<<< HEAD
-    write_int(RED_LED_FILE, red);
-    write_int(GREEN_LED_FILE, green);
-    write_int(BLUE_LED_FILE, blue);
-
-    if (onMS > 0 && offMS > 0) {
-        char dutystr[(3+1)*LED_DUTY_STEPS+1];
-        char* p = dutystr;
-        int stepMS;
-        int n;
-
-        onMS = max(onMS, LED_RAMP_MS);
-        offMS = max(offMS, LED_RAMP_MS);
-        stepMS = (onMS+offMS)/LED_DUTY_STEPS;
-
-        p += sprintf(p, "0");
-        for (n = 1; n < (onMS/stepMS); ++n) {
-            p += sprintf(p, ",%d", min((100*n*stepMS)/LED_RAMP_MS, 100));
-        }
-        for (n = 0; n < LED_DUTY_STEPS-(onMS/stepMS); ++n) {
-            p += sprintf(p, ",%d", 100 - min((100*n*stepMS)/LED_RAMP_MS, 100));
-        }
-        p += sprintf(p, "\n");
-
-        if (red) {
-            write_string(RED_DUTY_STEPS_FILE, dutystr);
-            write_int(RED_RAMP_MS_FILE, stepMS);
-            write_int(RED_BLINK_FILE, 1);
-        }
-        if (green) {
-            write_string(GREEN_DUTY_STEPS_FILE, dutystr);
-            write_int(GREEN_RAMP_MS_FILE, stepMS);
-            write_int(GREEN_BLINK_FILE, 1);
-        }
-        if (blue) {
-            write_string(BLUE_DUTY_STEPS_FILE, dutystr);
-            write_int(BLUE_RAMP_MS_FILE, stepMS);
-            write_int(BLUE_BLINK_FILE, 1);
-        }
-=======
     blink = state->flashMode;
 
     if (red == 255 && green == 255 && blue == 0) {
@@ -338,7 +220,6 @@ set_speaker_light_locked(struct light_device_t* dev,
       write_int(BLUE_BLINK_FILE, blue ? 1 : 0);
       write_int(BLUE_LED_FILE, blue);
       return 0;
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
     }
 
     write_int(BLUE_LED_FILE, 0);
@@ -350,14 +231,6 @@ set_speaker_light_locked(struct light_device_t* dev,
 static void
 handle_speaker_battery_locked(struct light_device_t* dev)
 {
-<<<<<<< HEAD
-    if (is_lit(&g_attention)) {
-        set_speaker_light_locked(dev, &g_attention);
-    } else if (is_lit(&g_notification)) {
-        set_speaker_light_locked(dev, &g_notification);
-    } else {
-        set_speaker_light_locked(dev, &g_battery);
-=======
     int lit = is_lit();
     struct light_state_t * x = &g_notification;
     if (!lit && (g_battery.color & 0xFFFFFF)) {
@@ -365,7 +238,6 @@ handle_speaker_battery_locked(struct light_device_t* dev)
     } else
     if (lit && !(g_notification.color & 0xFFFFFF)) {
       x = &g_battery;
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
     }
     set_speaker_light_locked(dev, x);
 }
@@ -398,16 +270,6 @@ set_light_attention(struct light_device_t* dev,
 }
 
 static int
-<<<<<<< HEAD
-set_light_battery(struct light_device_t* dev,
-        struct light_state_t const* state)
-{
-    pthread_mutex_lock(&g_lock);
-    g_battery = *state;
-    handle_speaker_battery_locked(dev);
-    pthread_mutex_unlock(&g_lock);
-    return 0;
-=======
 set_light_buttons(struct light_device_t* dev,
         struct light_state_t const* state)
 {
@@ -420,7 +282,6 @@ set_light_buttons(struct light_device_t* dev,
     //  state->flashMode, state->color, state->flashOnMS, state->flashOffMS, err);
     pthread_mutex_unlock(&g_lock);
     return err;
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
 }
 
 static int
@@ -460,13 +321,6 @@ static int open_lights(const struct hw_module_t* module, char const* name,
 
     if (0 == strcmp(LIGHT_ID_BACKLIGHT, name))
         set_light = set_light_backlight;
-<<<<<<< HEAD
-    else if (0 == strcmp(LIGHT_ID_NOTIFICATIONS, name))
-        set_light = set_light_notifications;
-    else if (0 == strcmp(LIGHT_ID_BATTERY, name))
-        set_light = set_light_battery;
-=======
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
     else if (0 == strcmp(LIGHT_ID_ATTENTION, name))
         set_light = set_light_attention;
     else if (0 == strcmp(LIGHT_ID_NOTIFICATIONS, name))
@@ -481,10 +335,6 @@ static int open_lights(const struct hw_module_t* module, char const* name,
     pthread_once(&g_init, init_globals);
 
     struct light_device_t *dev = malloc(sizeof(struct light_device_t));
-
-    if(!dev)
-        return -ENOMEM;
-
     memset(dev, 0, sizeof(*dev));
 
     dev->common.tag = HARDWARE_DEVICE_TAG;
@@ -509,11 +359,7 @@ struct hw_module_t HAL_MODULE_INFO_SYM = {
     .version_major = 1,
     .version_minor = 0,
     .id = LIGHTS_HARDWARE_MODULE_ID,
-<<<<<<< HEAD
-    .name = "armani lights module",
-=======
     .name = "JSR lights Module",
->>>>>>> ccd4bbe... Fix button-backlight (support tricolor led bct3253)
     .author = "Google, Inc., CyanogenMod",
     .methods = &lights_module_methods,
 };
