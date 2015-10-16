@@ -205,8 +205,8 @@ PRODUCT_PACKAGES += JSR_Settings
     
 # Ramdisk
 PRODUCT_PACKAGES += \
-    fstab.int \
-    fstab.sd \
+    fstab.d10f \
+    fstab.d10f_sd \
     init.d10f.rc \
     init.d10f.usb.rc \
     ueventd.d10f.rc
@@ -214,6 +214,9 @@ PRODUCT_PACKAGES += \
 # Sensors
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sensor_def_qcomdev.conf:system/etc/sensor_def_qcomdev.conf
+
+PRODUCT_PACKAGES += \
+    libsensors
 
 # Thermal
 PRODUCT_COPY_FILES += \
