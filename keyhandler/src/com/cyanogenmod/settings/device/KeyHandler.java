@@ -81,17 +81,20 @@ public class KeyHandler implements DeviceKeyHandler
     case 249:
       if (event.getAction() == KeyEvent.ACTION_DOWN) {
         //Slog.i(TAG, "FUNC key down " + event.getRepeatCount());
-        btn_func_timestamp = java.lang.System.currentTimeMillis();
+        if (btn_func_timestamp == 0){
+          btn_func_timestamp = java.lang.System.currentTimeMillis();
+          Slog.i(TAG, "FUNC key down at "+ btn_func_timestamp);
+        }
         //consumed = true;
       }
       if (event.getAction() == KeyEvent.ACTION_UP && btn_func_timestamp > 0) {
         String uri;
         long new_timestamp = java.lang.System.currentTimeMillis();
         if (new_timestamp - btn_func_timestamp < BTN_FUNC_TIMESTAMP_DELTA) {
-          Slog.i(TAG, "FUNC key up fast");
+          Slog.i(TAG, "FUNC key up fast at "+ new_timestamp +", delta: "+ (new_timestamp - btn_func_timestamp));
           uri = btn_func_app;
         } else {
-          Slog.i(TAG, "FUNC key up long");
+          Slog.i(TAG, "FUNC key up long at "+ new_timestamp +", delta: "+ (new_timestamp - btn_func_timestamp));
           uri = btn_func_app2;
         }
         btn_func_timestamp = 0;
