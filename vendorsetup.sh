@@ -1,6 +1,3 @@
-/bin/cp device/jsr/d10f/post_process_props_hook.py build/tools/
-chmod  0775 build/tools/post_process_props_hook.py
-
 cd build
 if grep -q "UTC%z" tools/buildinfo.sh
 then
