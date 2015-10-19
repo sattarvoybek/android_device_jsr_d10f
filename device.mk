@@ -203,6 +203,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Custom APK
 PRODUCT_PACKAGES += JSR_Settings    
     
+# OpenDelta
+PRODUCT_PACKAGES += OpenDelta
+
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.d10f \
