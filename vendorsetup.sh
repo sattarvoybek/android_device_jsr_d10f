@@ -39,6 +39,11 @@ then
 else
     git am ../../device/jsr/d10f/patches/frameworks/base/0004-POWER-Read-battery-capacity-from-sysfs.patch || git am --abort
 fi
+if grep -q "DEFAULT_THRESHOLD_MAX_BYTES = 10" core/java/android/os/storage/StorageManager.java; then
+    echo '[storages] DEFAULT_THRESHOLD_MAX_BYTES in Frameworks/base already patched';
+else
+    git am ../../device/jsr/d10f/patches/frameworks/base/0005-STORAGES-Reduce-DEFAULT_THRESHOLD_MAX_BYTES-500MB-10.patch || git am --abort
+fi
 croot
 
 cd frameworks/opt/net/wifi
