@@ -141,6 +141,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     lights.msm8226
 
+# LiveWallpapers
+PRODUCT_PACKAGES += \
+    LiveWallpapers \
+    LiveWallpapersPicker \
+
 # KeyHandler
 PRODUCT_PACKAGES += \
     com.cyanogenmod.keyhandler
