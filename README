@@ -24,7 +24,7 @@ sudo apt-get install dpkg-dev
 sudo apt-get install git gnupg flex bison gperf build-essential \
   zip curl libc6-dev libncurses5-dev:i386 x11proto-core-dev \
   libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
-  libgl1-mesa-dev g++-multilib mingw32 tofrodos \
+  libgl1-mesa-dev g++-multilib tofrodos \
   python-markdown libxml2-utils xsltproc zlib1g-dev:i386
 
 sudo ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
@@ -32,6 +32,7 @@ sudo ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL
 --------------------------
 # Install repo tool:
 sudo apt-get install curl
+mkdir ~/bin/
 sudo curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
 echo 'PATH=~/bin:$PATH' >> ~/.bashrc
@@ -45,11 +46,11 @@ git config --global user.email "user@gmail.com"
 git config --global user.name "github_account"
 repo init -u git://github.com/CyanogenMod/android.git -b cm-12.1
 mkdir -p .repo/local_manifests
-wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-12.1_reloaded/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
+wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-12.1/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
 repo sync
 
 --------------------------
-# Generate keys:
+# Generate keys (without password):
 cd ~/cm12.1
 mkdir -p vendor/jsr/security/
 development/tools/make_key vendor/jsr/security/releasekey '/CN=Your Name'
