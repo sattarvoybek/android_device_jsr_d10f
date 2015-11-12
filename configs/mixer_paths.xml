@@ -788,7 +788,6 @@
         <ctl name="RX4 MIX1 INP1" value="RX1" />
         <ctl name="SPK DAC Switch" value="1" />
         <ctl name="COMP0 Switch" value="1" />
-        <ctl name="RX4 Digital Volume" value="84" />
         <ctl name="HPHL DAC Switch" value="speaker" />
 
     </path>
@@ -851,7 +850,6 @@
     <path name="speaker-mic">
         <path name="adc3" />
         <ctl name="ADC1 Volume" value="13" />
-        <ctl name="DEC1 Volume" value="84" />
     </path>
 
     <path name="handset">
@@ -865,12 +863,8 @@
     </path>
 
     <path name="handset-mic">
-        <ctl name="AIF1_CAP Mixer SLIM TX1" value="1"/>
-        <ctl name="SLIM_0_TX Channels" value="One" />
-        <ctl name="SLIM TX1 MUX" value="DEC1" />
-        <ctl name="DEC1 MUX" value="ADC1" />
-        <ctl name="ADC1 Volume" value="14" /> <!-- Was 10, default volume is 12. S-trace. -->
-        <ctl name="DEC1 Volume" value="84" />
+        <path name="adc1" />
+        <ctl name="ADC1 Volume" value="14" />
     </path>
 
     <path name="anc-handset">
@@ -903,10 +897,6 @@
         <!-- This path used while playing music via wired headphones or wired headset -->
         <path name="headphones-lite" />
         <ctl name="COMP1 Switch" value="1" />
-        <ctl name="HPHL Volume" value="20" />
-        <ctl name="HPHR Volume" value="20" />
-        <ctl name="RX1 Digital Volume" value="84" />
-        <ctl name="RX2 Digital Volume" value="84" />
     </path>
 
     <path name="headphones-lite-skuf">
@@ -914,13 +904,8 @@
     </path>
 
     <path name="headset-mic">
-        <!-- This path used while recording sound via wired headset microphone-->
-        <ctl name="AIF1_CAP Mixer SLIM TX1" value="1"/>
-        <ctl name="SLIM_0_TX Channels" value="One" />
-        <ctl name="SLIM TX1 MUX" value="DEC1" />
-        <ctl name="DEC1 MUX" value="ADC2" />
+        <path name="adc2" />
         <ctl name="ADC2 Volume" value="13" />
-        <ctl name="DEC1 Volume" value="84" />
     </path>
 
     <path name="voice-handset">
@@ -936,11 +921,7 @@
 
     <path name="voice-speaker">
         <!-- This path used to play sound while making loudspeaker call with bare naked phone (without any accesoires) -->
-        <ctl name="SLIM RX1 MUX" value="AIF1_PB" />
-        <ctl name="SLIM_0_RX Channels" value="One" />
-        <ctl name="RX4 MIX1 INP1" value="RX1" />
-        <ctl name="SPK DAC Switch" value="1" />
-        <ctl name="COMP0 Switch" value="1" />
+        <path name="speaker" />
         <ctl name="SPK DRV Volume" value="8" />
         <ctl name="RX1 Digital Volume" value="99" />
         <ctl name="RX4 Digital Volume" value="99" /> <!-- Should I set this to 84? S-trace. -->
@@ -971,11 +952,12 @@
 
     <path name="speaker-and-headphones">
         <path name="headphones" />
+        <ctl name="RX1 Digital Volume" value="68" />
+        <ctl name="RX2 Digital Volume" value="68" />
         <ctl name="RX4 MIX1 INP1" value="RX1" />
         <ctl name="RX4 MIX1 INP2" value="RX2" />
         <ctl name="SPK DAC Switch" value="1" />
         <ctl name="COMP0 Switch" value="1" />
-        <ctl name="RX4 Digital Volume" value="84" /> <!-- Is this really neccessary? Default volume is 84. S-trace. -->
     </path>
 
     <path name="speaker-and-headphones-lite">
