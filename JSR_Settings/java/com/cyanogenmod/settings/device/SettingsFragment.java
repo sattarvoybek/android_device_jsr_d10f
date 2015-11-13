@@ -1,5 +1,7 @@
 package com.cyanogenmod.settings.device;
 
+import android.content.Intent;
+import android.content.ComponentName;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemProperties;
@@ -10,7 +12,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.widget.Toast;
-import android.util.Slog;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -30,6 +32,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     
     EditTextPreferenceEx btn_func_app;
     EditTextPreferenceEx btn_func_app2;
+    Preference btn_g_cal;
     
     private class SysfsValue {
         private String fileName;
@@ -87,6 +90,21 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         btn_func_app2 = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP2);
         btn_func_app2.setOnPreferenceChangeListener(this);
+        
+        btn_g_cal = (Preference)findPreference("btn_g_cal");
+        btn_g_cal.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference pref) {
+                if (pref.getKey().equals("btn_g_cal")) {
+                    Intent callGCal = new Intent();
+                    callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest", 
+                            "com.qualcomm.sensors.qsensortest.GravityCalibrationActivity"));
+                    startActivity(callGCal);
+                }
+                return true;
+            }
+        });
     }
 
     @Override

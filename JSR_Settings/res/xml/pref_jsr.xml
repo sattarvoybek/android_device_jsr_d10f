@@ -35,4 +35,12 @@
             android:summary="%s"
             />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/cal_category">
+        <Preference
+            android:key="btn_g_cal"
+            android:title="@string/btn_g_cal"
+            android:summary="@string/btn_g_cal_hint"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>

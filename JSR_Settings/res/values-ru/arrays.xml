@@ -4,10 +4,6 @@
         <item>Меню - Домой - Назад</item>
         <item>Назад - Домой - Меню</item>
     </string-array>
-    <string-array name="main_storage_names">
-        <item>Внутренняя память</item>
-        <item>SD карта</item>
-    </string-array>
     <string-array name="zram_names">
         <item>64 Мб</item>
         <item>128 Мб</item>
@@ -17,5 +13,11 @@
     </string-array>
     <string-array name="chargelevel_names">
         <item>Автоопределение</item>
+    </string-array>
+    
+    <!-- Implemented -->
+    <string-array name="main_storage_names">
+        <item>Внутренняя память</item>
+        <item>SD карта</item>
     </string-array>
 </resources>

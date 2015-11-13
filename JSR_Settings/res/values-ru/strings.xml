@@ -4,7 +4,6 @@
     <string name="prox_cal">Калибровка датчика приближения</string>
     <string name="prox_naked_cal">Первичная калибровка датчика приближения</string>
     <string name="port_enabler">Диагностический порт</string>
-    <string name="main_storage_title">Основная память</string>
     <string name="keys_order_title">Порядок кнопок тачскрина</string>
     <string name="reboot_needed">Перезагрузите телефон для применения настроек.</string>
     <string name="fail">Неизвестная ошибка.</string>
@@ -13,7 +12,6 @@
     <string name="palm2sleep_title">Palm2sleep</string>
     <string name="touchscreen_category">Сенсорный экран</string>
     <string name="charger_category">Зарядное</string>
-    <string name="storages_category">Память</string>
     <string name="tuning_category">Производительность</string>
     <string name="zram_title">ZRam</string>
     <string name="cpugov">Управление частотой процессора</string>
@@ -49,10 +47,18 @@
     <string name="pocket_gesture_title">Карман</string>
     <string name="pocket_gesture_summary">Показывать уведомления после извлечения телефона из кармана</string>
 
+    <!-- Implemented -->
+    <string name="storages_category">Память</string>
+    <string name="main_storage_title">Основная память</string>
+    
     <string name="btn_func_category">Дополнительная кнопка</string>
     <string name="btn_func_app">Действие на быстрое нажатие</string>
     <string name="btn_func_hint">без действия</string>
     <string name="btn_func_app2">Действие на длительное нажатие</string>
     <string name="btn_func_hint2">без действия</string>
+    
+    <string name="cal_category">Калибровка</string>
+    <string name="btn_g_cal">Калибровка G-сенсора</string>
+    <string name="btn_g_cal_hint">Нажмите для открытия окна калибровки</string>
 
 </resources>
