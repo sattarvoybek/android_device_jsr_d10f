@@ -137,6 +137,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     keystore.msm8226
 
+# KCAL color calibration daemon
+PRODUCT_PACKAGES += \
+    kcal-pp-daemon
+
 # Lights
 PRODUCT_PACKAGES += \
     lights.msm8226
