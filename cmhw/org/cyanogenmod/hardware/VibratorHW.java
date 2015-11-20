@@ -21,28 +21,30 @@ import java.io.File;
 
 public class VibratorHW {
 
-    private static String AMP_PATH = "/sys/class/timed_output/vibrator/amp";
+    private static String VTG_MIN_PATH = "/sys/class/timed_output/vibrator/vtg_min";
+    private static String VTG_MAX_PATH = "/sys/class/timed_output/vibrator/vtg_max";
+    private static String VTG_LEVEL_PATH = "/sys/class/timed_output/vibrator/vtg_level";
 
     public static boolean isSupported() {
-        return new File(AMP_PATH).exists();
+        return new File(VTG_LEVEL_PATH).exists();
     }
 
     public static int getMaxIntensity()  {
-        return 100;
+        return Integer.parseInt(FileUtils.readOneLine(VTG_MAX_PATH));
     }
     public static int getMinIntensity()  {
-        return 80;
+        return Integer.parseInt(FileUtils.readOneLine(VTG_MIN_PATH));
     }
     public static int getWarningThreshold()  {
         return -1;
     }
     public static int getCurIntensity()  {
-        return Integer.parseInt(FileUtils.readOneLine(AMP_PATH));
+        return Integer.parseInt(FileUtils.readOneLine(VTG_LEVEL_PATH));
     }
     public static int getDefaultIntensity()  {
-        return 90;
+        return Integer.parseInt(FileUtils.readOneLine(VTG_MAX_PATH));
     }
     public static boolean setIntensity(int intensity)  {
-        return FileUtils.writeLine(AMP_PATH, String.valueOf(intensity));
+        return FileUtils.writeLine(VTG_LEVEL_PATH, String.valueOf(intensity));
     }
 }
