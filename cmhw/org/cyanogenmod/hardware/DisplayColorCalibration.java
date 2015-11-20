@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The CyanogenMod Project
+ * Copyright (C) 2014 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,16 @@
 
 package org.cyanogenmod.hardware;
 
+import android.util.Log;
+
 import java.io.File;
 import java.util.Scanner;
 import org.cyanogenmod.hardware.util.FileUtils;
 
 public class DisplayColorCalibration {
-    private static final String COLOR_FILE = "/sys/class/graphics/fb0/rgb";
+    private static final String COLOR_FILE = "/sys/devices/platform/kcal_ctrl.0/kcal";
+    private static final String COLOR_FILE_CTRL = "/sys/devices/platform/kcal_ctrl.0/kcal_enable";
+    private static final String COLOR_MIN = "/sys/devices/platform/kcal_ctrl.0/kcal_min";
 
     public static boolean isSupported() {
         File f = new File(COLOR_FILE);
@@ -29,11 +33,18 @@ public class DisplayColorCalibration {
     }
 
     public static int getMaxValue()  {
-        return 32768;
+        return 255;
     }
 
     public static int getMinValue()  {
-        return 255;
+        int ret = 35;  // 35 is a good default minimum
+        try {
+            Scanner s = new Scanner(new File(COLOR_MIN));
+            ret = s.nextInt();
+            s.close();
+        } catch (Exception ex) {}
+
+        return ret;
     }
 
     public static int getDefValue() {
@@ -45,6 +56,18 @@ public class DisplayColorCalibration {
     }
 
     public static boolean setColors(String colors) {
-        return FileUtils.writeLine(COLOR_FILE, colors);
+        try {
+            Scanner s = new Scanner(new File(COLOR_FILE_CTRL));
+            int ret = s.nextInt();
+            s.close();
+	    if (ret != 1) {
+		Log.d("KCAL", "Enabling KCAL before setting colors!");
+		FileUtils.writeLine(COLOR_FILE_CTRL, "1");
+	    }
+	    if (!FileUtils.writeLine(COLOR_FILE, colors)) {
+		return false;
+	    }
+        } catch (Exception ex) {}
+    return true;
     }
 }
