@@ -28,9 +28,9 @@
     <ctl name="RX2 Digital Volume" value="84" />
     <ctl name="RX3 Digital Volume" value="84" />
     <ctl name="RX4 Digital Volume" value="84" />
-    <ctl name="ADC1 Volume" value="12" />
-    <ctl name="ADC2 Volume" value="12" />
-    <ctl name="ADC3 Volume" value="12" />
+    <ctl name="ADC1 Volume" value="12" /> <!-- Main (call) phone microphone -->
+    <ctl name="ADC2 Volume" value="12" /> <!-- Wired headset microphone -->
+    <ctl name="ADC3 Volume" value="12" /> <!-- Aux (camera) phone microphone -->
     <ctl name="ADC4 Volume" value="0" />
     <ctl name="ADC5 Volume" value="0" />
     <ctl name="DEC1 Volume" value="84" />
@@ -747,6 +747,7 @@
 
     <!-- These are actual sound device specific mixer settings -->
     <path name="adc1">
+        <!--This path used in other paths for audio recording from main device microphone (at bottom edge of display) -->
         <ctl name="AIF1_CAP Mixer SLIM TX1" value="1"/>
         <ctl name="SLIM_0_TX Channels" value="One" />
         <ctl name="SLIM TX1 MUX" value="DEC1" />
@@ -755,6 +756,7 @@
     </path>
 
     <path name="adc2">
+        <!--This path used in other paths for audio recording from wired headset microphone -->
         <ctl name="AIF1_CAP Mixer SLIM TX1" value="1"/>
         <ctl name="SLIM_0_TX Channels" value="One" />
         <ctl name="SLIM TX1 MUX" value="DEC1" />
@@ -763,6 +765,7 @@
     </path>
 
     <path name="adc3">
+        <!--This path used in other paths for audio recording from aux device microphone (near camera))-->
         <ctl name="AIF1_CAP Mixer SLIM TX1" value="1"/>
         <ctl name="SLIM_0_TX Channels" value="One" />
         <ctl name="SLIM TX1 MUX" value="DEC2" />
@@ -779,6 +782,7 @@
     </path>
 
     <path name="speaker">
+        <!-- This path used (in other paths too) while playing sounds via phone media speaker -->
         <ctl name="SLIM RX1 MUX" value="AIF1_PB" />
         <ctl name="SLIM_0_RX Channels" value="One" />
         <ctl name="RX4 MIX1 INP1" value="RX1" />
@@ -851,6 +855,7 @@
     </path>
 
     <path name="handset">
+        <!-- This path used (in other paths too) while playing sounds via phone call speaker -->
         <ctl name="SLIM RX1 MUX" value="AIF1_PB" />
         <ctl name="SLIM_0_RX Channels" value="One" />
         <ctl name="RX1 MIX1 INP1" value="RX1" />
@@ -895,6 +900,7 @@
     </path>
 
     <path name="headphones">
+        <!-- This path used while playing music via wired headphones or wired headset -->
         <path name="headphones-lite" />
         <ctl name="COMP1 Switch" value="1" />
         <ctl name="HPHL Volume" value="20" />
@@ -908,6 +914,7 @@
     </path>
 
     <path name="headset-mic">
+        <!-- This path used while recording sound via wired headset microphone-->
         <ctl name="AIF1_CAP Mixer SLIM TX1" value="1"/>
         <ctl name="SLIM_0_TX Channels" value="One" />
         <ctl name="SLIM TX1 MUX" value="DEC1" />
@@ -917,6 +924,7 @@
     </path>
 
     <path name="voice-handset">
+        <!-- This path used to play sound while making usual call with bare naked phone (without any accesoires) -->
         <path name="handset" />
         <ctl name="EAR PA Gain" value="POS_6_DB" /> <!-- Should I discard this and set next to 92? S-trace. -->
         <ctl name="RX1 Digital Volume" value="86" /> <!-- Was 84, default volume is 84. S-trace. -->
@@ -927,6 +935,7 @@
     </path>
 
     <path name="voice-speaker">
+        <!-- This path used to play sound while making loudspeaker call with bare naked phone (without any accesoires) -->
         <ctl name="SLIM RX1 MUX" value="AIF1_PB" />
         <ctl name="SLIM_0_RX Channels" value="One" />
         <ctl name="RX4 MIX1 INP1" value="RX1" />
@@ -938,10 +947,12 @@
     </path>
 
     <path name="voice-speaker-mic">
+        <!-- This path used to record sound while making loudspeaker call with bare naked phone (without any accesoires). ANC is not used for this type of call -->
         <path name="speaker-mic" />
     </path>
 
     <path name="voice-headphones">
+        <!-- This path used to play sound while making usual call with wired headset connected -->
         <path name="headphones" />
     </path>
 
@@ -954,6 +965,7 @@
     </path>
 
     <path name="voice-headset-mic">
+        <!-- This path used to record sound while making usual call with wired headset connected -->
         <path name="headset-mic" />
     </path>
 
@@ -963,6 +975,7 @@
         <ctl name="RX4 MIX1 INP2" value="RX2" />
         <ctl name="SPK DAC Switch" value="1" />
         <ctl name="COMP0 Switch" value="1" />
+        <ctl name="RX4 Digital Volume" value="84" /> <!-- Is this really neccessary? Default volume is 84. S-trace. -->
     </path>
 
     <path name="speaker-and-headphones-lite">
@@ -1088,6 +1101,7 @@
     </path>
 
     <path name="camcorder-mic">
+        <!-- This path used in Camera (and maybe other) apps while stereo recording from device microphones (ADC1/DEC1 is left channel (main microphone at bottom edge of display), ADC3/DEC2 is right channel (aux microphone near camera)) -->
         <ctl name="AIF1_CAP Mixer SLIM TX1" value="1" />
         <ctl name="AIF1_CAP Mixer SLIM TX2" value="1" />
         <ctl name="SLIM TX1 MUX" value="DEC1" />
@@ -1161,6 +1175,7 @@
     </path>
 
     <path name="voice-dmic-ef">
+        <!-- This path used to record sound while making usual call with bare naked phone (without any accesoires) or with wired headset (without microphone) connected. TODO: Is this path used for Active Noise Cancelling (ANC)? -->
         <path name="dmic-endfire" />
     </path>
 
@@ -1177,6 +1192,7 @@
     </path>
 
     <path name="handset-stereo-dmic-ef">
+        <!-- This path used in Dictaphone (and maybe other) apps while stereo recording from device microphones (ADC1/DEC1 is left channel (main microphone at bottom edge of display), ADC3/DEC3 is right channel (aux microphone near camera)) -->
         <path name="speaker-dmic-endfire" />
         <ctl name="ADC1 Volume" value="19" />
         <ctl name="ADC3 Volume" value="19" /> <!-- Was 13, default volume is 12. S-trace. -->
