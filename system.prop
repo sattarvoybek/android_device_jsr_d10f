@@ -49,5 +49,3 @@ ro.telephony.call_ring.multiple=false
 # uncomment for change Int & Ext SDCard
 #persist.storages.planned_swap=1
 
-# OTA
-cm.updater.uri=http://ota.randomdroids.com/api
