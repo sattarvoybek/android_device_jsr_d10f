@@ -520,7 +520,7 @@ on property:sys.perf.profile=0
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 787200
     write /sys/devices/system/cpu/sched_mc_power_savings 2
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor powersave
-    write /sys/class/devfreq/qcom,cpubw.64/governor powersave
+    write /sys/class/devfreq/qcom,cpubw.57/governor powersave
     start mpdecision
 
 # Balanced
@@ -549,7 +549,7 @@ on property:sys.perf.profile=1
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1401600
     write /sys/devices/system/cpu/sched_mc_power_savings 1
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
-    write /sys/class/devfreq/qcom,cpubw.64/governor msm_cpufreq
+    write /sys/class/devfreq/qcom,cpubw.57/governor msm_cpufreq
     start mpdecision
 
 # Performance
@@ -568,4 +568,4 @@ on property:sys.perf.profile=2
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1401600
     write /sys/devices/system/cpu/sched_mc_power_savings 0
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
-    write /sys/class/devfreq/qcom,cpubw.64/governor performance
+    write /sys/class/devfreq/qcom,cpubw.57/governor performance
