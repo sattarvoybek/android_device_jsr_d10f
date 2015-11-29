@@ -3,7 +3,6 @@ echo "Applying patches"
 patches_path="$build_root/device/jsr/d10f/patches/"
 pushd "$patches_path" > /dev/null
 unset repos
-find -type f -name '*.patch'|cut -d / -f 2-|sort
 for patch in `find -type f -name '*.patch'|cut -d / -f 2-|sort`; do
 	# Strip patch title to get git commit title - git ignore [text] prefixes in beginning of patch title during git am
 	title=$(sed -rn "s/Subject: (\[[^]]+] *)*//p" "$patch")
@@ -14,25 +13,23 @@ for patch in `find -type f -name '*.patch'|cut -d / -f 2-|sort`; do
 	echo -n "Is $repo_to_patch patched for '$title' ?.. "
 	pushd "$build_root/$repo_to_patch" > /dev/null
 	if (git log |fgrep -qm1 "$title" ); then
-		echo Yes
+		echo -n Yes
 	  commit_hash=$(git log --oneline |fgrep -m1 "$title"|cut -d ' ' -f 1)
 	  if [ q"$commit_hash" != "q" ]; then
-	  	  echo -n "Checking if patch $patch matches commit $commit_hash... "
-	  	  commit_id=$(git format-patch -1 --stdout $commit_hash |git patch-id|cut -d ' ' -f 1)
-	  	  patch_id=$(git patch-id < $absolute_patch_path|cut -d ' ' -f 1)
-#	  	  grep -oPz -- '(?s)-- ?\n[0-9.]+\n' $absolute_patch_path
-	  	  if [ $commit_id = $patch_id ]; then 
-	  	  	  echo 'Yes, it matches'
-	  	  else
-	  	  	  echo 'NO! MISMATCH!'
-	  	  	  sed '0,/^$/d' $absolute_patch_path|head -n -3  > /tmp/patch
-	  	  	  git show --stat $commit_hash -p --pretty=format:%b > /tmp/commit
-	  	  	  diff -u /tmp/patch /tmp/commit
-	  	  	  rm /tmp/patch /tmp/commit
-	  	  	  echo 'Resetting branch!'
-	  	  	  git checkout $commit_hash~1
-	  	  	  git am $absolute_patch_path || git am --abort
-          	  fi
+		  commit_id=$(git format-patch -1 --stdout $commit_hash |git patch-id|cut -d ' ' -f 1)
+		  patch_id=$(git patch-id < $absolute_patch_path|cut -d ' ' -f 1)
+		  if [ "$commit_id" = "$patch_id" ]; then
+			  echo ', patch matches'
+		  else
+			  echo ', PATCH MISMATCH!'
+			  sed '0,/^$/d' $absolute_patch_path|head -n -3  > /tmp/patch
+			  git show --stat $commit_hash -p --pretty=format:%b > /tmp/commit
+			  diff -u /tmp/patch /tmp/commit
+			  rm /tmp/patch /tmp/commit
+			  echo ' Resetting branch!'
+			  git checkout $commit_hash~1
+			  git am $absolute_patch_path || git am --abort
+		  fi
 	else
 		echo "Unable to get commit hash for '$title'! Something went wrong!"
 		sleep 20
