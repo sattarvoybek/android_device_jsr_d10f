@@ -23,10 +23,10 @@ index 663809e..d46b505 100644
 +	(void)width;
 +
 +	/*
-+	 * In the future, calculate the size based on the w/h but just
-+	 * hardcode it for now since 8K satisfies all current usecases.
++	 * This VENUS_EXTRADATA_SIZE breaks video camera with HighScreen IIse
++	 * camera blobs and need to be set to zero (S-trace). Thanks OatIT
 +	 */
-+	return 8 * 1024;
++	return 0;
 +}
 +
  static inline unsigned int VENUS_Y_STRIDE(int color_fmt, int width)
