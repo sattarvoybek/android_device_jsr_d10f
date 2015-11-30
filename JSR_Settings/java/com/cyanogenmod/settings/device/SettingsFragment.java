@@ -97,10 +97,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             @Override
             public boolean onPreferenceClick(Preference pref) {
                 if (pref.getKey().equals("btn_g_cal")) {
-                    Intent callGCal = new Intent();
-                    callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest", 
-                            "com.qualcomm.sensors.qsensortest.GravityCalibrationActivity"));
-                    startActivity(callGCal);
+		    try {
+                        Intent callGCal = new Intent();
+                        callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest", 
+                                "com.qualcomm.sensors.qsensortest.GravityCalibrationActivity"));
+                        startActivity(callGCal);
+                    }
+                    catch(Exception ex) {
+			Log.e("JSR_settings", "Failed to start GravityCalibrationActivity: " + ex);
+			Toast.makeText(getActivity(), R.string.btn_g_cal_failure, Toast.LENGTH_LONG).show();
+                    }
                 }
                 return true;
             }

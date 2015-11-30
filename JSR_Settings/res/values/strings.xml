@@ -63,5 +63,6 @@
     <string name="cal_category">Calibration</string>
     <string name="btn_g_cal">G-sensor calibration</string>
     <string name="btn_g_cal_hint">Press to open calibration interface</string>
+    <string name="btn_g_cal_failure">Unable to start G-sensor calibration activity</string>
 
 </resources>
