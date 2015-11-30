@@ -16,8 +16,10 @@
 
 package org.cyanogenmod.hardware;
 
+import android.util.Log;
 import org.cyanogenmod.hardware.util.FileUtils;
 import java.io.File;
+import java.util.Scanner;
 
 public class VibratorHW {
 
@@ -30,21 +32,52 @@ public class VibratorHW {
     }
 
     public static int getMaxIntensity()  {
-        return Integer.parseInt(FileUtils.readOneLine(VTG_MAX_PATH));
+        int ret = 31;  // 31 is a default max value in kernel
+        try {
+            Scanner s = new Scanner(new File(VTG_MAX_PATH));
+            ret = s.nextInt();
+            s.close();
+        } catch (Exception ex) {
+	    Log.e("VibratorHW", "getMaxIntensity failed with " + ex);
+	}
+	return ret;
     }
     public static int getMinIntensity()  {
-        return Integer.parseInt(FileUtils.readOneLine(VTG_MIN_PATH));
+        int ret = 12;  // 12 is a default min value in kernel
+        try {
+            Scanner s = new Scanner(new File(VTG_MIN_PATH));
+            ret = s.nextInt();
+            s.close();
+        } catch (Exception ex) {
+	    Log.e("VibratorHW", "getMinIntensity failed with " + ex);
+	}
+	return ret;
     }
     public static int getWarningThreshold()  {
         return -1;
     }
     public static int getCurIntensity()  {
-        return Integer.parseInt(FileUtils.readOneLine(VTG_LEVEL_PATH));
+	int ret = getMaxIntensity();
+        try {
+            Scanner s = new Scanner(new File(VTG_LEVEL_PATH));
+            ret = s.nextInt();
+            s.close();
+        } catch (Exception ex) {
+	    Log.e("VibratorHW", "getCurIntensity failed with " + ex);
+	}
+	return ret;
     }
     public static int getDefaultIntensity()  {
-        return Integer.parseInt(FileUtils.readOneLine(VTG_MAX_PATH));
+        return getMaxIntensity();
     }
     public static boolean setIntensity(int intensity)  {
-        return FileUtils.writeLine(VTG_LEVEL_PATH, String.valueOf(intensity));
+	boolean ret = false;
+        try {
+	    FileUtils.writeLine(VTG_LEVEL_PATH, String.valueOf(intensity));
+	    ret = true;
+        } catch (Exception ex) {
+	    Log.e("VibratorHW", "setIntensity failed with " + ex);
+	}
+	return ret;
     }
 }
