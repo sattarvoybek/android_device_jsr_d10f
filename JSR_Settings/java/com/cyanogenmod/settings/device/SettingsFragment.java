@@ -99,8 +99,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 if (pref.getKey().equals("btn_g_cal")) {
 		    try {
                         Intent callGCal = new Intent();
-                        callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest", 
-                                "com.qualcomm.sensors.qsensortest.GravityCalibrationActivity"));
+                        callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest",
+                                "com.qualcomm.sensors.qsensortest.TabControl"));
                         startActivity(callGCal);
                     }
                     catch(Exception ex) {
