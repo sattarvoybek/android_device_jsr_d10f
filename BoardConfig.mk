@@ -30,7 +30,6 @@ TARGET_CPU_VARIANT := krait
 
 # Audio
 BOARD_USES_ALSA_AUDIO := true
-AUDIO_FEATURE_ENABLED_FM := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 
 # Bluetooth
@@ -43,10 +42,6 @@ BLUETOOTH_HCI_USE_MCT := true
 TARGET_BOOTLOADER_BOARD_NAME := MSM8226
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
-
-# Camera
-COMMON_GLOBAL_CFLAGS += -DNEEDS_VECTORIMPL_SYMBOLS
-BOARD_USES_LEGACY_MMAP := true
 
 # Charger
 BOARD_CHARGER_SHOW_PERCENTAGE := true
@@ -96,7 +91,7 @@ BOARD_HARDWARE_CLASS := device/jsr/d10f/cmhw/
 
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
-TARGET_LIBINIT_DEFINES_FILE := device/jsr/d10f/init/init_d10f.c
+TARGET_LIBINIT_DEFINES_FILE := device/jsr/d10f/init/init_d10f.cpp
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/jsr/msm8226
@@ -108,6 +103,9 @@ BOARD_KERNEL_SEPARATED_DT := true
 BOARD_DTBTOOL_ARGS := --force-v2
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100
 
+# Keymaster
+TARGET_KEYMASTER_WAIT_FOR_QSEE := true
+
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
 
@@ -117,12 +115,16 @@ MALLOC_IMPL := dlmalloc
 # Platform
 TARGET_BOARD_PLATFORM := msm8226
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno305
+USE_CLANG_PLATFORM_BUILD := true
 
 # Power
 TARGET_POWERHAL_VARIANT := qcom
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
+
+# Radio
+TARGET_RIL_VARIANT := caf
 
 # Recovery
 TARGET_RECOVERY_FSTAB := device/jsr/d10f/recovery/recovery.fstab

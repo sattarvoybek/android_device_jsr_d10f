@@ -6,3 +6,7 @@ allow system_server vibeamp_sysfs:file rw_file_perms;
 # Battery capacity reading
 allow system_server sysfs_battery_supply:dir search;
 allow system_server sysfs_battery_supply:file { read getattr open };
+
+# USB
+allow system_server sysfs_usb_supply:dir search;
+allow system_server sysfs_usb_supply:file { read getattr open };
