@@ -1,0 +1,338 @@
+From 035748b54f695181219f72dd8dc6dc725afe2fee Mon Sep 17 00:00:00 2001
+From: Ashray Kulkarni <ashrayk@codeaurora.org>
+Date: Thu, 16 Apr 2015 15:01:13 -0700
+Subject: [PATCH 3/5]  msm: vidc: Enable session priority support.
+
+Add support for setting priority to each video session in driver.
+
+Change-Id: Iec9fa69ee42959a93d18fdb59eff1f12c53de235
+Signed-off-by: Ashray Kulkarni <ashrayk@codeaurora.org>
+---
+ .../media/platform/msm/vidc/hfi_packetization.c    |   5 +-
+ drivers/media/platform/msm/vidc/msm_vdec.c         |  15 +++
+ drivers/media/platform/msm/vidc/msm_venc.c         |  18 +++-
+ drivers/media/platform/msm/vidc/msm_vidc_common.c  | 117 ++++++++++++---------
+ include/linux/videodev2.h                          |   9 +-
+ 5 files changed, 114 insertions(+), 50 deletions(-)
+
+diff --git a/drivers/media/platform/msm/vidc/hfi_packetization.c b/drivers/media/platform/msm/vidc/hfi_packetization.c
+index a563f68..a23dd5f 100644
+--- a/drivers/media/platform/msm/vidc/hfi_packetization.c
++++ b/drivers/media/platform/msm/vidc/hfi_packetization.c
+@@ -764,7 +764,10 @@ int create_pkt_cmd_session_set_property(
+ 		struct hfi_enable *hfi;
+ 		pkt->rg_property_data[0] = HFI_PROPERTY_CONFIG_REALTIME;
+ 		hfi = (struct hfi_enable *) &pkt->rg_property_data[1];
+-		hfi->enable = ((struct hfi_enable *) pdata)->enable;
++		/* firmware has inverted vaules for realtime and
++		 * non-realtime priority
++		 */
++		hfi->enable = !(((struct hfi_enable *) pdata)->enable);
+ 		pkt->size += sizeof(u32) * 2;
+ 		break;
+ 	}
+diff --git a/drivers/media/platform/msm/vidc/msm_vdec.c b/drivers/media/platform/msm/vidc/msm_vdec.c
+index 321f0d9..1c7acc5 100644
+--- a/drivers/media/platform/msm/vidc/msm_vdec.c
++++ b/drivers/media/platform/msm/vidc/msm_vdec.c
+@@ -328,6 +328,16 @@ static struct msm_vidc_ctrl msm_vdec_ctrls[] = {
+ 		.menu_skip_mask = 0,
+ 		.qmenu = NULL,
+ 	},
++	{
++		.id = V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY,
++		.name = "Session Priority",
++		.type = V4L2_CTRL_TYPE_INTEGER,
++		.minimum = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_ENABLE,
++		.maximum = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE,
++		.default_value = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE,
++		.step = 1,
++		.qmenu = NULL,
++	},
+ };
+ 
+ #define NUM_CTRLS ARRAY_SIZE(msm_vdec_ctrls)
+@@ -1732,6 +1742,11 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
+ 			"Limiting input buffer size to :%u\n", ctrl->val);
+ 		break;
+ 	}
++	case V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY:
++		property_id = HAL_CONFIG_REALTIME;
++		hal_property.enable = ctrl->val;
++		pdata = &hal_property;
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/drivers/media/platform/msm/vidc/msm_venc.c b/drivers/media/platform/msm/vidc/msm_venc.c
+index b2e7ffb..fc729b2 100644
+--- a/drivers/media/platform/msm/vidc/msm_venc.c
++++ b/drivers/media/platform/msm/vidc/msm_venc.c
+@@ -809,7 +809,18 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
+ 		.default_value = 1,
+ 		.step = 1,
+ 		.qmenu = NULL,
+-	}
++	},
++	{
++		.id = V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY,
++		.name = "Session Priority",
++		.type = V4L2_CTRL_TYPE_INTEGER,
++		.minimum = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_ENABLE,
++		.maximum = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE,
++		.default_value = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE,
++		.step = 1,
++		.qmenu = NULL,
++	},
++
+ };
+ 
+ #define NUM_CTRLS ARRAY_SIZE(msm_venc_ctrls)
+@@ -2187,6 +2198,11 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
+ 		}
+ 		pdata = &hier_p_layers;
+ 		break;
++	case V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY:
++		property_id = HAL_CONFIG_REALTIME;
++		enable.enable = ctrl->val;
++		pdata = &enable;
++		break;
+ 	default:
+ 		dprintk(VIDC_ERR, "Unsupported index: %x\n", ctrl->id);
+ 		rc = -ENOTSUPP;
+diff --git a/drivers/media/platform/msm/vidc/msm_vidc_common.c b/drivers/media/platform/msm/vidc/msm_vidc_common.c
+index 0e71c18..f4cab7d 100644
+--- a/drivers/media/platform/msm/vidc/msm_vidc_common.c
++++ b/drivers/media/platform/msm/vidc/msm_vidc_common.c
+@@ -36,7 +36,7 @@
+ 		V4L2_EVENT_MSM_VIDC_RELEASE_BUFFER_REFERENCE
+ 
+ #define NUM_MBS_PER_SEC(__height, __width, __fps) ({\
+-	(__height >> 4) * (__width >> 4) * __fps; \
++	(__height / 16) * (__width  / 16) * __fps; \
+ })
+ 
+ #define VIDC_BUS_LOAD(__height, __width, __fps, __br) ({\
+@@ -51,30 +51,9 @@ static void msm_comm_generate_session_error(struct msm_vidc_inst *inst);
+ static void msm_comm_generate_sys_error(struct msm_vidc_inst *inst);
+ static void handle_session_error(enum command_response cmd, void *data);
+ 
+-static bool is_turbo_requested(struct msm_vidc_core *core,
+-		enum session_type type)
++static inline bool is_turbo_session(struct msm_vidc_inst *inst)
+ {
+-	struct msm_vidc_inst *inst = NULL;
+-	bool wants_turbo = false;
+-
+-	mutex_lock(&core->lock);
+-	list_for_each_entry(inst, &core->instances, list) {
+-
+-		mutex_lock(&inst->lock);
+-		if (inst->session_type == type &&
+-			inst->state >= MSM_VIDC_OPEN_DONE &&
+-			inst->state < MSM_VIDC_STOP_DONE) {
+-			wants_turbo = inst->flags & VIDC_TURBO;
+-		}
+-		mutex_unlock(&inst->lock);
+-
+-		if (wants_turbo)
+-			break;
+-	}
+-
+-	mutex_unlock(&core->lock);
+-
+-	return wants_turbo;
++	return !!(inst->flags & VIDC_TURBO);
+ }
+ 
+ static bool is_thumbnail_session(struct msm_vidc_inst *inst)
+@@ -90,6 +69,17 @@ static bool is_thumbnail_session(struct msm_vidc_inst *inst)
+ 	}
+ 	return false;
+ }
++
++static inline bool is_non_realtime_session(struct msm_vidc_inst *inst)
++{
++	int rc = 0;
++	struct v4l2_control ctrl = {
++		.id = V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY
++	};
++	rc = v4l2_g_ctrl(&inst->ctrl_handler, &ctrl);
++	return (!rc && ctrl.value);
++}
++
+ enum multi_stream msm_comm_get_stream_output_mode(struct msm_vidc_inst *inst)
+ {
+ 	if (inst->session_type == MSM_VIDC_DECODER) {
+@@ -114,9 +104,43 @@ static int msm_comm_get_mbs_per_sec(struct msm_vidc_inst *inst)
+ 		inst->prop.width[OUTPUT_PORT]);
+ 	return NUM_MBS_PER_SEC(height, width, inst->prop.fps);
+ }
++enum load_calc_quirks {
++	LOAD_CALC_NO_QUIRKS = 0,
++	LOAD_CALC_IGNORE_TURBO_LOAD = 1 << 0,
++	LOAD_CALC_IGNORE_THUMBNAIL_LOAD = 1 << 1,
++	LOAD_CALC_IGNORE_NON_REALTIME_LOAD = 1 << 2,
++};
++
++static int msm_comm_get_inst_load(struct msm_vidc_inst *inst,
++		enum load_calc_quirks quirks)
++{
++	int load = 0;
++
++	if (!(inst->state >= MSM_VIDC_OPEN_DONE &&
++		inst->state < MSM_VIDC_STOP_DONE))
++		return 0;
++
++	load = msm_comm_get_mbs_per_sec(inst);
++
++	if (is_thumbnail_session(inst)) {
++		if (quirks & LOAD_CALC_IGNORE_THUMBNAIL_LOAD)
++			load = 0;
++	}
++
++	if (is_turbo_session(inst)) {
++		if (!(quirks & LOAD_CALC_IGNORE_TURBO_LOAD))
++			load = inst->core->resources.max_load;
++	}
++
++	if (is_non_realtime_session(inst) &&
++		(quirks & LOAD_CALC_IGNORE_NON_REALTIME_LOAD))
++		load = msm_comm_get_mbs_per_sec(inst) / inst->prop.fps;
++
++        return load;
++}
+ 
+ static int msm_comm_get_load(struct msm_vidc_core *core,
+-	enum session_type type)
++	enum session_type type, enum load_calc_quirks quirks)
+ {
+ 	struct msm_vidc_inst *inst = NULL;
+ 	int num_mbs_per_sec = 0;
+@@ -126,14 +150,11 @@ static int msm_comm_get_load(struct msm_vidc_core *core,
+ 	}
+ 	mutex_lock(&core->lock);
+ 	list_for_each_entry(inst, &core->instances, list) {
++		if (inst->session_type != type)
++			continue;
++
+ 		mutex_lock(&inst->lock);
+-		if (inst->session_type == type &&
+-			inst->state >= MSM_VIDC_OPEN_DONE &&
+-			inst->state < MSM_VIDC_STOP_DONE) {
+-			if (!is_thumbnail_session(inst))
+-				num_mbs_per_sec +=
+-					msm_comm_get_mbs_per_sec(inst);
+-		}
++		num_mbs_per_sec += msm_comm_get_inst_load(inst, quirks);
+ 		mutex_unlock(&inst->lock);
+ 	}
+ 	mutex_unlock(&core->lock);
+@@ -158,10 +179,7 @@ static int msm_comm_scale_bus(struct msm_vidc_core *core,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (is_turbo_requested(core, type))
+-		load = core->resources.max_load;
+-	else
+-		load = msm_comm_get_load(core, type);
++        load = msm_comm_get_load(core, type, LOAD_CALC_NO_QUIRKS);
+ 
+ 	rc = call_hfi_op(hdev, scale_bus, hdev->hfi_device_data,
+ 					 load, type, mtype);
+@@ -1509,6 +1527,7 @@ static int msm_comm_scale_clocks(struct msm_vidc_core *core)
+ 	int num_mbs_per_sec;
+ 	int rc = 0;
+ 	struct hfi_device *hdev;
++
+ 	if (!core) {
+ 		dprintk(VIDC_ERR, "%s Invalid args: %p\n", __func__, core);
+ 		return -EINVAL;
+@@ -1521,13 +1540,10 @@ static int msm_comm_scale_clocks(struct msm_vidc_core *core)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (is_turbo_requested(core, MSM_VIDC_ENCODER) ||
+-			is_turbo_requested(core, MSM_VIDC_DECODER)) {
+-		num_mbs_per_sec = core->resources.max_load;
+-	} else {
+-		num_mbs_per_sec = msm_comm_get_load(core, MSM_VIDC_ENCODER);
+-		num_mbs_per_sec += msm_comm_get_load(core, MSM_VIDC_DECODER);
+-	}
++	num_mbs_per_sec =
++		msm_comm_get_load(core, MSM_VIDC_ENCODER, LOAD_CALC_NO_QUIRKS) +
++		msm_comm_get_load(core, MSM_VIDC_DECODER, LOAD_CALC_NO_QUIRKS);
++
+ 
+ 	dprintk(VIDC_INFO, "num_mbs_per_sec = %d\n", num_mbs_per_sec);
+ 	rc = call_hfi_op(hdev, scale_clocks,
+@@ -1856,6 +1872,9 @@ static int msm_vidc_load_resources(int flipped_state,
+ 	int rc = 0;
+ 	struct hfi_device *hdev;
+ 	int num_mbs_per_sec = 0;
++	enum load_calc_quirks quirks = LOAD_CALC_IGNORE_TURBO_LOAD |
++		LOAD_CALC_IGNORE_THUMBNAIL_LOAD |
++		LOAD_CALC_IGNORE_NON_REALTIME_LOAD;
+ 
+ 	if (!inst || !inst->core || !inst->core->device) {
+ 		dprintk(VIDC_ERR, "%s invalid parameters", __func__);
+@@ -1868,8 +1887,9 @@ static int msm_vidc_load_resources(int flipped_state,
+ 		return -EINVAL;
+ 	}
+ 
+-	num_mbs_per_sec = msm_comm_get_load(inst->core, MSM_VIDC_DECODER);
+-	num_mbs_per_sec += msm_comm_get_load(inst->core, MSM_VIDC_ENCODER);
++	num_mbs_per_sec =
++		msm_comm_get_load(inst->core, MSM_VIDC_DECODER, quirks) +
++		msm_comm_get_load(inst->core, MSM_VIDC_ENCODER, quirks);
+ 
+ 	if (num_mbs_per_sec > inst->core->resources.max_load) {
+ 		dprintk(VIDC_ERR, "HW is overloaded, needed: %d max: %d\n",
+@@ -3278,12 +3298,15 @@ int msm_vidc_trigger_ssr(struct msm_vidc_core *core,
+ static int msm_vidc_load_supported(struct msm_vidc_inst *inst)
+ {
+ 	int num_mbs_per_sec = 0;
++	enum load_calc_quirks quirks = LOAD_CALC_IGNORE_TURBO_LOAD |
++		LOAD_CALC_IGNORE_THUMBNAIL_LOAD |
++		LOAD_CALC_IGNORE_NON_REALTIME_LOAD;
+ 
+ 	if (inst->state == MSM_VIDC_OPEN_DONE) {
+ 		num_mbs_per_sec = msm_comm_get_load(inst->core,
+-			MSM_VIDC_DECODER);
++			MSM_VIDC_DECODER, quirks);
+ 		num_mbs_per_sec += msm_comm_get_load(inst->core,
+-			MSM_VIDC_ENCODER);
++			MSM_VIDC_ENCODER, quirks);
+ 		if (num_mbs_per_sec > inst->core->resources.max_load) {
+ 			dprintk(VIDC_ERR,
+ 				"H/w is overloaded. needed: %d max: %d\n",
+diff --git a/include/linux/videodev2.h b/include/linux/videodev2.h
+index 91c5f81..08530b8 100644
+--- a/include/linux/videodev2.h
++++ b/include/linux/videodev2.h
+@@ -1063,7 +1063,6 @@ struct v4l2_bt_timings {
+ #define V4L2_DV_VSYNC_POS_POL	0x00000001
+ #define V4L2_DV_HSYNC_POS_POL	0x00000002
+ 
+-
+ /* DV timings */
+ struct v4l2_dv_timings {
+ 	__u32 type;
+@@ -1951,6 +1950,14 @@ enum v4l2_mpeg_vidc_video_ltrmode {
+ #define V4L2_CID_MPEG_VIDC_VIDEO_BUFFER_SIZE_LIMIT \
+ 		(V4L2_CID_MPEG_MSM_VIDC_BASE + 48)
+ 
++#define V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY \
++		(V4L2_CID_MPEG_MSM_VIDC_BASE + 73)
++
++enum v4l2_mpeg_vidc_video_priority {
++	V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_ENABLE = 0,
++	V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE = 1,
++};
++
+ /*  Camera class control IDs */
+ #define V4L2_CID_CAMERA_CLASS_BASE 	(V4L2_CTRL_CLASS_CAMERA | 0x900)
+ #define V4L2_CID_CAMERA_CLASS 		(V4L2_CTRL_CLASS_CAMERA | 1)
+-- 
+2.5.0
+
