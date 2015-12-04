@@ -1,9 +1,0 @@
-type kcal-pp-daemon, domain;
-type kcal-pp-daemon_exec, exec_type, file_type;
-
-init_daemon_domain(kcal-pp-daemon)
-
-#============= kcal-pp-daemon ==============
-allow kcal-pp-daemon init:unix_stream_socket { read write };
-allow kcal-pp-daemon kcal_sysfs:dir search;
-allow kcal-pp-daemon kcal_sysfs:file { write getattr open };

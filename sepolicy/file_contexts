@@ -3,7 +3,7 @@
 
 # CMHW
 /sys/devices/platform/kcal_ctrl.0(/.*)?       u:object_r:kcal_sysfs:s0
-/sys/class/timed_output/vibrator/vtg_level          u:object_r:vibeamp_sysfs:s0
+/sys/class/timed_output/vibrator/vtg_level    u:object_r:vibeamp_sysfs:s0
 
 # GPS
 /system/bin/gsiff_daemon                      u:object_r:location_exec:s0
@@ -17,3 +17,6 @@
 
 # Thermal
 /system/bin/thermal-engine                    u:object_r:thermal-engine_exec:s0
+
+# KCAL UI PostProcessing daemon
+/system/bin/kcal-pp-daemon                    u:object_r:kcal-pp-daemon_exec:s0

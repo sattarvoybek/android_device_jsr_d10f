@@ -1,0 +1,14 @@
+type kcal-pp-daemon, domain;
+type kcal-pp-daemon_exec, exec_type, file_type;
+
+init_daemon_domain(kcal-pp-daemon)
+
+#============= kcal-pp-daemon ==============
+allow kcal-pp-daemon kcal_sysfs:dir search;
+allow kcal-pp-daemon kcal_sysfs:file { getattr open read write append };
+allow kcal-pp-daemon kcal-pp-daemon_prop:property_service set;
+
+# Allow socket calls in kcal-pp-daemon
+allow kcal-pp-daemon property_socket:sock_file write;
+allow kcal-pp-daemon init:unix_stream_socket { connectto accept listen read write };
+

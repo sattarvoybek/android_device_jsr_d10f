@@ -1,2 +1,3 @@
 #============= init ==============
 allow init rootfs:file {unlink link};
+allow init kcal_sysfs:file getattr;
