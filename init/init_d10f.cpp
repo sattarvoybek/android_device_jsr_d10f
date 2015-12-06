@@ -4,6 +4,7 @@
 #include "vendor_init.h"
 #include "property_service.h"
 #include "log.h"
+#include "init.h"
 #include "util.h"
 #include <dirent.h>
 #include <errno.h>
@@ -12,20 +13,22 @@
 #include <sys/types.h>
 #include <sys/mount.h>
 
-
 #include "init_msm.h"
 
 #define PERSISTENT_PROPERTY_DIR  "/data/property"
-
+#define PERSISTENT_PROPERTY_CONFIGURATION_NAME "ro.storage_list.override"
+#define STORAGES_CONFIGURATION_CLASSIC   "0"
+#define STORAGES_CONFIGURATION_INVERTED  "1"
+#define SERVICE_VOLD "vold"
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * board_type)
 {
 	UNUSED(msm_id);
 	UNUSED(msm_ver);
 	UNUSED(board_type);
-	
+
 	char value[PROP_VALUE_MAX];
 	int rc;
-	
+
 	DIR * dir = opendir(PERSISTENT_PROPERTY_DIR);
 	int dir_fd;
 	struct dirent * entry;
@@ -36,7 +39,7 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		dir_fd = dirfd(dir);
 		while ((entry = readdir(dir)) != NULL) {
 			// we need to read this properties before load_persistent_properties()
-			if (strncmp("persist.storages.planned_swap", entry->d_name, strlen("persist.storages.planned_swap")))
+			if (strncmp(PERSISTENT_PROPERTY_CONFIGURATION_NAME, entry->d_name, strlen(PERSISTENT_PROPERTY_CONFIGURATION_NAME)))
 				continue;
 #if HAVE_DIRENT_D_TYPE
 			if (entry->d_type != DT_REG)
@@ -80,19 +83,32 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	} else {
 		ERROR("Unable to open persistent property directory %s errno: %d\n", PERSISTENT_PROPERTY_DIR, errno);
 	}
-	
+
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
-	
-	rc = property_get("persist.storages.planned_swap", value);
-	if (rc && atoi(value)) {
+
+	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
+	if (rc && ISMATCH(value, STORAGES_CONFIGURATION_INVERTED)) {
 		// if swapped
-		property_set("persist.storages.swapped", "1");
-		property_set("ro.storage_list.override", "storage_list_swapped");
-                unlink("/fstab.d10f");
-		symlink("/fstab.d10f_sd", "/fstab.d10f");
+		property_set("ro.vold.primary_physical", "1");
+		ERROR("Got inverted storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		unlink("/fstab.d10f");
+		link("/fstab.d10f_sd", "/fstab.d10f");
+		unlink("/fstab.d10f_sd");
 	} else {
-		// if not swapped
-		property_set("persist.storages.swapped", "0");
+		// if classic (default case)
+		property_set("ro.vold.primary_physical", "1");
+		ERROR("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		unlink("/fstab.d10f_sd");
+	}
+	ERROR("Storage configuration applied\n");
+
+	struct service *svc = service_find_by_name(SERVICE_VOLD);
+	if (svc) {
+		ERROR("Restarting vold\n");
+		service_restart(svc);
+		ERROR("Restarted vold)\n");
+	} else {
+		ERROR("no such service '%s'\n", SERVICE_VOLD);
 	}
 
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|MS_RDONLY, NULL);
