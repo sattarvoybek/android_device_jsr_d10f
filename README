@@ -40,18 +40,18 @@ source ~/.bashrc
 
 --------------------------
 # Fetch the sources:
-mkdir ~/cm12.1
-cd ~/cm12.1
+mkdir ~/cm13.0
+cd ~/cm13.0
 git config --global user.email "user@gmail.com"
 git config --global user.name "github_account"
-repo init -u git://github.com/CyanogenMod/android.git -b cm-12.1
+repo init -u git://github.com/CyanogenMod/android.git -b cm-13.0
 mkdir -p .repo/local_manifests
-wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-12.1/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
+wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-13.0/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
 repo sync
 
 --------------------------
 # Generate keys (without password):
-cd ~/cm12.1
+cd ~/cm13.0
 mkdir -p vendor/jsr/security/
 development/tools/make_key vendor/jsr/security/releasekey '/CN=Your Name'
 development/tools/make_key vendor/jsr/security/media '/CN=Your Name'
@@ -62,7 +62,7 @@ development/tools/make_key vendor/jsr/security/testkey '/CN=Your Name/'
 
 --------------------------
 # Update OTA configuration:
-cd ~/cm12.1
+cd ~/cm13.0
 # Dump public key:
 source build/envsetup.sh
 lunch cm_d10f-userdebug
@@ -74,6 +74,6 @@ nano device/jsr/d10f/overlay/packages/apps/OpenDelta/res/values/config.xml
 
 --------------------------
 # Build ROM:
-cd ~/cm12.1
+cd ~/cm13.0
 source build/envsetup.sh
 brunch cm_d10f-userdebug
