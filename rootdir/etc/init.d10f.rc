@@ -389,10 +389,8 @@ service ppd /system/bin/kcal-pp-daemon
     user system
     socket pps stream 0660 system system graphics
     group system graphics
-
 on property:init.svc.surfaceflinger=stopped
     stop ppd
-
 service charger /sbin/healthd -c
     class charger
     critical
