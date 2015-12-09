@@ -5,8 +5,9 @@
         <item>WSTECZ - STRONA GŁÓWNA - MENU</item>
     </string-array>
     <string-array name="main_storage_names">
-        <item>Pamięć wewnętrzna</item>
+        <item>Wewnętrzna SD</item>
         <item>Karta SD</item>
+        <item>Pamięć wewnętrzna</item>
     </string-array>
     <string-array name="zram_names">
         <item>64 Mb</item>

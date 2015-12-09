@@ -48,14 +48,16 @@
         <item>TORCH</item>
         <item>NONE</item>
     </string-array>
-    
+
     <!-- Implemented -->
     <string-array name="main_storage_names">
-        <item>Internal storage</item>
+        <item>Internal SD</item>
         <item>SD card</item>
+        <item>Internal storage</item>
     </string-array>
     <string-array translatable="false" name="main_storage_values">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

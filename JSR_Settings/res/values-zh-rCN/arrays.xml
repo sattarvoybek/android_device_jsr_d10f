@@ -5,8 +5,9 @@
         <item>返回 - 桌面 - 菜单</item>
     </string-array>
     <string-array name="main_storage_names">
-        <item>内置存储</item>
+        <item>Internal SD</item>
         <item>SD卡存储</item>
+        <item>内置存储</item>
     </string-array>
     <string-array name="zram_names">
         <item>64 Mb</item>

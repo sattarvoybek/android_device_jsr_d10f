@@ -6,6 +6,7 @@
 #include "log.h"
 #include "init.h"
 #include "util.h"
+#include "init.h"
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -19,6 +20,7 @@
 #define PERSISTENT_PROPERTY_CONFIGURATION_NAME "ro.storage_list.override"
 #define STORAGES_CONFIGURATION_CLASSIC   "0"
 #define STORAGES_CONFIGURATION_INVERTED  "1"
+#define STORAGES_CONFIGURATION_DATAMEDIA "2"
 #define SERVICE_VOLD "vold"
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * board_type)
 {
@@ -87,18 +89,27 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
 
 	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
-	if (rc && ISMATCH(value, STORAGES_CONFIGURATION_INVERTED)) {
+	if (rc && ISMATCH(value, STORAGES_CONFIGURATION_DATAMEDIA)) {
+		// if datamedia
+		ERROR("Got datamedia storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		unlink("/fstab.d10f");
+		link("/fstab.d10f_int", "/fstab.d10f");
+		unlink("/fstab.d10f_sd");
+		unlink("/fstab.d10f_int");
+	} else if (rc && ISMATCH(value, STORAGES_CONFIGURATION_INVERTED)) {
 		// if swapped
 		property_set("ro.vold.primary_physical", "1");
 		ERROR("Got inverted storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
 		unlink("/fstab.d10f");
 		link("/fstab.d10f_sd", "/fstab.d10f");
 		unlink("/fstab.d10f_sd");
+		unlink("/fstab.d10f_int");
 	} else {
 		// if classic (default case)
 		property_set("ro.vold.primary_physical", "1");
 		ERROR("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
 		unlink("/fstab.d10f_sd");
+		unlink("/fstab.d10f_int");
 	}
 	ERROR("Storage configuration applied\n");
 

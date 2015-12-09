@@ -205,7 +205,7 @@ PRODUCT_PACKAGES += OpenDelta
 PRODUCT_PACKAGES += \
     fstab.d10f \
     fstab.d10f_sd \
-    twrp.fstab \
+    fstab.d10f_int \
     init.d10f.rc \
     init.d10f.usb.rc \
     ueventd.d10f.rc

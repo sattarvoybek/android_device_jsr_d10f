@@ -17,7 +17,8 @@
     
     <!-- Implemented -->
     <string-array name="main_storage_names">
-        <item>Внутренняя память</item>
+        <item>Внутренняя SD</item>
         <item>SD карта</item>
+        <item>Внутреннее хранилище</item>
     </string-array>
 </resources>
