@@ -135,6 +135,32 @@ TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
+#BOARD_HAS_LARGE_FILESYSTEM := true
+#BOARD_SUPPRESS_EMMC_WIPE := true
+#BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
+
+# Comment next line out to build default recovery instead of TWRP
+# RECOVERY_VARIANT := twrp
+
+ifeq ($(RECOVERY_VARIANT), twrp)
+# TWRP
+	DEVICE_RESOLUTION := 720x1280
+	TWHAVE_SELINUX := true
+	# RECOVERY_SDCARD_ON_DATA := true
+	TW_INCLUDE_JB_CRYPTO := true
+	TW_INCLUDE_L_CRYPTO := true
+	# TW_INTERNAL_STORAGE_PATH := "/sdcard"
+	# TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard"
+	# TW_EXTERNAL_STORAGE_PATH := "/external_sd"
+	# TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
+	# TW_DEFAULT_EXTERNAL_STORAGE := true
+	TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+	TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
+	TW_THEME := portrait_hdpi
+	# RECOVERY_GRAPHICS_USE_LINELENGTH := true
+	# This hook fixes stock ROMs device check
+	PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=D10A_HighScreen
+endif
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk

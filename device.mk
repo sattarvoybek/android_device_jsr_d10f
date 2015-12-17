@@ -195,8 +195,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Custom APK
-PRODUCT_PACKAGES += JSR_Settings    
-    
+PRODUCT_PACKAGES += JSR_Settings
+
 # OpenDelta
 PRODUCT_PACKAGES += OpenDelta
 
@@ -204,6 +204,7 @@ PRODUCT_PACKAGES += OpenDelta
 PRODUCT_PACKAGES += \
     fstab.d10f \
     fstab.d10f_sd \
+    twrp.fstab \
     init.d10f.rc \
     init.d10f.usb.rc \
     ueventd.d10f.rc
