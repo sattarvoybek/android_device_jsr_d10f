@@ -68,6 +68,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PACKAGES += \
     libboringssl-compat \
+    camera.msm8226 \
     libxml2
 
 # Charger
