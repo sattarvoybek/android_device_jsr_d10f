@@ -371,11 +371,11 @@ service thermal-engine /system/bin/thermal-engine
     user root
     group root
 
-# service qseecomd /system/bin/qseecomd
-#     class core
-#     user root
-#     group root
-
+service qseecomd /system/bin/qseecomd
+    class core
+    user root
+    group root
+    
 service adsprpcd /system/bin/adsprpcd
     class main
     user media
