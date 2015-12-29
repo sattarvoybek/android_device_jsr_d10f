@@ -20,3 +20,7 @@
 
 # KCAL UI PostProcessing daemon
 /system/bin/kcal-pp-daemon                    u:object_r:kcal-pp-daemon_exec:s0
+
+# Torch
+/sys/class/leds/torch-light(/.*)?             u:object_r:torch_sysfs:s0
+/sys/devices/qcom,camera-led-flash.([0-9])+/leds/torch-light(/.*)? u:object_r:torch_sysfs:s0
