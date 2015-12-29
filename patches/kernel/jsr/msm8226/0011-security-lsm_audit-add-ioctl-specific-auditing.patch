@@ -1,7 +1,7 @@
-From 5755e480fb18a99f2cbeeca972188cff325ec7ec Mon Sep 17 00:00:00 2001
+From de2ab60bd98a21907b5c340484af715b18eee9e8 Mon Sep 17 00:00:00 2001
 From: Jeff Vander Stoep <jeffv@google.com>
 Date: Sat, 4 Apr 2015 16:15:54 -0700
-Subject: [PATCH 39/72] security: lsm_audit: add ioctl specific auditing
+Subject: [PATCH 11/14] security: lsm_audit: add ioctl specific auditing
 
 Add information about ioctl calls to the LSM audit data. Log the
 file path and command number.

@@ -1,7 +1,7 @@
-From 5c1cf1094a48eb58ebf4a7cf94f527ee484020f5 Mon Sep 17 00:00:00 2001
+From 8066316e1b205f5e5315161a5f7d32130b3f212a Mon Sep 17 00:00:00 2001
 From: Stephen Smalley <sds@tycho.nsa.gov>
 Date: Fri, 10 May 2013 10:16:19 -0400
-Subject: [PATCH 5/5]  Enable setting security contexts on rootfs inodes.
+Subject: [PATCH 07/14] Enable setting security contexts on rootfs inodes.
 
 rootfs (ramfs) can support setting of security contexts
 by userspace due to the vfs fallback behavior of calling
@@ -22,10 +22,10 @@ Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
  1 file changed, 7 insertions(+)
 
 diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 6e54826..9d5649b 100644
+index 50b003a..a9f0db5 100644
 --- a/security/selinux/hooks.c
 +++ b/security/selinux/hooks.c
-@@ -422,6 +422,13 @@ static int sb_finish_set_opts(struct super_block *sb)
+@@ -406,6 +406,13 @@ static int sb_finish_set_opts(struct super_block *sb)
  	if (strncmp(sb->s_type->name, "sysfs", sizeof("sysfs")) == 0)
  		sbsec->flags |= SE_SBLABELSUPP;
  

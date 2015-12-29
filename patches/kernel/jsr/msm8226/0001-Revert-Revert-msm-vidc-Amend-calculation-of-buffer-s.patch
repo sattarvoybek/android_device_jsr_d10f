@@ -1,7 +1,7 @@
-From 717a4eea4a61fb201e1994fde7a5ace34d95b545 Mon Sep 17 00:00:00 2001
+From ab41987d05a3339f0aa8dff94aad014272244832 Mon Sep 17 00:00:00 2001
 From: S-trace <S-trace@list.ru>
 Date: Thu, 5 Nov 2015 06:50:50 +0300
-Subject: [PATCH 1/4] Revert "Revert "msm: vidc: Amend calculation of buffer
+Subject: [PATCH 01/14] Revert "Revert "msm: vidc: Amend calculation of buffer
  sizes in VENUS_BUFFER_SIZE""
 
 This reverts commit 2e8d4680003dad767b350aba39c464fbb5f3f635.

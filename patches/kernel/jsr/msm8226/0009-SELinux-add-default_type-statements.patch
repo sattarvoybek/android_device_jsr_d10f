@@ -1,7 +1,7 @@
-From d40864aeff3b026ea20b6c15456592c412fc467a Mon Sep 17 00:00:00 2001
+From 5ce8761cbb9bb9cf2aecb24947a20e3d62c287fe Mon Sep 17 00:00:00 2001
 From: Eric Paris <eparis@redhat.com>
 Date: Tue, 20 Mar 2012 14:35:12 -0400
-Subject: [PATCH 7/9] SELinux: add default_type statements
+Subject: [PATCH 09/14] SELinux: add default_type statements
 
 Because Fedora shipped userspace based on my development tree we now
 have policy version 27 in the wild defining only default user, role, and

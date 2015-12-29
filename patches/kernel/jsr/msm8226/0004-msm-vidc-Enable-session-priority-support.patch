@@ -1,7 +1,7 @@
-From 035748b54f695181219f72dd8dc6dc725afe2fee Mon Sep 17 00:00:00 2001
+From 9f56e530dfcf2c0d15dc54411e06a83231a1f3f9 Mon Sep 17 00:00:00 2001
 From: Ashray Kulkarni <ashrayk@codeaurora.org>
 Date: Thu, 16 Apr 2015 15:01:13 -0700
-Subject: [PATCH 3/5]  msm: vidc: Enable session priority support.
+Subject: [PATCH 04/14] msm: vidc: Enable session priority support.
 
 Add support for setting priority to each video session in driver.
 
@@ -16,7 +16,7 @@ Signed-off-by: Ashray Kulkarni <ashrayk@codeaurora.org>
  5 files changed, 114 insertions(+), 50 deletions(-)
 
 diff --git a/drivers/media/platform/msm/vidc/hfi_packetization.c b/drivers/media/platform/msm/vidc/hfi_packetization.c
-index a563f68..a23dd5f 100644
+index 0e38b18..a7ccd47 100644
 --- a/drivers/media/platform/msm/vidc/hfi_packetization.c
 +++ b/drivers/media/platform/msm/vidc/hfi_packetization.c
 @@ -764,7 +764,10 @@ int create_pkt_cmd_session_set_property(
@@ -32,7 +32,7 @@ index a563f68..a23dd5f 100644
  		break;
  	}
 diff --git a/drivers/media/platform/msm/vidc/msm_vdec.c b/drivers/media/platform/msm/vidc/msm_vdec.c
-index 321f0d9..1c7acc5 100644
+index 272225e..f556066 100644
 --- a/drivers/media/platform/msm/vidc/msm_vdec.c
 +++ b/drivers/media/platform/msm/vidc/msm_vdec.c
 @@ -328,6 +328,16 @@ static struct msm_vidc_ctrl msm_vdec_ctrls[] = {
@@ -52,7 +52,7 @@ index 321f0d9..1c7acc5 100644
  };
  
  #define NUM_CTRLS ARRAY_SIZE(msm_vdec_ctrls)
-@@ -1732,6 +1742,11 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
+@@ -1752,6 +1762,11 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
  			"Limiting input buffer size to :%u\n", ctrl->val);
  		break;
  	}
@@ -65,10 +65,10 @@ index 321f0d9..1c7acc5 100644
  		break;
  	}
 diff --git a/drivers/media/platform/msm/vidc/msm_venc.c b/drivers/media/platform/msm/vidc/msm_venc.c
-index b2e7ffb..fc729b2 100644
+index 1a9f491..e3bddfc 100644
 --- a/drivers/media/platform/msm/vidc/msm_venc.c
 +++ b/drivers/media/platform/msm/vidc/msm_venc.c
-@@ -809,7 +809,18 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
+@@ -808,7 +808,18 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
  		.default_value = 1,
  		.step = 1,
  		.qmenu = NULL,
@@ -88,7 +88,7 @@ index b2e7ffb..fc729b2 100644
  };
  
  #define NUM_CTRLS ARRAY_SIZE(msm_venc_ctrls)
-@@ -2187,6 +2198,11 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
+@@ -2202,6 +2213,11 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
  		}
  		pdata = &hier_p_layers;
  		break;
@@ -101,10 +101,10 @@ index b2e7ffb..fc729b2 100644
  		dprintk(VIDC_ERR, "Unsupported index: %x\n", ctrl->id);
  		rc = -ENOTSUPP;
 diff --git a/drivers/media/platform/msm/vidc/msm_vidc_common.c b/drivers/media/platform/msm/vidc/msm_vidc_common.c
-index 0e71c18..f4cab7d 100644
+index c0b3531..5558fd2 100644
 --- a/drivers/media/platform/msm/vidc/msm_vidc_common.c
 +++ b/drivers/media/platform/msm/vidc/msm_vidc_common.c
-@@ -36,7 +36,7 @@
+@@ -35,7 +35,7 @@
  		V4L2_EVENT_MSM_VIDC_RELEASE_BUFFER_REFERENCE
  
  #define NUM_MBS_PER_SEC(__height, __width, __fps) ({\
@@ -113,7 +113,7 @@ index 0e71c18..f4cab7d 100644
  })
  
  #define VIDC_BUS_LOAD(__height, __width, __fps, __br) ({\
-@@ -51,30 +51,9 @@ static void msm_comm_generate_session_error(struct msm_vidc_inst *inst);
+@@ -50,30 +50,9 @@ static void msm_comm_generate_session_error(struct msm_vidc_inst *inst);
  static void msm_comm_generate_sys_error(struct msm_vidc_inst *inst);
  static void handle_session_error(enum command_response cmd, void *data);
  
@@ -146,7 +146,7 @@ index 0e71c18..f4cab7d 100644
  }
  
  static bool is_thumbnail_session(struct msm_vidc_inst *inst)
-@@ -90,6 +69,17 @@ static bool is_thumbnail_session(struct msm_vidc_inst *inst)
+@@ -89,6 +68,17 @@ static bool is_thumbnail_session(struct msm_vidc_inst *inst)
  	}
  	return false;
  }
@@ -164,7 +164,7 @@ index 0e71c18..f4cab7d 100644
  enum multi_stream msm_comm_get_stream_output_mode(struct msm_vidc_inst *inst)
  {
  	if (inst->session_type == MSM_VIDC_DECODER) {
-@@ -114,9 +104,43 @@ static int msm_comm_get_mbs_per_sec(struct msm_vidc_inst *inst)
+@@ -113,9 +103,43 @@ static int msm_comm_get_mbs_per_sec(struct msm_vidc_inst *inst)
  		inst->prop.width[OUTPUT_PORT]);
  	return NUM_MBS_PER_SEC(height, width, inst->prop.fps);
  }
@@ -209,7 +209,7 @@ index 0e71c18..f4cab7d 100644
  {
  	struct msm_vidc_inst *inst = NULL;
  	int num_mbs_per_sec = 0;
-@@ -126,14 +150,11 @@ static int msm_comm_get_load(struct msm_vidc_core *core,
+@@ -125,14 +149,11 @@ static int msm_comm_get_load(struct msm_vidc_core *core,
  	}
  	mutex_lock(&core->lock);
  	list_for_each_entry(inst, &core->instances, list) {
@@ -228,7 +228,7 @@ index 0e71c18..f4cab7d 100644
  		mutex_unlock(&inst->lock);
  	}
  	mutex_unlock(&core->lock);
-@@ -158,10 +179,7 @@ static int msm_comm_scale_bus(struct msm_vidc_core *core,
+@@ -157,10 +178,7 @@ static int msm_comm_scale_bus(struct msm_vidc_core *core,
  		return -EINVAL;
  	}
  
@@ -240,7 +240,7 @@ index 0e71c18..f4cab7d 100644
  
  	rc = call_hfi_op(hdev, scale_bus, hdev->hfi_device_data,
  					 load, type, mtype);
-@@ -1509,6 +1527,7 @@ static int msm_comm_scale_clocks(struct msm_vidc_core *core)
+@@ -1514,6 +1532,7 @@ static int msm_comm_scale_clocks(struct msm_vidc_core *core)
  	int num_mbs_per_sec;
  	int rc = 0;
  	struct hfi_device *hdev;
@@ -248,7 +248,7 @@ index 0e71c18..f4cab7d 100644
  	if (!core) {
  		dprintk(VIDC_ERR, "%s Invalid args: %p\n", __func__, core);
  		return -EINVAL;
-@@ -1521,13 +1540,10 @@ static int msm_comm_scale_clocks(struct msm_vidc_core *core)
+@@ -1526,13 +1545,10 @@ static int msm_comm_scale_clocks(struct msm_vidc_core *core)
  		return -EINVAL;
  	}
  
@@ -266,7 +266,7 @@ index 0e71c18..f4cab7d 100644
  
  	dprintk(VIDC_INFO, "num_mbs_per_sec = %d\n", num_mbs_per_sec);
  	rc = call_hfi_op(hdev, scale_clocks,
-@@ -1856,6 +1872,9 @@ static int msm_vidc_load_resources(int flipped_state,
+@@ -1866,6 +1882,9 @@ static int msm_vidc_load_resources(int flipped_state,
  	int rc = 0;
  	struct hfi_device *hdev;
  	int num_mbs_per_sec = 0;
@@ -276,7 +276,7 @@ index 0e71c18..f4cab7d 100644
  
  	if (!inst || !inst->core || !inst->core->device) {
  		dprintk(VIDC_ERR, "%s invalid parameters", __func__);
-@@ -1868,8 +1887,9 @@ static int msm_vidc_load_resources(int flipped_state,
+@@ -1884,8 +1903,9 @@ static int msm_vidc_load_resources(int flipped_state,
  		return -EINVAL;
  	}
  
@@ -288,7 +288,7 @@ index 0e71c18..f4cab7d 100644
  
  	if (num_mbs_per_sec > inst->core->resources.max_load) {
  		dprintk(VIDC_ERR, "HW is overloaded, needed: %d max: %d\n",
-@@ -3278,12 +3298,15 @@ int msm_vidc_trigger_ssr(struct msm_vidc_core *core,
+@@ -3357,12 +3377,15 @@ int msm_vidc_trigger_ssr(struct msm_vidc_core *core,
  static int msm_vidc_load_supported(struct msm_vidc_inst *inst)
  {
  	int num_mbs_per_sec = 0;

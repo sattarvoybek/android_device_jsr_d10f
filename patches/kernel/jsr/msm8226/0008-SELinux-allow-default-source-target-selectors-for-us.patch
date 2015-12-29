@@ -1,7 +1,7 @@
-From 06b45de101ace1d7913f367e85e4e76423873b0e Mon Sep 17 00:00:00 2001
+From c9df6a075236c8b92b9235c5474638be51a9bc83 Mon Sep 17 00:00:00 2001
 From: Eric Paris <eparis@redhat.com>
 Date: Tue, 20 Mar 2012 14:35:12 -0400
-Subject: [PATCH 6/9] SELinux: allow default source/target selectors for
+Subject: [PATCH 08/14] SELinux: allow default source/target selectors for
  user/role/range
 
 When new objects are created we have great and flexible rules to

@@ -1,7 +1,7 @@
-From 8554a4ff19b100eb95941b35792b439286dbedc4 Mon Sep 17 00:00:00 2001
+From a2dbca975530b37183cb0e6748c7b6ff3c955a56 Mon Sep 17 00:00:00 2001
 From: Ashray Kulkarni <ashrayk@codeaurora.org>
 Date: Wed, 29 Apr 2015 23:15:37 -0700
-Subject: [PATCH 4/5]  msm: vidc: add driver support to enable operating rate
+Subject: [PATCH 05/14] msm: vidc: add driver support to enable operating rate
 
 Add support for enabling operating rate in encoder. This will enable
 support for high fps/timelapse recording and still maintain 30fps
@@ -17,7 +17,7 @@ Signed-off-by: Ashray Kulkarni <ashrayk@codeaurora.org>
  4 files changed, 39 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/msm/vidc/msm_vdec.c b/drivers/media/platform/msm/vidc/msm_vdec.c
-index 1c7acc5..37774df 100644
+index f556066..31f0261 100644
 --- a/drivers/media/platform/msm/vidc/msm_vdec.c
 +++ b/drivers/media/platform/msm/vidc/msm_vdec.c
 @@ -338,6 +338,16 @@ static struct msm_vidc_ctrl msm_vdec_ctrls[] = {
@@ -37,7 +37,7 @@ index 1c7acc5..37774df 100644
  };
  
  #define NUM_CTRLS ARRAY_SIZE(msm_vdec_ctrls)
-@@ -1747,6 +1757,9 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
+@@ -1767,6 +1777,9 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
  		hal_property.enable = ctrl->val;
  		pdata = &hal_property;
  		break;
@@ -48,10 +48,10 @@ index 1c7acc5..37774df 100644
  		break;
  	}
 diff --git a/drivers/media/platform/msm/vidc/msm_venc.c b/drivers/media/platform/msm/vidc/msm_venc.c
-index fc729b2..3cf669d 100644
+index e3bddfc..f0cbb0e 100644
 --- a/drivers/media/platform/msm/vidc/msm_venc.c
 +++ b/drivers/media/platform/msm/vidc/msm_venc.c
-@@ -820,7 +820,16 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
+@@ -819,7 +819,16 @@ static struct msm_vidc_ctrl msm_venc_ctrls[] = {
  		.step = 1,
  		.qmenu = NULL,
  	},
@@ -69,7 +69,7 @@ index fc729b2..3cf669d 100644
  };
  
  #define NUM_CTRLS ARRAY_SIZE(msm_venc_ctrls)
-@@ -891,6 +900,7 @@ static struct msm_vidc_format venc_formats[] = {
+@@ -890,6 +899,7 @@ static struct msm_vidc_format venc_formats[] = {
  		.get_frame_size = get_frame_size_nv21,
  		.type = OUTPUT_PORT,
  	},
@@ -77,7 +77,7 @@ index fc729b2..3cf669d 100644
  };
  
  static int msm_venc_queue_setup(struct vb2_queue *q,
-@@ -2203,6 +2213,9 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
+@@ -2218,6 +2228,9 @@ static int try_set_ctrl(struct msm_vidc_inst *inst, struct v4l2_ctrl *ctrl)
  		enable.enable = ctrl->val;
  		pdata = &enable;
  		break;
@@ -88,10 +88,10 @@ index fc729b2..3cf669d 100644
  		dprintk(VIDC_ERR, "Unsupported index: %x\n", ctrl->id);
  		rc = -ENOTSUPP;
 diff --git a/drivers/media/platform/msm/vidc/msm_vidc_common.c b/drivers/media/platform/msm/vidc/msm_vidc_common.c
-index f4cab7d..b62445c 100644
+index 5558fd2..91dc900 100644
 --- a/drivers/media/platform/msm/vidc/msm_vidc_common.c
 +++ b/drivers/media/platform/msm/vidc/msm_vidc_common.c
-@@ -98,11 +98,19 @@ enum multi_stream msm_comm_get_stream_output_mode(struct msm_vidc_inst *inst)
+@@ -97,11 +97,19 @@ enum multi_stream msm_comm_get_stream_output_mode(struct msm_vidc_inst *inst)
  static int msm_comm_get_mbs_per_sec(struct msm_vidc_inst *inst)
  {
  	int height, width;

@@ -1,7 +1,8 @@
-From d5801bdcceb0d4353833fe7826ae903254d9058f Mon Sep 17 00:00:00 2001
+From 582ca4e4df0ede2e866a367fb60040a5934dfd05 Mon Sep 17 00:00:00 2001
 From: Stephen Smalley <sds@tycho.nsa.gov>
 Date: Tue, 29 Apr 2014 11:29:04 -0700
-Subject: [PATCH] selinux: Report permissive mode in avc: denied messages.
+Subject: [PATCH 06/14] selinux: Report permissive mode in avc: denied
+ messages.
 
 We cannot presently tell from an avc: denied message whether access was in
 fact denied or was allowed due to global or per-domain permissive mode.

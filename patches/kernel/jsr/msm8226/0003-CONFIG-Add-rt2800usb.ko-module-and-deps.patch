@@ -1,7 +1,7 @@
-From ec710653b780c396082eb272c180b0e1228c3585 Mon Sep 17 00:00:00 2001
+From 65ba6973c2e9b8906a3e3ea958fc3b374f6406f6 Mon Sep 17 00:00:00 2001
 From: S-trace <S-trace@list.ru>
 Date: Thu, 26 Nov 2015 01:26:32 +0300
-Subject: [PATCH 3/3] CONFIG: Add rt2800usb.ko module (and deps)
+Subject: [PATCH 03/14] CONFIG: Add rt2800usb.ko module (and deps)
 
 for trash-9@forum.4pda.ru (Aircrack-ng)
 
