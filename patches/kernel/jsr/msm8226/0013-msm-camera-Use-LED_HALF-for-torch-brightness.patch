@@ -1,0 +1,32 @@
+From 359a70bda90a8ea914575084034934b842b932f9 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Wed, 30 Dec 2015 00:00:22 +0300
+Subject: [PATCH 13/14] msm: camera: Use LED_HALF for torch brightness
+
+Fix torch flickering on some devices
+
+Change-Id: I47a24e6b8dad1b5c5198d125004bbc55ab16cc93
+---
+ drivers/media/platform/msm/camera_v2/sensor/flash/msm_led_trigger.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/msm/camera_v2/sensor/flash/msm_led_trigger.c b/drivers/media/platform/msm/camera_v2/sensor/flash/msm_led_trigger.c
+index c2d6161..bd95787 100644
+--- a/drivers/media/platform/msm/camera_v2/sensor/flash/msm_led_trigger.c
++++ b/drivers/media/platform/msm/camera_v2/sensor/flash/msm_led_trigger.c
+@@ -232,7 +232,11 @@ static int32_t msm_led_trigger_probe(struct platform_device *pdev)
+ 
+ 			if (flashtype == GPIO_FLASH) {
+ 				/* use fake current */
+-				fctrl.torch_op_current = LED_FULL;
++                                /****************************************************
++                                 * S-trace: Do not use LED_FULL because it can lead *
++                                 *          to torch flickering on some devices     *
++                                 ****************************************************/
++				fctrl.torch_op_current = LED_HALF; 
+ 				if (temp)
+ 					fctrl.torch_trigger = temp;
+ 				else
+-- 
+2.5.0
+
