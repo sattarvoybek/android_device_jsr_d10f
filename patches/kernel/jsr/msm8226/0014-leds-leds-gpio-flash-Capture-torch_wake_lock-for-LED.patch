@@ -1,0 +1,48 @@
+From 387d31e221b2ac1edd8e7bab5578e54949839dbd Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Wed, 30 Dec 2015 00:12:26 +0300
+Subject: [PATCH 14/14] leds: leds-gpio-flash: Capture torch_wake_lock for
+ LED_FULL too
+
+Some devices can use LED_FULL as torch brightness
+(unstable on charger sometimes, but usable)
+
+Change-Id: I93c09c674f17b1c330ff34f0ff86fe610440e01d
+---
+ drivers/leds/leds-msm-gpio-flash.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/leds/leds-msm-gpio-flash.c b/drivers/leds/leds-msm-gpio-flash.c
+index 6323a45..f96fea9 100644
+--- a/drivers/leds/leds-msm-gpio-flash.c
++++ b/drivers/leds/leds-msm-gpio-flash.c
+@@ -54,13 +54,12 @@ static void led_gpio_brightness_set(struct led_classdev *led_cdev,
+ 	int brightness = value;
+ 	int flash_en = 0, flash_now = 0;
+ 
+-#ifdef CONFIG_JSR_TORCH_WAKE_LOCK	
+-	if (brightness >= LED_FULL) {	  
+-		if (torch_wake_lock_flag == 0x55)
+-			wake_unlock(&flash_led->torch_wake_lock);
++#ifdef CONFIG_JSR_TORCH_WAKE_LOCK
++	if (brightness >= LED_FULL) {
+ 		flash_en = 1;
+ 		flash_now = 1;
+-		torch_wake_lock_flag = 0;
++                torch_wake_lock_flag = 0x55;
++                wake_lock(&flash_led->torch_wake_lock);
+ 	} else
+ 	if (brightness >= LED_HALF) {
+ 		flash_en = 1;
+@@ -72,7 +71,7 @@ static void led_gpio_brightness_set(struct led_classdev *led_cdev,
+ 			wake_unlock(&flash_led->torch_wake_lock);
+ 		flash_en = 0;
+ 		flash_now = 0;
+-		torch_wake_lock_flag = 0;	
++		torch_wake_lock_flag = 0;
+ 	}
+ #else
+ 	if (brightness > LED_HALF) {
+-- 
+2.5.0
+
