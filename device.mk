@@ -259,4 +259,4 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/buildinfo/repo_state.txt:system/etc/repo_state.txt
 
 # Signing keys
-PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/security/releasekey
+PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/security/cm-13.0/releasekey
