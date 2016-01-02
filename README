@@ -67,7 +67,7 @@ cd ~/cm12.1
 source build/envsetup.sh
 lunch cm_d10f-userdebug
 mka system/core/libmincrypt/tools
-java -jar out/host/linux-x86/framework/dumpkey.jar vendor/jsr/security/releasekey.x509.pem
+java -jar out/host/linux-x86/framework/dumpkey.jar vendor/jsr/security/cm-13.0/releasekey.x509.pem
 # Edit configuration:
 nano device/jsr/d10f/overlay/packages/apps/OpenDelta/res/values/config.xml
 # Edit OTA server URLs (url_*) and replace my OTA key in inject_signature_keys by your key (dumped by dumpkey.jar)
