@@ -1,0 +1,30 @@
+From 7bd89c08bb9e881204a122ceaf268120f37a80bb Mon Sep 17 00:00:00 2001
+From: fefifofum <jorsellis@gmail.com>
+Date: Sun, 6 Dec 2015 15:23:39 +0100
+Subject: [PATCH 16/17] armani: defconfig: Disable CONFIG_SYSVIPC
+
+Android SELinux policies block SysV IPC. New kernels should not be
+built with it.
+
+Change-Id: I2e111a57623cab6d82606253bda174e2e936afe0
+---
+ arch/arm/configs/jsr_d10f_defconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/jsr_d10f_defconfig b/arch/arm/configs/jsr_d10f_defconfig
+index d8376f6..6a18c43 100644
+--- a/arch/arm/configs/jsr_d10f_defconfig
++++ b/arch/arm/configs/jsr_d10f_defconfig
+@@ -54,8 +54,7 @@ CONFIG_KERNEL_GZIP=y
+ # CONFIG_KERNEL_LZO is not set
+ CONFIG_DEFAULT_HOSTNAME="(none)"
+ CONFIG_SWAP=y
+-CONFIG_SYSVIPC=y
+-CONFIG_SYSVIPC_SYSCTL=y
++# CONFIG_SYSVIPC is not set
+ # CONFIG_POSIX_MQUEUE is not set
+ # CONFIG_BSD_PROCESS_ACCT is not set
+ # CONFIG_FHANDLE is not set
+-- 
+2.5.0
+
