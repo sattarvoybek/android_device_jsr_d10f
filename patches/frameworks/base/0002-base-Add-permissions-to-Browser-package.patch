@@ -1,0 +1,39 @@
+From 8bd94f3797be697f157ae111c023aff49ed791bc Mon Sep 17 00:00:00 2001
+From: Menno van Grinsven <scanno71@gmail.com>
+Date: Tue, 1 Dec 2015 17:26:41 +0100
+Subject: [PATCH 2/2] base: Add permissions to Browser package
+
+Includes:
+* CONTACTS_PERMISSIONS
+* STORAGE_PERMISSIONS
+
+Change-Id: I29cdf512888a38aba28ea2cfeb6b56352fe3a589
+---
+ .../core/java/com/android/server/pm/DefaultPermissionGrantPolicy.java | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/services/core/java/com/android/server/pm/DefaultPermissionGrantPolicy.java b/services/core/java/com/android/server/pm/DefaultPermissionGrantPolicy.java
+index 8f4aa1f..a764c65 100644
+--- a/services/core/java/com/android/server/pm/DefaultPermissionGrantPolicy.java
++++ b/services/core/java/com/android/server/pm/DefaultPermissionGrantPolicy.java
+@@ -495,6 +495,8 @@ final class DefaultPermissionGrantPolicy {
+             if (browserPackage != null
+                     && doesPackageSupportRuntimePermissions(browserPackage)) {
+                 grantRuntimePermissionsLPw(browserPackage, LOCATION_PERMISSIONS, userId);
++                grantRuntimePermissionsLPw(browserPackage, CONTACTS_PERMISSIONS, userId);
++                grantRuntimePermissionsLPw(browserPackage, STORAGE_PERMISSIONS, userId);
+             }
+ 
+             // IME
+@@ -756,6 +758,8 @@ final class DefaultPermissionGrantPolicy {
+         if (browserPackage != null
+                 && doesPackageSupportRuntimePermissions(browserPackage)) {
+             grantRuntimePermissionsLPw(browserPackage, LOCATION_PERMISSIONS, false, false, userId);
++            grantRuntimePermissionsLPw(browserPackage, CONTACTS_PERMISSIONS, false, false, userId);
++            grantRuntimePermissionsLPw(browserPackage, STORAGE_PERMISSIONS, false, false, userId);
+         }
+     }
+ 
+-- 
+2.5.0
+
