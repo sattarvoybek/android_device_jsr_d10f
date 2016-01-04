@@ -17,7 +17,7 @@
 #include "init_msm.h"
 
 #define PERSISTENT_PROPERTY_DIR  "/data/property"
-#define PERSISTENT_PROPERTY_CONFIGURATION_NAME "ro.storage_list.override"
+#define PERSISTENT_PROPERTY_CONFIGURATION_NAME "persist.storages.configuration"
 #define STORAGES_CONFIGURATION_CLASSIC   "0"
 #define STORAGES_CONFIGURATION_INVERTED  "1"
 #define STORAGES_CONFIGURATION_DATAMEDIA "2"
