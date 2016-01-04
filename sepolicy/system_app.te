@@ -1,3 +1,6 @@
 # Battery capacity reading
 allow system_app sysfs_battery_supply:dir search;
 allow system_app sysfs_battery_supply:file { read getattr open };
+
+# JSR-Settings.apk
+allow system_app storages-config_prop:property_service set;

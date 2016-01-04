@@ -1,1 +1,2 @@
 persist.kcal_pp.                u:object_r:kcal-pp-daemon_prop:s0
+persist.storages.configuration  u:object_r:storages-config_prop:s0

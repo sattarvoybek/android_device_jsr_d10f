@@ -1,2 +1,5 @@
 # kcal-pp-daemon
 type kcal-pp-daemon_prop, property_type;
+
+# JSR_Settings.apk
+type storages-config_prop, property_type;
