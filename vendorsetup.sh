@@ -1,4 +1,9 @@
 build_root=$(pwd) # vendorsetup.sh is sourced by build/envsetup.sh in root of android build tree. Hope that nobody can correctly source it not from root of android tree.
+
+echo Touching prebuilts/qemu-kernel/arm/LINUX_KERNEL_COPYING
+mkdir -p prebuilts/qemu-kernel/arm/
+touch prebuilts/qemu-kernel/arm/LINUX_KERNEL_COPYING
+
 echo "Applying patches"
 patches_path="$build_root/device/jsr/d10f/patches/"
 pushd "$patches_path" > /dev/null
