@@ -1,7 +1,7 @@
 From 482d12551dfe98b74eed683486c00c743611bf5e Mon Sep 17 00:00:00 2001
 From: Atul <c_araut@codeaurora.org>
 Date: Fri, 26 Jun 2015 19:30:06 -0700
-Subject: [PATCH 17/17] Fix  arm-eabi-gcc build error for kernel by
+Subject: [PATCH 17/17] Fix arm-eabi-gcc build error for kernel by
 
 falling back to arm-eabi-4.8 gcc version
 
