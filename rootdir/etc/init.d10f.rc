@@ -509,7 +509,7 @@ on property:sys.boot_completed=1
 # CyanogenMod Performance Profiles
 
 # Powersave
-on property:sys.perf.profile=0
+on property:persist.sys.perf.profile=0
     stop mpdecision
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
@@ -528,7 +528,7 @@ on property:sys.perf.profile=0
     start mpdecision
 
 # Balanced
-on property:sys.perf.profile=1
+on property:persist.sys.perf.profile=1
     stop mpdecision
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
@@ -557,7 +557,7 @@ on property:sys.perf.profile=1
     start mpdecision
 
 # Performance
-on property:sys.perf.profile=2
+on property:persist.sys.perf.profile=2
     stop mpdecision
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
