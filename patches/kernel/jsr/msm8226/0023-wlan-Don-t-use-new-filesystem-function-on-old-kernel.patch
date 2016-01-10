@@ -1,0 +1,32 @@
+From df4f820a22f4b9940bf5bae8263567750fd42c32 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sun, 10 Jan 2016 02:39:30 +0300
+Subject: [PATCH 23/31] wlan: Don't use new filesystem function on old kernels
+
+PDE_DATA() and file_inode() not defined on 3.4 kernel
+
+Change-Id: Ia67585621004aa4f6a93adfa31054080147c1873
+---
+ drivers/staging/prima/CORE/HDD/src/wlan_hdd_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/prima/CORE/HDD/src/wlan_hdd_main.c b/drivers/staging/prima/CORE/HDD/src/wlan_hdd_main.c
+index e1a416f..73c1e47 100755
+--- a/drivers/staging/prima/CORE/HDD/src/wlan_hdd_main.c
++++ b/drivers/staging/prima/CORE/HDD/src/wlan_hdd_main.c
+@@ -12533,7 +12533,11 @@ static ssize_t memdump_read(struct file *file, char __user *buf,
+                     size_t count, loff_t *pos)
+ {
+     int status;
+-    hdd_context_t *hdd_ctx = (hdd_context_t *)PDE_DATA(file_inode(file));
++    #if !(LINUX_VERSION_CODE < KERNEL_VERSION(3,18,3))
++                  hdd_context_t *hdd_ctx = (hdd_context_t *)PDE_DATA(file_inode(file));
++    #else
++                  hdd_context_t *hdd_ctx = (hdd_context_t *)PDE(file->f_dentry->d_inode)->data;
++    #endif
+     size_t ret_count;
+     loff_t bytes_left;
+     ENTER();
+-- 
+2.5.0
+

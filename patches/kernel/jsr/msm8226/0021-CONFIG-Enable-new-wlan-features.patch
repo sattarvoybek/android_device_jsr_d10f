@@ -1,0 +1,33 @@
+From c3a59c47ec5880f5b25bbf4ec74f973f0fb778ce Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sat, 9 Jan 2016 05:41:52 +0300
+Subject: [PATCH 21/31] CONFIG: Enable new wlan features
+
+CONFIG_ENABLE_LINUX_REG=y
+CONFIG_QCOM_TDLS=y
+CONFIG_WLAN_OFFLOAD_PACKETS=y
+
+This also fixes build failures
+
+Change-Id: I63de947db52e1eacc125a73aa688c1279f18ebdc
+---
+ arch/arm/configs/jsr_d10f_defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/configs/jsr_d10f_defconfig b/arch/arm/configs/jsr_d10f_defconfig
+index d8376f6..95c8578 100644
+--- a/arch/arm/configs/jsr_d10f_defconfig
++++ b/arch/arm/configs/jsr_d10f_defconfig
+@@ -3160,6 +3160,9 @@ CONFIG_PRIMA_WLAN_OKC=y
+ CONFIG_PRIMA_WLAN_11AC_HIGH_TP=y
+ CONFIG_WLAN_FEATURE_11W=y
+ CONFIG_QCOM_VOWIFI_11R=y
++CONFIG_ENABLE_LINUX_REG=y
++CONFIG_QCOM_TDLS=y
++CONFIG_WLAN_OFFLOAD_PACKETS=y
+ 
+ #
+ # Qualcomm MSM specific device drivers
+-- 
+2.5.0
+

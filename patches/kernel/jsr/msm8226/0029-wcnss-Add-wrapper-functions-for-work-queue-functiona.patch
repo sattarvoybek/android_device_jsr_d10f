@@ -1,0 +1,70 @@
+From 8bc1b562b287342e4654b7c9673b20e0147afe59 Mon Sep 17 00:00:00 2001
+From: Anand N Sunkad <asunka@codeaurora.org>
+Date: Mon, 9 Mar 2015 16:27:13 +0530
+Subject: [PATCH 29/31] wcnss: Add wrapper functions for work queue
+ functionalities
+
+WLAN prop driver cannot access following functions directly.
+To mitigate issue add wrapper functions in platform driver for
+cancel_work_sync and cancel_delayed_work_sync kernel APIs .
+
+CRs-Fixed: 804860
+Change-Id: I990b3abd1fd678802e0728c882c18f83582a4075
+Signed-off-by: Anand N Sunkad <asunka@codeaurora.org>
+---
+ drivers/net/wireless/wcnss/wcnss_wlan.c | 24 ++++++++++++++++++++++++
+ include/linux/wcnss_wlan.h              |  3 +++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/drivers/net/wireless/wcnss/wcnss_wlan.c b/drivers/net/wireless/wcnss/wcnss_wlan.c
+index 0c33549..3bcb71c 100644
+--- a/drivers/net/wireless/wcnss/wcnss_wlan.c
++++ b/drivers/net/wireless/wcnss/wcnss_wlan.c
+@@ -2691,6 +2691,30 @@ fail_gpio_res:
+ 	return ret;
+ }
+ 
++/* wlan prop driver cannot invoke cancel_work_sync
++ * function directly, so to invoke this function it
++ * call wcnss_flush_work function
++ */
++void wcnss_flush_work(struct work_struct *work)
++{
++	struct work_struct *cnss_work = work;
++	if (cnss_work != NULL)
++		cancel_work_sync(cnss_work);
++}
++EXPORT_SYMBOL(wcnss_flush_work);
++
++/* wlan prop driver cannot invoke cancel_delayed_work_sync
++ * function directly, so to invoke this function it call
++ * wcnss_flush_delayed_work function
++ */
++void wcnss_flush_delayed_work(struct delayed_work *dwork)
++{
++	struct delayed_work *cnss_dwork = dwork;
++	if (cnss_dwork != NULL)
++		cancel_delayed_work_sync(cnss_dwork);
++}
++EXPORT_SYMBOL(wcnss_flush_delayed_work);
++
+ static int wcnss_node_open(struct inode *inode, struct file *file)
+ {
+ 	struct platform_device *pdev;
+diff --git a/include/linux/wcnss_wlan.h b/include/linux/wcnss_wlan.h
+index 17fcde0..675c85a 100644
+--- a/include/linux/wcnss_wlan.h
++++ b/include/linux/wcnss_wlan.h
+@@ -90,6 +90,9 @@ void wcnss_riva_dump_pmic_regs(void);
+ int wcnss_xo_auto_detect_enabled(void);
+ u32 wcnss_get_wlan_rx_buff_count(void);
+ int wcnss_wlan_iris_xo_mode(void);
++void wcnss_flush_work(struct work_struct *work);
++void wcnss_flush_delayed_work(struct delayed_work *dwork);
++
+ #ifdef CONFIG_WCNSS_REGISTER_DUMP_ON_BITE
+ void wcnss_log_debug_regs_on_bite(void);
+ #else
+-- 
+2.5.0
+

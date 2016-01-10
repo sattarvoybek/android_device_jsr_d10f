@@ -1,0 +1,35 @@
+From 7c6dfcbf5a4be62d450b18ee55aef0bcbb9fa7b9 Mon Sep 17 00:00:00 2001
+From: Jeff Johnson <jjohnson@codeaurora.org>
+Date: Tue, 9 Dec 2014 18:15:59 -0800
+Subject: [PATCH 33/33] nl80211: Fix backport of struct wiphy_vendor_command
+
+Change-Id I5bdab7e0dce095f2d846687343f78cc0dd60aab1 ("nl80211: vendor
+command support") was used to backport nl80211 vendor command support
+from 3.14.  Unfortunately this backport has a typo in the definition
+of struct wiphy_vendor_command, namely the third param to the doit
+callback function was declared as "void *data" instead of the correct
+"const void *data".  Correct this flaw in the backport.
+
+Change-Id: I1caf72215ebea94f6f9e7a930ab54d67ec8c2538
+CRs-Fixed: 768724
+Signed-off-by: Jeff Johnson <jjohnson@codeaurora.org>
+---
+ include/net/cfg80211.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index 8b833dd..da72596 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -2130,7 +2130,7 @@ struct wiphy_vendor_command {
+ 	struct nl80211_vendor_cmd_info info;
+ 	u32 flags;
+ 	int (*doit)(struct wiphy *wiphy, struct wireless_dev *wdev,
+-		    void *data, int data_len);
++		    const void *data, int data_len);
+ };
+ 
+ /**
+-- 
+2.5.0
+
