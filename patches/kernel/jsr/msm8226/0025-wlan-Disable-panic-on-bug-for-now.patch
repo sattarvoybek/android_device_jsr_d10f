@@ -1,0 +1,26 @@
+From cf412c9c4ccb36009bf4e8fbaba87c94b955fc07 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sun, 10 Jan 2016 03:50:33 +0300
+Subject: [PATCH 25/31] wlan: Disable panic on bug (for now)
+
+Change-Id: I313bc49b9fcbf65d7c037d36d89858a271838c2a
+---
+ drivers/staging/prima/Kbuild | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/prima/Kbuild b/drivers/staging/prima/Kbuild
+index 148b655..79bbc15 100644
+--- a/drivers/staging/prima/Kbuild
++++ b/drivers/staging/prima/Kbuild
+@@ -62,7 +62,7 @@ BUILD_DEBUG_VERSION := 1
+ BUILD_DIAG_VERSION := 1
+ 
+ #Do we panic on bug?  default is to warn
+-PANIC_ON_BUG := 1
++PANIC_ON_BUG := 0
+ 
+ #Re-enable wifi on WDI timeout
+ RE_ENABLE_WIFI_ON_WDI_TIMEOUT := 0
+-- 
+2.5.0
+

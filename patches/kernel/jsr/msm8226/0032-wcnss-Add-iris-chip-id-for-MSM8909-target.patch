@@ -1,0 +1,38 @@
+From 54031f7b0852d09c4665c833fb9c30a63ce0c6de Mon Sep 17 00:00:00 2001
+From: Hardik Kantilal Patel <hkpatel@codeaurora.org>
+Date: Wed, 22 Apr 2015 13:21:17 -0700
+Subject: [PATCH 32/33] wcnss: Add iris chip id for MSM8909 target
+
+Add iris chip id to support new IRIS card for MSM8909
+target.
+
+CRs-Fixed: 827135
+Change-Id: I465a8deb826b41462f0ff136bdf209313846b5f3
+Signed-off-by: Hardik Kantilal Patel <hkpatel@codeaurora.org>
+---
+ drivers/net/wireless/wcnss/wcnss_vreg.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/wireless/wcnss/wcnss_vreg.c b/drivers/net/wireless/wcnss/wcnss_vreg.c
+index e42027b..375bfc3 100644
+--- a/drivers/net/wireless/wcnss/wcnss_vreg.c
++++ b/drivers/net/wireless/wcnss/wcnss_vreg.c
+@@ -51,6 +51,7 @@ static int auto_detect;
+ #define WCN3620       0x5111
+ #define WCN3620A      0x5112
+ #define WCN3610       0x9101
++#define WCN3610V1     0x9110
+ 
+ #define WCNSS_PMU_CFG_IRIS_XO_CFG          BIT(3)
+ #define WCNSS_PMU_CFG_IRIS_XO_EN           BIT(4)
+@@ -204,6 +205,7 @@ int validate_iris_chip_id(u32 reg)
+ 	case WCN3620:
+ 	case WCN3620A:
+ 	case WCN3610:
++	case WCN3610V1:
+ 		return 0;
+ 	default:
+ 		return 1;
+-- 
+2.5.0
+
