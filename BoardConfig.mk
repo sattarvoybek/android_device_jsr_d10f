@@ -139,7 +139,6 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 ifeq ($(RECOVERY_VARIANT), twrp)
 # TWRP
-	DEVICE_RESOLUTION := 720x1280
 	TWHAVE_SELINUX := true
 	# RECOVERY_SDCARD_ON_DATA := true
 	TW_INCLUDE_JB_CRYPTO := true
@@ -152,7 +151,6 @@ ifeq ($(RECOVERY_VARIANT), twrp)
 	TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 	TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
 	TW_THEME := portrait_hdpi
-	# RECOVERY_GRAPHICS_USE_LINELENGTH := true
 	# This hook fixes stock ROMs device check
 	PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=D10A_HighScreen
 endif
