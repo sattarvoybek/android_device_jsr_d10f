@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/mount.h>
+#include <sys/statvfs.h>
 
 #include "init_msm.h"
 
@@ -86,6 +87,15 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		ERROR("Unable to open persistent property directory %s errno: %d\n", PERSISTENT_PROPERTY_DIR, errno);
 	}
 
+        unsigned long mount_flags=0;
+	struct statvfs statvfs_buf;
+	if (statvfs("/init", &statvfs_buf) != 0) {
+		ERROR("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
+	}
+	else {
+		mount_flags=statvfs_buf.f_flag;
+	}
+
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
 
 	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
@@ -122,5 +132,5 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		ERROR("no such service '%s'\n", SERVICE_VOLD);
 	}
 
-	mount("rootfs", "/", "rootfs", MS_REMOUNT|MS_RDONLY, NULL);
+	mount("rootfs", "/", "rootfs", MS_REMOUNT|mount_flags, NULL);
 }
