@@ -1,0 +1,30 @@
+From 026760703f050dec67f000d511b604dd172fbe70 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Thu, 14 Jan 2016 01:39:58 +0300
+Subject: [PATCH 39/39] CONFIG: Enable F2FS
+
+Change-Id: Ic0623747be0f89960b4817ac6b1e2e08569220ab
+---
+ arch/arm/configs/jsr_d10f_defconfig | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/configs/jsr_d10f_defconfig b/arch/arm/configs/jsr_d10f_defconfig
+index a44f416..5abac15 100644
+--- a/arch/arm/configs/jsr_d10f_defconfig
++++ b/arch/arm/configs/jsr_d10f_defconfig
+@@ -3696,3 +3696,12 @@ CONFIG_NLATTR=y
+ CONFIG_AVERAGE=y
+ # CONFIG_CORDIC is not set
+ CONFIG_QMI_ENCDEC=y
++
++CONFIG_F2FS_FS=y
++CONFIG_F2FS_STAT_FS=y
++CONFIG_F2FS_FS_XATTR=y
++CONFIG_F2FS_FS_POSIX_ACL=y
++CONFIG_F2FS_FS_SECURITY=y
++CONFIG_F2FS_CHECK_FS=y
++# CONFIG_F2FS_FS_ENCRYPTION is not set
++
+-- 
+2.5.0
+
