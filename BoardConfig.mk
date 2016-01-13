@@ -152,6 +152,7 @@ ifeq ($(RECOVERY_VARIANT), twrp)
 	TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 	TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
 	TW_THEME := portrait_hdpi
+	TW_NO_EXFAT_FUSE := true
 	# This hook fixes stock ROMs device check
 	PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=D10A_HighScreen
 endif
