@@ -1,0 +1,43 @@
+From 02abc66fa1c6ac43e24bccd8c3894df3a5cc7f52 Mon Sep 17 00:00:00 2001
+From: Anand N Sunkad <asunka@codeaurora.org>
+Date: Fri, 9 Jan 2015 12:11:53 +0530
+Subject: [PATCH 37/39] wcnss: add proper macro value check to avoid
+ unnecessary delay
+
+wcnss_service is sends value zero to platform driver, to indicate cal data
+is not present, but platform driver checking received value with macro
+value -1, because of improper macro value check unnecessary delay is added.
+To mitigate issue add proper macro value check and avoid the
+unnecessary delay.
+
+Change-Id: I8ff55c7e95c8b556063928d22940a16bee60e931
+CRs-Fixed: 779421
+Signed-off-by: Anand N Sunkad <asunka@codeaurora.org>
+---
+ drivers/net/wireless/wcnss/wcnss_wlan.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/wcnss/wcnss_wlan.c b/drivers/net/wireless/wcnss/wcnss_wlan.c
+index 637d130..c960351 100644
+--- a/drivers/net/wireless/wcnss/wcnss_wlan.c
++++ b/drivers/net/wireless/wcnss/wcnss_wlan.c
+@@ -56,6 +56,7 @@
+ #define WCNSS_ENABLE_PC_LATENCY	PM_QOS_DEFAULT_VALUE
+ #define WCNSS_PM_QOS_TIMEOUT	15000
+ #define WAIT_FOR_CBC_IND     2
++#define IS_CAL_DATA_PRESENT     0
+ 
+ /* module params */
+ #define WCNSS_CONFIG_UNSPECIFIED (-1)
+@@ -2285,7 +2286,7 @@ static void wcnss_nvbin_dnld_main(struct work_struct *worker)
+ 	if (!FW_CALDATA_CAPABLE())
+ 		goto nv_download;
+ 
+-	if (!penv->fw_cal_available && WCNSS_CONFIG_UNSPECIFIED
++	if (!penv->fw_cal_available && IS_CAL_DATA_PRESENT
+ 		!= has_calibrated_data && !penv->user_cal_available) {
+ 		while (!penv->user_cal_available && retry++ < 5)
+ 			msleep(500);
+-- 
+2.5.0
+

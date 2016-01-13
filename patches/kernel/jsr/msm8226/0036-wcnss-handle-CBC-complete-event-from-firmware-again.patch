@@ -1,0 +1,111 @@
+From 526dfdd005ca6abf3e290491e9b03eda6a8c865b Mon Sep 17 00:00:00 2001
+From: Siddharth Bhal <sbhal@codeaurora.org>
+Date: Fri, 10 Oct 2014 21:53:47 +0530
+Subject: [PATCH 36/39] wcnss: handle CBC complete event from firmware again
+
+Add case to handle cold boot calibration complete
+event from firmware.
+
+Change-Id: I3d3dce178fadd7f993ee31667c89bcebb02c388c
+CRs-Fixed: 796303
+Signed-off-by: Siddharth Bhal <sbhal@codeaurora.org>
+---
+ drivers/net/wireless/wcnss/wcnss_wlan.c | 19 +++++++++++++++++++
+ include/linux/wcnss_wlan.h              |  2 ++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/drivers/net/wireless/wcnss/wcnss_wlan.c b/drivers/net/wireless/wcnss/wcnss_wlan.c
+index 43547dc..637d130 100644
+--- a/drivers/net/wireless/wcnss/wcnss_wlan.c
++++ b/drivers/net/wireless/wcnss/wcnss_wlan.c
+@@ -55,6 +55,7 @@
+ #define WCNSS_DISABLE_PC_LATENCY	100
+ #define WCNSS_ENABLE_PC_LATENCY	PM_QOS_DEFAULT_VALUE
+ #define WCNSS_PM_QOS_TIMEOUT	15000
++#define WAIT_FOR_CBC_IND     2
+ 
+ /* module params */
+ #define WCNSS_CONFIG_UNSPECIFIED (-1)
+@@ -215,6 +216,7 @@ static DEFINE_SPINLOCK(reg_spinlock);
+ #define	WCNSS_BUILD_VER_REQ           (WCNSS_CTRL_MSG_START + 9)
+ #define	WCNSS_BUILD_VER_RSP           (WCNSS_CTRL_MSG_START + 10)
+ #define	WCNSS_PM_CONFIG_REQ           (WCNSS_CTRL_MSG_START + 11)
++#define	WCNSS_CBC_COMPLETE_IND        (WCNSS_CTRL_MSG_START + 12)
+ 
+ /* max 20mhz channel count */
+ #define WCNSS_MAX_CH_NUM			45
+@@ -407,6 +409,7 @@ static struct {
+ 	void __iomem *alarms_tactl;
+ 	void __iomem *fiq_reg;
+ 	int	nv_downloaded;
++	int	is_cbc_done;
+ 	unsigned char *fw_cal_data;
+ 	unsigned char *user_cal_data;
+ 	int	fw_cal_rcvd;
+@@ -1093,6 +1096,7 @@ static void wcnss_smd_notify_event(void *data, unsigned int event)
+ 		pr_debug("wcnss: closing WCNSS SMD channel :%s",
+ 				WCNSS_CTRL_CHANNEL);
+ 		penv->nv_downloaded = 0;
++		penv->is_cbc_done = 0;
+ 		break;
+ 
+ 	default:
+@@ -1301,6 +1305,15 @@ int wcnss_device_ready(void)
+ }
+ EXPORT_SYMBOL(wcnss_device_ready);
+ 
++bool wcnss_cbc_complete(void)
++{
++	if (penv && penv->pdev && penv->is_cbc_done &&
++		!wcnss_device_is_shutdown())
++		return true;
++	return false;
++}
++EXPORT_SYMBOL(wcnss_cbc_complete);
++
+ int wcnss_device_is_shutdown(void)
+ {
+ 	if (penv && penv->is_shutdown)
+@@ -1959,6 +1972,8 @@ static void wcnssctrl_rx_handler(struct work_struct *worker)
+ 		fw_status = wcnss_fw_status();
+ 		pr_debug("wcnss: received WCNSS_NVBIN_DNLD_RSP from ccpu %u\n",
+ 			fw_status);
++		if (fw_status != WAIT_FOR_CBC_IND)
++			penv->is_cbc_done = 1;
+ 		wcnss_setup_vbat_monitoring();
+ 		break;
+ 
+@@ -1968,6 +1983,10 @@ static void wcnssctrl_rx_handler(struct work_struct *worker)
+ 		pr_debug("wcnss: received WCNSS_CALDATA_DNLD_RSP from ccpu %u\n",
+ 			fw_status);
+ 		break;
++	case WCNSS_CBC_COMPLETE_IND:
++		penv->is_cbc_done = 1;
++		pr_debug("wcnss: received WCNSS_CBC_COMPLETE_IND from FW\n");
++		break;
+ 
+ 	case WCNSS_CALDATA_UPLD_REQ:
+ 		extract_cal_data(len);
+diff --git a/include/linux/wcnss_wlan.h b/include/linux/wcnss_wlan.h
+index 37d0acb..6218c33 100644
+--- a/include/linux/wcnss_wlan.h
++++ b/include/linux/wcnss_wlan.h
+@@ -43,6 +43,7 @@ enum {
+ #define HAVE_WCNSS_SUSPEND_RESUME_NOTIFY 1
+ #define HAVE_WCNSS_RESET_INTR 1
+ #define HAVE_WCNSS_CAL_DOWNLOAD 1
++#define HAVE_CBC_DONE 1
+ #define HAVE_WCNSS_RX_BUFF_COUNT 1
+ #define WLAN_MAC_ADDR_SIZE (6)
+ #define PRONTO_PMU_OFFSET       0x1004
+@@ -85,6 +86,7 @@ void wcnss_riva_log_debug_regs(void);
+ void wcnss_pronto_log_debug_regs(void);
+ int wcnss_is_hw_pronto_ver3(void);
+ int wcnss_device_ready(void);
++bool wcnss_cbc_complete(void);
+ int wcnss_device_is_shutdown(void);
+ void wcnss_riva_dump_pmic_regs(void);
+ int wcnss_xo_auto_detect_enabled(void);
+-- 
+2.5.0
+
