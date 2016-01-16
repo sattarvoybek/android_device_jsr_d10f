@@ -239,9 +239,6 @@ PRODUCT_PACKAGES += \
     libQWiFiSoftApCfg \
     wcnss_service
 
-PRODUCT_PACKAGES += \
-    Snap
-
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.disableWifiApFirmwareReload=true \
     persist.debug.wfd.enable=1 \
