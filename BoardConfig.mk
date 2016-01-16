@@ -129,15 +129,11 @@ TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
-#BOARD_HAS_LARGE_FILESYSTEM := true
 #BOARD_SUPPRESS_EMMC_WIPE := true
-#BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
 
-# Comment next line out to build default recovery instead of TWRP
+# Uncomment next line to build TWRP
 # RECOVERY_VARIANT := twrp
-
 ifeq ($(RECOVERY_VARIANT), twrp)
-# TWRP
 	TWHAVE_SELINUX := true
 	TARGET_RECOVERY_FSTAB := device/jsr/d10f/recovery/twrp.fstab
 	# RECOVERY_SDCARD_ON_DATA := true
