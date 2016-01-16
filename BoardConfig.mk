@@ -150,6 +150,9 @@ ifeq ($(RECOVERY_VARIANT), twrp)
 	TW_NO_EXFAT_FUSE := true
 	# This hook fixes stock ROMs device check
 	PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=D10A_HighScreen
+	PRODUCT_EXTRA_RECOVERY_KEYS += \
+		vendor/jsr/security/cm-12.1/releasekey \
+		vendor/jsr/security/cm-13.0/releasekey
 endif
 
 # SELinux
