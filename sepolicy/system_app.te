@@ -4,3 +4,7 @@ allow system_app sysfs_battery_supply:file { read getattr open };
 
 # JSR-Settings.apk
 allow system_app storages-config_prop:property_service set;
+
+# Torch.apk
+allow system_app torch_sysfs:dir search;
+allow system_app torch_sysfs:lnk_file read;
