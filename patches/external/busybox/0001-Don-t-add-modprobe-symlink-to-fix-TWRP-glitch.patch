@@ -1,0 +1,30 @@
+From b47d6021204deeb30d46ebf9ce294450be17bac4 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Fri, 15 Jan 2016 21:26:40 +0300
+Subject: [PATCH] Don't add modprobe symlink to fix TWRP glitch
+
+Kernel brings up HUGE count of modprobe processes like this:
+D     0 12154 12153   920   100 0:0   23:09 00:00:00 {modprobe} /sbin/sh /sbin/modprobe -q -- personality-8
+
+It loads CPU, slow down work and eat battery very fast
+
+Change-Id: I53174e6579b1ad9100997f3efdc8de4f22c2ab49
+---
+ busybox-full.links | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/busybox-full.links b/busybox-full.links
+index d85352d..3848503 100644
+--- a/busybox-full.links
++++ b/busybox-full.links
+@@ -116,7 +116,6 @@
+ /sbin/mkswap
+ /bin/mktemp
+ /sbin/modinfo
+-/sbin/modprobe
+ /bin/more
+ /bin/mount
+ /bin/mountpoint
+-- 
+2.5.0
+
