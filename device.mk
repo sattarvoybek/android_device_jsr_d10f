@@ -62,6 +62,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     init.qcom.bt.sh
 
+# CABL
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.qualcomm.cabl=0
+
 # Camera
 PRODUCT_PROPERTY_OVERRIDES += \
     camera2.portability.force_api=1
@@ -195,9 +199,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     power.msm8226
 
-# Qualcomm
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.timed.enable=true \
     ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Custom APK
@@ -236,6 +238,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/init.recovery.d10f.rc:root/init.recovery.d10f.rc
 endif
 
+# Time services
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.timed.enable=true
+
 # Wifi
 PRODUCT_PACKAGES += \
     hostapd_default.conf \
@@ -262,9 +268,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     ro.disableWifiApFirmwareReload=true \
-    wlan.driver.config=/system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
-    persist.debug.wfd.enable=1 \
-    persist.sys.wfd.virtual=0
+    wlan.driver.config=/system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
 
 # This build information
 PRODUCT_COPY_FILES += \
