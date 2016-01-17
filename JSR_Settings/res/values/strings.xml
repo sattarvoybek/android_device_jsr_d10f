@@ -64,5 +64,11 @@
     <string name="btn_g_cal">G-sensor calibration</string>
     <string name="btn_g_cal_hint">Press to open calibration interface</string>
     <string name="btn_g_cal_failure">Unable to start G-sensor calibration activity</string>
+    
+    <string name="noise_category">Noise Cancellation</string>
+    <string name="swt_spkr">In speaker mode</string>
+    <string name="swt_call">In voice calls</string>
+    <string name="swt_voice_rec">During voice recording</string>
+    <string name="swt_audio_rec">During audio recording</string>
 
 </resources>

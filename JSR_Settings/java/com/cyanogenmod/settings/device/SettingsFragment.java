@@ -1,38 +1,43 @@
 package com.cyanogenmod.settings.device;
 
-import android.content.Intent;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemProperties;
-import android.preference.SwitchPreference;
 import android.preference.ListPreference;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.widget.Toast;
 import android.util.Log;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 /**
  * Created by prodoomman on 19.02.15.
  */
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, OnPreferenceClickListener {
     
     private static final String TAG = "JSR";
     private static final String BTN_FUNC_APP = "btn_func_app";
     private static final String BTN_FUNC_APP2 = "btn_func_app2";
-    
+    private static final String BTN_G_CAL = "btn_g_cal";
+    private static final String SWT_SPKR = "swt_spkr";
+    private static final String SWT_CALL = "swt_call";
+    private static final String SWT_VOICE_REC = "swt_voice_rec";
+    private static final String SWT_AUDIO_REC = "swt_audio_rec";
+
     EditTextPreferenceEx btn_func_app;
     EditTextPreferenceEx btn_func_app2;
     Preference btn_g_cal;
+    SwitchPreference swt_spkr;
+    SwitchPreference swt_call;
+    SwitchPreference swt_voice_rec;
+    SwitchPreference swt_audio_rec;
     
     private class SysfsValue {
         private String fileName;
@@ -91,27 +96,22 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         btn_func_app2 = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP2);
         btn_func_app2.setOnPreferenceChangeListener(this);
         
-        btn_g_cal = (Preference)findPreference("btn_g_cal");
-        btn_g_cal.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-        {
-            @Override
-            public boolean onPreferenceClick(Preference pref) {
-                if (pref.getKey().equals("btn_g_cal")) {
-		    try {
-                        Intent callGCal = new Intent();
-                        callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest",
-                                "com.qualcomm.sensors.qsensortest.TabControl"));
-                        startActivity(callGCal);
-                    }
-                    catch(Exception ex) {
-			Log.e("JSR_settings", "Failed to start GravityCalibrationActivity: " + ex);
-			Toast.makeText(getActivity(), R.string.btn_g_cal_failure, Toast.LENGTH_LONG).show();
-                    }
-                }
-                return true;
-            }
-        });
-    }
+        btn_g_cal = (Preference)findPreference(BTN_G_CAL);
+        btn_g_cal.setOnPreferenceClickListener(this);
+
+        swt_spkr = (SwitchPreference)findPreference(SWT_SPKR);
+        swt_call = (SwitchPreference)findPreference(SWT_CALL);
+        swt_voice_rec = (SwitchPreference)findPreference(SWT_VOICE_REC);
+        swt_audio_rec = (SwitchPreference)findPreference(SWT_AUDIO_REC);
+        swt_spkr.setOnPreferenceChangeListener(this);
+        swt_call.setOnPreferenceChangeListener(this);
+        swt_voice_rec.setOnPreferenceChangeListener(this);
+        swt_audio_rec.setOnPreferenceChangeListener(this);
+        swt_spkr.setChecked(SystemProperties.getBoolean("persist.audio.fluence.speaker", false));
+        swt_call.setChecked(SystemProperties.getBoolean("persist.audio.fluence.voicecall", false));
+        swt_voice_rec.setChecked(SystemProperties.getBoolean("persist.audio.fluence.voicerec", false));
+        swt_audio_rec.setChecked(SystemProperties.getBoolean("persist.audio.fluence.audiorec", false));     
+        }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue)
@@ -126,6 +126,38 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if (preference.getKey().equals(BTN_FUNC_APP2)) {
             Settings.System.putString(getActivity().getContentResolver(), preference.getKey(), (String)newValue);
         }
+        if (preference.getKey().equals(SWT_SPKR)) {
+            SystemProperties.set("persist.audio.fluence.speaker", newValue.toString());
+            Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
+        }
+        if (preference.getKey().equals(SWT_CALL)) {
+            SystemProperties.set("persist.audio.fluence.voicecall", newValue.toString());
+            Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
+        }
+        if (preference.getKey().equals(SWT_VOICE_REC)) {
+            SystemProperties.set("persist.audio.fluence.voicerec", newValue.toString());
+            Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
+        }
+        if (preference.getKey().equals(SWT_AUDIO_REC)) {
+            SystemProperties.set("persist.audio.fluence.audiorec", newValue.toString());
+            Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
+        }
         return true;
     }
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		if (preference.getKey().equals(BTN_G_CAL)) {
+			try {
+				Intent callGCal = new Intent();
+				callGCal.setComponent(new ComponentName("com.qualcomm.sensors.qsensortest",
+						"com.qualcomm.sensors.qsensortest.TabControl"));
+				startActivity(callGCal);
+			} catch (Exception ex) {
+				Log.e(TAG, "Failed to start GravityCalibrationActivity: " + ex);
+				Toast.makeText(getActivity(), R.string.btn_g_cal_failure, Toast.LENGTH_LONG).show();
+			}
+		}
+		return true;
+	}
 }

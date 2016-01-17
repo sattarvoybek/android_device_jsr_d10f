@@ -61,5 +61,11 @@
     <string name="btn_g_cal">Калибровка G-сенсора</string>
     <string name="btn_g_cal_hint">Нажмите для открытия окна калибровки</string>
     <string name="btn_g_cal_failure">Невозоможно запустить калибровку G-сенсора</string>
+    
+    <string name="noise_category">Шумоподавление</string>
+    <string name="swt_spkr">В режиме громкоговорителя</string>
+    <string name="swt_call">Во время звонка</string>
+    <string name="swt_voice_rec">Во время записи голоса</string>
+    <string name="swt_audio_rec">Во время звукозаписи</string>
 
 </resources>
