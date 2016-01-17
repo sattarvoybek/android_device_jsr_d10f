@@ -218,11 +218,13 @@ PRODUCT_PACKAGES += \
     Torch
 
 # TWRP
+ifeq ($(RECOVERY_VARIANT), twrp)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/twrp.fstab:root/etc/twrp.fstab \
     $(LOCAL_PATH)/recovery/twrp_datamedia.fstab:root/etc/twrp_datamedia.fstab \
     $(LOCAL_PATH)/recovery/fstab.recovery.d10f:root/fstab.recovery.d10f \
     $(LOCAL_PATH)/recovery/init.recovery.d10f.rc:root/init.recovery.d10f.rc
+endif
 
 # Wifi
 PRODUCT_PACKAGES += \
