@@ -4,6 +4,8 @@
 /boot             emmc       /dev/block/platform/msm_sdcc.1/by-name/boot
 /recovery         emmc       /dev/block/platform/msm_sdcc.1/by-name/recovery    flags=display="Recovery";backup=1
 /modem            emmc       /dev/block/platform/msm_sdcc.1/by-name/modem       flags=display="Modem";backup=1
+/persist          emmc       /dev/block/platform/msm_sdcc.1/by-name/persist     flags=display="Persist";backup=1
+/splash           emmc       /dev/block/platform/msm_sdcc.1/by-name/splash      flags=display="Splash";backup=1
 
 /external_sd      vfat       /dev/block/mmcblk1p1                               flags=display="SD card";storagename="SD card";storage;wipeingui;removable;fsflags=utf8
 /usb-otg          vfat       /dev/block/sda1 /dev/block/sda                     flags=display="USB OTG";storagename="USB OTG";storage;wipeingui;removable
