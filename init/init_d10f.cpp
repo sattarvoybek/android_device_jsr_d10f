@@ -246,6 +246,7 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		unlink(TWRP_FSTAB_CLASSIC);
 		link(TWRP_FSTAB_DATAMEDIA, TWRP_FSTAB_CLASSIC);
 		unlink(TWRP_FSTAB_DATAMEDIA);
+		isDatamedia = TRUE;
         }
 
 	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
@@ -267,8 +268,15 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		unlink("/fstab.d10f_int");
 	} else {
 		// if classic (default case)
-		property_set("ro.vold.primary_physical", "1");
 		ERROR("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		property_set("ro.vold.primary_physical", "1");
+		if (isDatamedia) {
+			strncpy(value, STORAGES_CONFIGURATION_DATAMEDIA, PROP_VALUE_MAX);
+			property_set(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
+			ERROR("No usbmsc partiton - overriding storage configuration to datamedia! (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+			unlink("/fstab.d10f");
+			link("/fstab.d10f_int", "/fstab.d10f");
+		}
 		unlink("/fstab.d10f_sd");
 		unlink("/fstab.d10f_int");
 	}
