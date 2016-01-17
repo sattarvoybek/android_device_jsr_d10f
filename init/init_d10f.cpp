@@ -39,6 +39,10 @@
 
 #define USBMSC_PRESENT_PROPERTY_NAME "ro.usbmsc.present"
 #define USBMSC_PARTITION_PATH "/dev/block/platform/msm_sdcc.1/by-name/usbmsc"
+
+#define TWRP_FSTAB_CLASSIC   "/etc/twrp.fstab"
+#define TWRP_FSTAB_DATAMEDIA "/etc/twrp_datamedia.fstab"
+
 void restart_vold(void){
 	struct service *svc = service_find_by_name(SERVICE_VOLD);
 	if (svc) {
@@ -235,9 +239,13 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	if(access(USBMSC_PARTITION_PATH, F_OK) == 0) {
 		ERROR("access() successed, usbmsc present\n");
 		property_set(USBMSC_PRESENT_PROPERTY_NAME, "true");
+		unlink(TWRP_FSTAB_DATAMEDIA);
 	} else {
 		ERROR("statvfs() failed, usbmsc not present, errno: %d (%s)\n", errno, strerror(errno));
 		property_set(USBMSC_PRESENT_PROPERTY_NAME, "false");
+		unlink(TWRP_FSTAB_CLASSIC);
+		link(TWRP_FSTAB_DATAMEDIA, TWRP_FSTAB_CLASSIC);
+		unlink(TWRP_FSTAB_DATAMEDIA);
         }
 
 	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);

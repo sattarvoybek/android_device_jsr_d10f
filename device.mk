@@ -217,6 +217,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     Torch
 
+# TWRP
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/twrp.fstab:recovery/root/etc/twrp.fstab \
+    $(LOCAL_PATH)/recovery/twrp_datamedia.fstab:recovery/root/etc/twrp_datamedia.fstab
+
 # Wifi
 PRODUCT_PACKAGES += \
     hostapd_default.conf \

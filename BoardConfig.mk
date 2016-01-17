@@ -136,7 +136,6 @@ BOARD_SUPPRESS_EMMC_WIPE := true
 # RECOVERY_VARIANT := twrp
 ifeq ($(RECOVERY_VARIANT), twrp)
 	TWHAVE_SELINUX := true
-	TARGET_RECOVERY_FSTAB := device/jsr/d10f/recovery/twrp.fstab
 	# RECOVERY_SDCARD_ON_DATA := true
 	TW_INCLUDE_JB_CRYPTO := true
 	TW_INCLUDE_L_CRYPTO := true
