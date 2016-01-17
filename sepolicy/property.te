@@ -3,3 +3,6 @@ type kcal-pp-daemon_prop, property_type;
 
 # JSR_Settings.apk
 type storages-config_prop, property_type;
+
+# init
+type usbmsc_present_prop, property_type;

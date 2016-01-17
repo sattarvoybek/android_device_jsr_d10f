@@ -37,6 +37,8 @@
 #define STORAGE_XML_CONFIG_CLASSIC_FMT   "<volumes version=\"%d\" primaryStorageUuid=\"primary_physical\" forceAdoptable=\"%s\">\n"
 #define STORAGE_XML_CONFIG_DATAMEDIA_FMT "<volumes version=\"%d\" forceAdoptable=\"%s\">\n"
 
+#define USBMSC_PRESENT_PROPERTY_NAME "ro.usbmsc.present"
+#define USBMSC_PARTITION_PATH "/dev/block/platform/msm_sdcc.1/by-name/usbmsc"
 void restart_vold(void){
 	struct service *svc = service_find_by_name(SERVICE_VOLD);
 	if (svc) {
@@ -228,6 +230,15 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	}
 
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
+
+	errno=0;
+	if(access(USBMSC_PARTITION_PATH, F_OK) == 0) {
+		ERROR("access() successed, usbmsc present\n");
+		property_set(USBMSC_PRESENT_PROPERTY_NAME, "true");
+	} else {
+		ERROR("statvfs() failed, usbmsc not present, errno: %d (%s)\n", errno, strerror(errno));
+		property_set(USBMSC_PRESENT_PROPERTY_NAME, "false");
+        }
 
 	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
 	if (rc && ISMATCH(value, STORAGES_CONFIGURATION_DATAMEDIA)) {

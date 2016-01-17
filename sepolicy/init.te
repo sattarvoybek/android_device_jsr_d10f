@@ -1,3 +1,4 @@
 #============= init ==============
 allow init rootfs:file {unlink link};
 allow init kcal_sysfs:file getattr;
+allow init usbmsc_present_prop:property_service set;
