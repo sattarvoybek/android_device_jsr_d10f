@@ -1,0 +1,57 @@
+From 832b56036d4a4d0ecbd2938019bc9e1acf76a70c Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sun, 17 Jan 2016 08:00:09 +0300
+Subject: [PATCH 3/3] [DATAMEDIA] Set datamedia flag based on ro.usbmsc.present
+ prop
+
+Change-Id: I70b3379d1098cdd0dd5ea703056f012bf036c901
+---
+ data.cpp | 13 +++++++++++--
+ twrp.cpp |  7 +++++++
+ 2 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/data.cpp b/data.cpp
+index c945f2a..acf391e 100644
+--- a/data.cpp
++++ b/data.cpp
+@@ -690,8 +690,17 @@ void DataManager::SetDefaultValues()
+ 	mConstValues.insert(make_pair("tw_has_internal", "1"));
+ 	datamedia = true;
+ #else
+-	mValues.insert(make_pair(TW_HAS_DATA_MEDIA, make_pair("0", 0)));
+-	mValues.insert(make_pair("tw_has_internal", make_pair("0", 0)));
++	char usbmsc_present[PROPERTY_VALUE_MAX];
++	property_get("ro.usbmsc.present", usbmsc_present, "true");
++	if (strncmp(usbmsc_present, "false", PROPERTY_VALUE_MAX) == 0) {
++		printf("RECOVERY_SDCARD_ON_DATA := true (forced by property ro.usbmsc.present=%s\n", usbmsc_present);
++		mConstValues.insert(make_pair(TW_HAS_DATA_MEDIA, "1"));
++		mConstValues.insert(make_pair("tw_has_internal", "1"));
++		datamedia = true;
++        } else {
++		mValues.insert(make_pair(TW_HAS_DATA_MEDIA, make_pair("0", 0)));
++		mValues.insert(make_pair("tw_has_internal", make_pair("0", 0)));
++        }
+ #endif
+ #ifdef TW_NO_BATT_PERCENT
+ 	printf("TW_NO_BATT_PERCENT := true\n");
+diff --git a/twrp.cpp b/twrp.cpp
+index 4f42664..a52aa85 100644
+--- a/twrp.cpp
++++ b/twrp.cpp
+@@ -98,6 +98,13 @@ int main(int argc, char **argv) {
+ 
+ #ifdef RECOVERY_SDCARD_ON_DATA
+ 	datamedia = true;
++#else
++	char usbmsc_present[PROPERTY_VALUE_MAX];
++	property_get("ro.usbmsc.present", usbmsc_present, "true");
++	if (strncmp(usbmsc_present, "false", PROPERTY_VALUE_MAX) == 0) {
++		printf("datamedia = true (forced by property ro.usbmsc.present=%s)\n", usbmsc_present);
++		datamedia = true;
++	}
+ #endif
+ 
+ 	char crash_prop_val[PROPERTY_VALUE_MAX];
+-- 
+2.5.0
+
