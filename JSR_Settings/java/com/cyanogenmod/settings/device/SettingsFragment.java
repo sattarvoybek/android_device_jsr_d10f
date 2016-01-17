@@ -30,9 +30,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private static final String BTN_FUNC_APP = "btn_func_app";
     private static final String BTN_FUNC_APP2 = "btn_func_app2";
     private static final String PERSISTENT_PROPERTY_CONFIGURATION_NAME = "persist.storages.configuration";
-    private static final int STORAGES_CONFIGURATION_CLASSIC = 0 ;
-    private static final int STORAGES_CONFIGURATION_INVERTED = 1 ;
-    private static final int STORAGES_CONFIGURATION_DATAMEDIA = 2 ;
+    private static final String USBMSC_PRESENT_PROPERTY_NAME = "ro.usbmsc.present";
+    private static final String STORAGES_CONFIGURATION_CLASSIC = "0" ;
+    private static final String STORAGES_CONFIGURATION_INVERTED = "1" ;
+    private static final String STORAGES_CONFIGURATION_DATAMEDIA = "2" ;
 
     EditTextPreferenceEx btn_func_app;
     EditTextPreferenceEx btn_func_app2;
@@ -82,13 +83,27 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_jsr);
+        ListPreference main_storage;
+        String configuration;
+        boolean usbmscPresent = SystemProperties.getBoolean(USBMSC_PRESENT_PROPERTY_NAME, true);
+        if (usbmscPresent) {
+            main_storage=(ListPreference)findPreference("main_storage");
+	    main_storage.setEntries(new String[]{getString(R.string.storage_datamedia), getString(R.string.storage_usbmsc), getString(R.string.storage_sdcard)});
+	    main_storage.setEntryValues(new String[]{STORAGES_CONFIGURATION_DATAMEDIA, STORAGES_CONFIGURATION_CLASSIC, STORAGES_CONFIGURATION_INVERTED});
+            configuration = SystemProperties.get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_CLASSIC);
+        } else {
+            main_storage=(ListPreference)findPreference("main_storage");
+            main_storage.setEntries(new String[]{getString(R.string.storage_datamedia), getString(R.string.storage_sdcard)});
+	    main_storage.setEntryValues(new String[]{STORAGES_CONFIGURATION_DATAMEDIA, STORAGES_CONFIGURATION_INVERTED});
+	    configuration = SystemProperties.get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_DATAMEDIA);
+            if (configuration == STORAGES_CONFIGURATION_CLASSIC) {
+		configuration = STORAGES_CONFIGURATION_DATAMEDIA;
+	    }
+        }
 
-        ListPreference main_storage = (ListPreference)findPreference("main_storage");
         main_storage.setOnPreferenceChangeListener(this);
 
-        int configuration = SystemProperties.getInt(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_CLASSIC);
-
-        main_storage.setValue(String.valueOf(configuration));
+        main_storage.setValue(configuration);
 
         btn_func_app = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP);
         btn_func_app.setOnPreferenceChangeListener(this);

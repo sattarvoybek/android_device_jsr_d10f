@@ -14,11 +14,4 @@
     <string-array name="chargelevel_names">
         <item>Автоопределение</item>
     </string-array>
-    
-    <!-- Implemented -->
-    <string-array name="main_storage_names">
-        <item>Внутренняя SD</item>
-        <item>SD карта</item>
-        <item>Внутреннее хранилище</item>
-    </string-array>
 </resources>

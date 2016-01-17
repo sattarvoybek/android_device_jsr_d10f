@@ -62,4 +62,7 @@
     <string name="btn_g_cal_hint">Нажмите для открытия окна калибровки</string>
     <string name="btn_g_cal_failure">Невозоможно запустить калибровку G-сенсора</string>
 
+    <string name="storage_datamedia">Внутреннее хранилище</string>
+    <string name="storage_usbmsc">Внутренняя SD</string>
+    <string name="storage_sdcard">SD карта</string>
 </resources>

@@ -21,4 +21,7 @@
     <string name="cpugov_powersave">Tryb oszczędny - %s</string>
     <string name="cpu_boost">Zwiększenie częstotliwości procesora</string>
     <string name="intelliplug_boost">Zwiększenie rdzeni procesora</string>
+    <string name="storage_datamedia">Pamięć wewnętrzna</string>
+    <string name="storage_usbmsc">Wewnętrzna SD</string>
+    <string name="storage_sdcard">Karta SD</string>
 </resources>

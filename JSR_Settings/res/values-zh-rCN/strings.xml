@@ -21,4 +21,7 @@
     <string name="cpugov_powersave">节能模式 - %s</string>
     <string name="cpu_boost">Cpu 频率提升</string>
     <string name="intelliplug_boost">Cpu 内核提升</string>
+    <string name="storage_datamedia">内置存储</string>
+    <string name="storage_usbmsc">内置SD</string>
+    <string name="storage_sdcard">SD卡存储</string>
 </resources>

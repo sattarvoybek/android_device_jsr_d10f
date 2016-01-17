@@ -21,4 +21,7 @@
     <string name="cpugov_powersave">Powersave mode - %s</string>
     <string name="cpu_boost">Підвищення частоти процесора</string>
     <string name="intelliplug_boost">Активація додаткових ядер</string>
+    <string name="storage_datamedia">Внутрішня пам’ять</string>
+    <string name="storage_usbmsc">Внутрішня SD</string>
+    <string name="storage_sdcard">SD карта</string>
 </resources>

@@ -4,11 +4,6 @@
         <item>МЕНЮ - ДОДОМУ - НАЗАД</item>
         <item>НАЗАД - ДОДОМУ - МЕНЮ</item>
     </string-array>
-    <string-array name="main_storage_names">
-        <item>Внутрішня SD</item>
-        <item>SD карта</item>
-        <item>Внутрішня пам’ять</item>
-    </string-array>
     <string-array name="zram_names">
         <item>64 Мб</item>
         <item>128 Мб</item>

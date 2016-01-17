@@ -65,4 +65,7 @@
     <string name="btn_g_cal_hint">Press to open calibration interface</string>
     <string name="btn_g_cal_failure">Unable to start G-sensor calibration activity</string>
 
+    <string name="storage_datamedia">Internal storage</string>
+    <string name="storage_usbmsc">Internal SD</string>
+    <string name="storage_sdcard">SD card</string>
 </resources>
