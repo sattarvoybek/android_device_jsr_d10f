@@ -1,0 +1,58 @@
+From eaca957a14e87d37b52172670ae6f3c483f40c30 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sun, 17 Jan 2016 10:38:27 +0300
+Subject: [PATCH 4/5] [DATAMEDIA] Honor persist.storages.configuration setting
+
+Change-Id: Ie0f2e454ac8f94e01044832b07bb5101ce503b8d
+---
+ data.cpp | 9 +++++++--
+ twrp.cpp | 9 +++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/data.cpp b/data.cpp
+index acf391e..250b9a0 100644
+--- a/data.cpp
++++ b/data.cpp
+@@ -690,10 +690,15 @@ void DataManager::SetDefaultValues()
+ 	mConstValues.insert(make_pair("tw_has_internal", "1"));
+ 	datamedia = true;
+ #else
++#define STORAGES_CONFIGURATION_CLASSIC   "0"
++#define STORAGES_CONFIGURATION_INVERTED  "1"
++#define STORAGES_CONFIGURATION_DATAMEDIA "2"
+ 	char usbmsc_present[PROPERTY_VALUE_MAX];
++	char storage_configuration[PROPERTY_VALUE_MAX];
+ 	property_get("ro.usbmsc.present", usbmsc_present, "true");
+-	if (strncmp(usbmsc_present, "false", PROPERTY_VALUE_MAX) == 0) {
+-		printf("RECOVERY_SDCARD_ON_DATA := true (forced by property ro.usbmsc.present=%s\n", usbmsc_present);
++	property_get("persist.storages.configuration", storage_configuration, STORAGES_CONFIGURATION_CLASSIC);
++	if (strncmp(usbmsc_present, "false", PROPERTY_VALUE_MAX) == 0 || strncmp(storage_configuration, STORAGES_CONFIGURATION_DATAMEDIA, PROPERTY_VALUE_MAX) == 0) {
++		printf("RECOVERY_SDCARD_ON_DATA := true (forced by properties ro.usbmsc.present=%s and persist.storages.configuration=%s\n", usbmsc_present, storage_configuration);
+ 		mConstValues.insert(make_pair(TW_HAS_DATA_MEDIA, "1"));
+ 		mConstValues.insert(make_pair("tw_has_internal", "1"));
+ 		datamedia = true;
+diff --git a/twrp.cpp b/twrp.cpp
+index a52aa85..253314a 100644
+--- a/twrp.cpp
++++ b/twrp.cpp
+@@ -99,10 +99,15 @@ int main(int argc, char **argv) {
+ #ifdef RECOVERY_SDCARD_ON_DATA
+ 	datamedia = true;
+ #else
++#define STORAGES_CONFIGURATION_CLASSIC   "0"
++#define STORAGES_CONFIGURATION_INVERTED  "1"
++#define STORAGES_CONFIGURATION_DATAMEDIA "2"
+ 	char usbmsc_present[PROPERTY_VALUE_MAX];
++	char storage_configuration[PROPERTY_VALUE_MAX];
+ 	property_get("ro.usbmsc.present", usbmsc_present, "true");
+-	if (strncmp(usbmsc_present, "false", PROPERTY_VALUE_MAX) == 0) {
+-		printf("datamedia = true (forced by property ro.usbmsc.present=%s)\n", usbmsc_present);
++	property_get("persist.storages.configuration", storage_configuration, STORAGES_CONFIGURATION_CLASSIC);
++	if (strncmp(usbmsc_present, "false", PROPERTY_VALUE_MAX) == 0 || strncmp(storage_configuration, STORAGES_CONFIGURATION_DATAMEDIA, PROPERTY_VALUE_MAX) == 0) {
++		printf("datamedia = true (forced by property ro.usbmsc.present=%s and persist.storages.configuration=%s\n", usbmsc_present, storage_configuration);
+ 		datamedia = true;
+ 	}
+ #endif
+-- 
+2.5.0
+
