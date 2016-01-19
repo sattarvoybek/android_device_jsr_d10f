@@ -1,4 +1,0 @@
-# Torch.apk
-allow platform_app torch_sysfs:dir search;
-allow platform_app torch_sysfs:file { getattr open read write append };
-
