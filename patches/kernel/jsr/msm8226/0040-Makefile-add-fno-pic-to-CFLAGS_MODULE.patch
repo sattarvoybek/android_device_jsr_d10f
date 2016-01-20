@@ -1,0 +1,29 @@
+From 1f5c4840a9e447b70716a62be6d1c8e1b35840ff Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Thu, 21 Jan 2016 00:36:28 +0300
+Subject: [PATCH 40/40] Makefile: add -fno-pic to CFLAGS_MODULE
+
+This is necessary to get pronto WLAN driver module loading and get rid of error:
+[ 1525.047424,0 ] wlan: Unknown symbol _GLOBAL_OFFSET_TABLE_ (err 0)
+
+Change-Id: Ic07bfd5f0ce65d5a370a4a8c3e05ee87c9d426e5
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 0c11d69..25c7f417 100644
+--- a/Makefile
++++ b/Makefile
+@@ -351,7 +351,7 @@ CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
+ 
+ CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
+ 		  -Wbitwise -Wno-return-void $(CF)
+-CFLAGS_MODULE   =
++CFLAGS_MODULE   = -fno-pic
+ AFLAGS_MODULE   =
+ LDFLAGS_MODULE  =
+ CFLAGS_KERNEL	=
+-- 
+2.5.0
+
