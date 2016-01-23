@@ -1,0 +1,54 @@
+From 03f0452d30c2c8087cc169a5a3af0f379477b320 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sat, 23 Jan 2016 03:18:46 +0300
+Subject: [PATCH 5/5] [OTA] Use zipadjust to make .apks more OpenDelta-friendly
+
+Decompress and zipadjust every .apk in ROM before zipaligning - OpenDelta don't like deflated data
+
+Change-Id: I59d052d81612e5acf80ac8da3d8c9ec88c6be612
+---
+ core/Makefile       | 1 +
+ core/config.mk      | 1 +
+ core/definitions.mk | 2 ++
+ 3 files changed, 4 insertions(+)
+
+diff --git a/core/Makefile b/core/Makefile
+index 7eca2db..3485187 100644
+--- a/core/Makefile
++++ b/core/Makefile
+@@ -1522,6 +1522,7 @@ DISTTOOLS :=  $(HOST_OUT_EXECUTABLES)/minigzip \
+   $(HOST_OUT_EXECUTABLES)/unpackbootimg \
+   $(HOST_OUT_EXECUTABLES)/fs_config \
+   $(HOST_OUT_EXECUTABLES)/mkyaffs2image \
++  $(HOST_OUT_EXECUTABLES)/zipadjust \
+   $(HOST_OUT_EXECUTABLES)/zipalign \
+   $(HOST_OUT_EXECUTABLES)/bsdiff \
+   $(HOST_OUT_EXECUTABLES)/imgdiff \
+diff --git a/core/config.mk b/core/config.mk
+index 9344958..57617e6 100644
+--- a/core/config.mk
++++ b/core/config.mk
+@@ -510,6 +510,7 @@ ACP := $(BUILD_OUT_EXECUTABLES)/acp$(BUILD_EXECUTABLE_SUFFIX)
+ # dx is java behind a shell script; no .exe necessary.
+ DX := $(HOST_OUT_EXECUTABLES)/dx
+ ZIPALIGN := $(HOST_OUT_EXECUTABLES)/zipalign$(HOST_EXECUTABLE_SUFFIX)
++ZIPADJUST := $(HOST_OUT_EXECUTABLES)/zipadjust$(HOST_EXECUTABLE_SUFFIX)
+ 
+ # relocation packer
+ RELOCATION_PACKER := prebuilts/misc/$(BUILD_OS)-$(HOST_PREBUILT_ARCH)/relocation_packer/relocation_packer
+diff --git a/core/definitions.mk b/core/definitions.mk
+index 2db4e1b..fa0b8c7 100644
+--- a/core/definitions.mk
++++ b/core/definitions.mk
+@@ -2139,6 +2139,8 @@ endef
+ # Align STORED entries of a package on 4-byte boundaries to make them easier to mmap.
+ #
+ define align-package
++$(hide) mv $@ $@.unadjusted
++$(hide) $(ZIPADJUST) --decompress $@.unadjusted $@
+ $(hide) mv $@ $@.unaligned
+ $(hide) $(ZIPALIGN) \
+     -f \
+-- 
+2.5.0
+
