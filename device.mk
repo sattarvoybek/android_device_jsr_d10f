@@ -72,6 +72,10 @@ PRODUCT_PACKAGES += \
     libxml2 \
     Snap
 
+# CM-11.0 Calculator
+PRODUCT_PACKAGES += \
+    Calculator
+
 # Charger
 PRODUCT_PACKAGES += \
     charger_res_images
