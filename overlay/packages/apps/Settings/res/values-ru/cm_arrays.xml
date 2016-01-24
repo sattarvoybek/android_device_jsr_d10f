@@ -30,4 +30,11 @@
         <item>Бразилия</item>
         <item>Индия</item>
     </string-array>
+
+    <!-- Values for screen color  -->
+    <string-array name="screen_color_setting">
+        <item>Стандартный</item>
+        <item>Яркий</item>
+        <item>Другой</item>
+    </string-array>
 </resources>
