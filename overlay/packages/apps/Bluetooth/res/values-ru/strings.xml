@@ -16,8 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="network_2G3G" translatable="false">2G/3G автовыбор</string>
-    <string name="simContacts_airplaneMode" msgid="5254946758982621072">"Чтобы импортировать контакты с SIM-карты, отключите режим полёта."</string>
-    <string name="incall_error_power_off" msgid="2947938060513306698">"Чтобы позвонить, отключите режим полёта."</string>
-    <string name="incall_error_power_off_wfc" msgid="8711428920632416575">"Чтобы позвонить, отключите режим полёта и подключитесь к Wi-Fi."</string>
+    <string name="airplane_error_title" msgid="2683839635115739939">"Режим полёта"</string>
+    <string name="airplane_error_msg" msgid="8698965595254137230">"В режиме полёта нельзя использовать Bluetooth."</string>
 </resources>

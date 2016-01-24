@@ -21,4 +21,8 @@
     <string name="su_indicator_summary">Показывать индикатор суперпользователя (#) в строке состояния, когда он используется</string>
     <string name="statusbar_exclamation_marks_display">Индикаторы подключения к интернет</string>
     <string name="statusbar_exclamation_marks_desc">Показывать восклицательные знаки рядом с индикаторами сигнала, когда отсутствует подключение к интернет</string>
+    <string name="airplane_mode" msgid="8837269988154128601">"Режим полёта"</string>
+    <string name="radio_controls_summary" msgid="2837395036275123133">"Настройки Wi‑Fi, Bluetooth, режима полёта, мобильных сетей и VPN"</string>
+    <string name="wifi_in_airplane_mode" msgid="8652520421778203796">"Режим полёта"</string>
+    <string name="battery_sugg_radio" msgid="8211336978326295047">"Если нет доступа в сеть, вкл. режим полёта для экономии заряда"</string>
 </resources>
