@@ -1,0 +1,37 @@
+From 9c6ee89f5f7657cf02059138094f3be7509f2017 Mon Sep 17 00:00:00 2001
+From: Ketut Putu Kumajaya <ketut.kumajaya@gmail.com>
+Date: Sat, 2 Jan 2016 12:30:10 +0700
+Subject: [PATCH] f2fs-tools: Respect NO_SECURE_DISCARD flag
+
+http://review.cyanogenmod.org/#/c/126301
+
+Change-Id: I192950ea73fc6958d4d340ef4b73381c8ad75498
+---
+ mkfs/f2fs_format_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mkfs/f2fs_format_utils.c b/mkfs/f2fs_format_utils.c
+index 0e2b1cb..5d336af 100644
+--- a/mkfs/f2fs_format_utils.c
++++ b/mkfs/f2fs_format_utils.c
+@@ -52,7 +52,7 @@ int __attribute__((weak)) f2fs_trim_device()
+ #endif
+ 		return 0;
+ 	} else if (S_ISBLK(stat_buf.st_mode)) {
+-#if defined(BLKSECDISCARD)
++#if defined(BLKSECDISCARD) && !defined(NO_SECURE_DISCARD)
+ 		if (ioctl(config.fd, BLKSECDISCARD, &range) < 0) {
+ #endif
+ 			if (ioctl(config.fd, BLKDISCARD, &range) < 0) {
+@@ -60,7 +60,7 @@ int __attribute__((weak)) f2fs_trim_device()
+ 			} else {
+ 				MSG(0, "Info: Wipe via secure discard failed, used discard instead\n");
+ 			}
+-#if defined(BLKSECDISCARD)
++#if defined(BLKSECDISCARD) && !defined(NO_SECURE_DISCARD)
+ 		}
+ #endif
+ 	} else
+-- 
+2.5.0
+
