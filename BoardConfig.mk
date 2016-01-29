@@ -138,6 +138,7 @@ ifeq ($(RECOVERY_VARIANT), twrp)
 	# RECOVERY_SDCARD_ON_DATA := true
 	TW_INCLUDE_JB_CRYPTO := true
 	TW_INCLUDE_L_CRYPTO := true
+	TARGET_RECOVERY_QCOM_RTC_FIX := true
 	TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 	TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
 	TW_THEME := portrait_hdpi
