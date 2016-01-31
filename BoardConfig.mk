@@ -139,6 +139,7 @@ ifeq ($(RECOVERY_VARIANT), twrp)
 	TW_INCLUDE_JB_CRYPTO := true
 	TW_INCLUDE_L_CRYPTO := true
 	TARGET_RECOVERY_QCOM_RTC_FIX := true
+	TW_TARGET_USES_QCOM_BSP := true
 	TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 	TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
 	TW_THEME := portrait_hdpi
