@@ -54,7 +54,7 @@
     <!-- Notification manager -->
     <dashboard-tile android:id="@+id/notification_manager" android:title="@string/notification_manager" android:fragment="com.android.settings.notification.NotificationManagerSettings" android:icon="@drawable/ic_settings_notifications"/>
     <!-- Lock screen -->
-    <dashboard-tile android:id="@+id/lockscreen_settings" android:title="@string/lockscreen_settings" android:fragment="com.android.settings.SecuritySettings" android:icon="@drawable/ic_settings_security">
+    <dashboard-tile android:id="@+id/lockscreen_settings" android:title="@string/lockscreen_settings" android:fragment="com.android.settings.SecuritySettings" android:icon="@drawable/ic_settings_lockscreen">
       <extra android:name="filter_type" android:value="0"/>
     </dashboard-tile>
     <!-- Buttons -->
