@@ -47,10 +47,6 @@ persist.radio.msgtunnel.start=false
 persist.radio.multisim.config=dsds
 persist.radio.rat_on=combine
 ro.telephony.ril.config=simactivation
-# Force TeleService to show network mode settings for both SIMs
-# Broken by commit packages/services/Telephony:
-# 4ee48b4 TelephonyService: Use user preferred nw for selections.
-ro.ril.multi_rat_capable=true
 
 # uncomment for change Int & Ext SDCard
 #persist.storages.planned_swap=1
