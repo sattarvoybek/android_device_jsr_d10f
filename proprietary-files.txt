@@ -202,6 +202,8 @@ vendor/lib/libsmemlog.so
 # Radio
 bin/netmgrd
 bin/qmuxd
+bin/radish
+bin/rfs_access
 bin/rmt_storage
 lib/libmdmdetect.so
 vendor/lib/libcneapiclient.so
