@@ -1,4 +1,4 @@
-From ec3928e90c9765d2aaaf2d148e10da9d96490a18 Mon Sep 17 00:00:00 2001
+From bcd0b5735b5e537b0b54fd19fc6693ca759fe0b2 Mon Sep 17 00:00:00 2001
 From: S-trace <S-trace@list.ru>
 Date: Thu, 4 Feb 2016 20:08:05 +0300
 Subject: [PATCH] Revert "Allow MobileNetworkSettings to be invoked for
@@ -6,13 +6,13 @@ Subject: [PATCH] Revert "Allow MobileNetworkSettings to be invoked for
 
 This reverts commit 623872c77f4d264851aa1e3abb7342219959c036.
 
-Change-Id: I61f14ff837a5108222fe8d42176327127ebc82de
+Change-Id: I21d7ead4db85f7aed285b4a70e25b3c532e9c8e9
 ---
- src/com/android/phone/MobileNetworkSettings.java | 32 ++++++------------------
- 1 file changed, 7 insertions(+), 25 deletions(-)
+ src/com/android/phone/MobileNetworkSettings.java | 33 +++++-------------------
+ 1 file changed, 7 insertions(+), 26 deletions(-)
 
 diff --git a/src/com/android/phone/MobileNetworkSettings.java b/src/com/android/phone/MobileNetworkSettings.java
-index 688cb4c..586fa6d 100755
+index 688cb4c..53e6f2a 100755
 --- a/src/com/android/phone/MobileNetworkSettings.java
 +++ b/src/com/android/phone/MobileNetworkSettings.java
 @@ -261,34 +261,12 @@ public class MobileNetworkSettings extends PreferenceActivity
@@ -69,6 +69,14 @@ index 688cb4c..586fa6d 100755
  
          // Update to the active subscription list
          mActiveSubInfos.clear();
+@@ -350,7 +332,6 @@ public class MobileNetworkSettings extends PreferenceActivity
+         switch (state) {
+             case UPDATE: {
+                 if (DBG) log("initializeSubscriptions: UPDATE");
+-                int phoneCount = tm.getPhoneCount();
+                 currentTab = mTabHost != null ? mTabHost.getCurrentTab() : 0;
+ 
+                 setContentView(com.android.internal.R.layout.common_tab_settings);
 -- 
 2.5.0
 
