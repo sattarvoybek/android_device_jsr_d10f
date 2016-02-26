@@ -17,7 +17,8 @@
 ** limitations under the License.
 */
 
-#define LOG_TAG "RILC"
+char g_log_tag[12] = "RILC_x";
+#define LOG_TAG ((const char *)g_log_tag)
 
 #include <hardware_legacy/power.h>
 
@@ -278,6 +279,8 @@ static UnsolResponseInfo s_unsolResponses[] = {
 #include "ril_unsol_commands.h"
 };
 
+int extlog = 0;
+
 /* For older RILs that do not support new commands RIL_REQUEST_VOICE_RADIO_TECH and
    RIL_UNSOL_VOICE_RADIO_TECH_CHANGED messages, decode the voice radio tech from
    radio state message and store it. Every time there is a change in Radio State
@@ -403,6 +406,9 @@ processCommandBuffer(void *buffer, size_t buflen) {
         return 0;
     }
 
+    if (extlog)
+        RLOGI("[ExtLog] > %s [id = %d, token = %d, size = %d]",
+            requestToString(request), request, token, buflen);
 
     pRI = (RequestInfo *)calloc(1, sizeof(RequestInfo));
 
@@ -3397,6 +3403,31 @@ extern "C" void
 RIL_register (const RIL_RadioFunctions *callbacks) {
     int ret;
     int flags;
+    char prop_name[120];
+    char prop_val[PROPERTY_VALUE_MAX];
+    int prop_len;
+
+    if (strcmp(RIL_getRilSocketName(), "rild") == 0) {
+        g_log_tag[5] = '0';
+    } else {
+        g_log_tag[5] = '1';
+    }
+    sprintf(prop_name, "ro.ril.delay_%c", g_log_tag[5]);
+    prop_len = property_get(prop_name, prop_val, "");
+    if (prop_len > 0) {
+        int delay = strtol(prop_val, NULL, 0);
+        if (delay > 0) {
+            RLOGI("delay = %d sec .... wait .....", delay);
+            sleep(delay);
+        }
+    } 
+    strcpy(prop_name, "ro.ril.extlog");
+    prop_len = property_get(prop_name, prop_val, "");
+    if (prop_len > 0) {
+        extlog = strtol(prop_val, NULL, 0);
+        RLOGI("extlog = %d", extlog);
+        if (extlog < 0) extlog = 0;
+    }
 
     if (callbacks == NULL) {
         RLOGE("RIL_register: RIL_RadioFunctions * null");
@@ -3560,6 +3591,11 @@ RIL_onRequestComplete(RIL_Token t, RIL_Errno e, void *response, size_t responsel
 
         goto done;
     }
+
+    if (extlog)
+        RLOGI("[ExtLog] < %s [id = %d, token = %d, size = %d, cancelled = %d, err = %d]", 
+            requestToString(pRI->pCI->requestNumber), pRI->pCI->requestNumber, pRI->token, 
+            responselen, pRI->cancelled, (int)e);
 
     appendPrintBuf("[%04d]< %s",
         pRI->token, requestToString(pRI->pCI->requestNumber));
@@ -3764,6 +3800,10 @@ void RIL_onUnsolicitedResponse(int unsolResponse, const void *data,
         RLOGE("unsupported unsolicited response code %d", unsolResponse);
         return;
     }
+
+    if (extlog)
+        RLOGI("[ExtLog] < %s [id = %d, size = %d]", 
+            requestToString(unsolResponse), unsolResponse, datalen);
 
     // Grab a wake lock if needed for this reponse,
     // as we exit we'll either release it immediately
