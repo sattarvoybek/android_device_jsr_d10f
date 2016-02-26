@@ -46,6 +46,12 @@ TARGET_BOOTLOADER_BOARD_NAME := MSM8226
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
+# GCC BUILD FLAGS (only kernel)
+#TARGET_USE_O3 := true
+#OPT_MEMORY := true
+STRICT_ALIASING := false
+SUPPRESS_UNUSED_WARNING := true
+
 # Flags
 #TARGET_GLOBAL_CFLAGS += -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=softfp
 #TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=softfp
