@@ -1,0 +1,25 @@
+From 4f6e4f2317f615f377430a8033abea1d09c87e6d Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Thu, 25 Feb 2016 10:14:15 +0200
+Subject: [PATCH] Change date format
+
+---
+ tools/buildinfo.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/buildinfo.sh b/tools/buildinfo.sh
+index 64bd8d9..2d1427e 100755
+--- a/tools/buildinfo.sh
++++ b/tools/buildinfo.sh
+@@ -11,7 +11,7 @@ echo "ro.build.version.codename=$PLATFORM_VERSION_CODENAME"
+ echo "ro.build.version.release=$PLATFORM_VERSION"
+ echo "ro.build.version.security_patch=$PLATFORM_SECURITY_PATCH"
+ echo "ro.build.version.base_os=$PLATFORM_BASE_OS"
+-echo "ro.build.date=`date`"
++echo "ro.build.date=`date '+%Y-%m-%d %H:%M:%S UTC%z'`"
+ echo "ro.build.date.utc=`date +%s`"
+ echo "ro.build.type=$TARGET_BUILD_TYPE"
+ echo "ro.build.user=$USER"
+-- 
+1.9.5.msysgit.0
+
