@@ -76,6 +76,40 @@ int write_extcsd_value(int fd, __u8 index, __u8 value)
 	return ret;
 }
 
+int do_write_extcsd_byte(int nargs, char **argv)
+{
+	int fd, ret;
+	char *device;
+	int index;
+	int value;
+
+	CHECK(nargs != 4, "Usage: mmc extcsd write <offset> <value> "
+			  "</path/to/mmcblkX>\n", exit(1));
+
+	index = strtol(argv[1], NULL, 0);
+	value = strtol(argv[2], NULL, 0);
+	device = argv[3];
+
+	fd = open(device, O_RDWR);
+	if (fd < 0) {
+		perror("open");
+		exit(1);
+	}
+
+	ret = write_extcsd_value(fd, (__u8)index, (__u8)value);
+	if (ret) {
+		fprintf(stderr, "Could not write byte 0x%02x (%d) to "
+			"EXT_CSD[%d] in %s\n",
+			value, value, index, device);
+		exit(1);
+	}
+	printf("Successful write byte 0x%02x (%d) to "
+		"EXT_CSD[%d] in %s\n",
+		value, value, index, device);
+
+	return 0;
+}
+
 int send_status(int fd, __u32 *response)
 {
 	int ret = 0;

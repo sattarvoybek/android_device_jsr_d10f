@@ -60,6 +60,11 @@ static struct Command commands[] = {
 		"Print extcsd data from <device>.",
 	  NULL
 	},
+	{ do_write_extcsd_byte, -3,
+	  "extcsd write", "<offset> " "<value> " "<device>\n"
+		"Set byte in extcsd of <device>.",
+	  NULL
+	},
 	{ do_writeprotect_get, -1,
 	  "writeprotect get", "<device>\n"
 		"Determine the eMMC writeprotect status of <device>.",
