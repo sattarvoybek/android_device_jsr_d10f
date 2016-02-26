@@ -258,6 +258,8 @@ extern "C" const char * failCauseToString(RIL_Errno);
 extern "C" const char * callStateToString(RIL_CallState);
 extern "C" const char * radioStateToString(RIL_RadioState);
 
+static int sendResponse (Parcel &p);
+
 #ifdef RIL_SHLIB
 extern "C" void RIL_onUnsolicitedResponse(int unsolResponse, void *data,
                                 size_t datalen);
@@ -390,8 +392,14 @@ processCommandBuffer(void *buffer, size_t buflen) {
     }
 
     if (request < 1 || request >= (int32_t)NUM_ELEMS(s_commands)) {
+        Parcel pErr;
         RLOGE("unsupported request code %d token %d", request, token);
         // FIXME this should perhaps return a response
+        pErr.writeInt32 (RESPONSE_SOLICITED);
+        pErr.writeInt32 (token);
+        pErr.writeInt32 (RIL_E_GENERIC_FAILURE);
+        
+        sendResponse(pErr);
         return 0;
     }
 
