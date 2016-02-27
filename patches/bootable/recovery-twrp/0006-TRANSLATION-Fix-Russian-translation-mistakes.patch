@@ -1,0 +1,44 @@
+From e6cdb57da6b72804e6adee78ffc64467863fab98 Mon Sep 17 00:00:00 2001
+From: S-trace <S-trace@list.ru>
+Date: Sun, 28 Feb 2016 00:10:38 +0300
+Subject: [PATCH 6/6] [TRANSLATION] Fix Russian translation mistakes
+
+Change-Id: I0b509deee996ddb1d0083f8039289f3f551afb76
+---
+ gui/theme/common/languages/ru.xml | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/gui/theme/common/languages/ru.xml b/gui/theme/common/languages/ru.xml
+index 57a9965..f1dd011 100755
+--- a/gui/theme/common/languages/ru.xml
++++ b/gui/theme/common/languages/ru.xml
+@@ -52,7 +52,7 @@
+ 
+ 		<string name="install_btn">Установить</string>
+ 		<string name="wipe_btn">Очистка</string>
+-		<string name="backup_btn">Резервное коп-ние</string>
++		<string name="backup_btn">Рез. копирование</string>
+ 		<string name="restore_btn">Восстановление</string>
+ 		<string name="mount_btn">Монтирование</string>
+ 		<string name="settings_btn">Настройки</string>
+@@ -259,12 +259,12 @@
+ 		<string name="decrypt_data_btn">Расшифровать данные</string>
+ 		<string name="disable_mtp_btn">Выключить MTP</string>
+ 		<string name="enable_mtp_btn">Включить MTP</string>
+-		<string name="mount_usb_storage_btn">Смонтировать как USB-накопит.</string>
++		<string name="mount_usb_storage_btn">Режим USB-накопителя</string>
+ 		<string name="usb_storage_hdr">USB накопитель</string>
+-		<string name="usb_stor_mnt1">USB накопитель смонтирован</string>
+-		<string name="usb_stor_mnt2">Для безопасного отключения вашего устройства</string>
+-		<string name="usb_stor_mnt3">от компьютера, выполните размонтирование!</string>
+-		<string name="unmount_btn">Размонтировать</string>
++		<string name="usb_stor_mnt1">Режим USB накопителя включен</string>
++		<string name="usb_stor_mnt2">Перед отключением вашего устройства от компьютера, </string>
++		<string name="usb_stor_mnt3">выполните размонтирование (безопасное извлечение)!</string>
++		<string name="unmount_btn">Выкл. USB-накопитель</string>
+ 		<string name="rb_system_btn">Система</string>
+ 		<string name="rb_poweroff_btn">Выключение</string>
+ 		<string name="rb_recovery_btn">Рекавери</string>
+-- 
+2.5.0
+
