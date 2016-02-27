@@ -1,2 +1,3 @@
 on fs
+    symlink /dev/block/platform/msm_sdcc.2 /dev/block/platform/msm_sdcc.1
     mount_all fstab.recovery.d10f
