@@ -73,11 +73,7 @@ public class KeyHandler implements DeviceKeyHandler
     updateSettings();
     Slog.i(TAG, "Init com.cyanogenmod.keyhandler");
   }
-  
-  public boolean handleKeyEvent(KeyEvent event, DeviceHandlerCallback callback) {
-    return false;
-  }
-  
+
   public boolean handleKeyEvent(KeyEvent event)
   {
     boolean consumed = false;
