@@ -2,9 +2,9 @@
 <manifest>
   <project name="CyanogenMod/android_device_qcom_common"            path="device/qcom/common"             remote="github" revision="cm-13.0" />
 
-  <project name="S-trace/android_device_jsr_d10f"                   path="device/jsr/d10f"                remote="github" revision="cm-13.0" />
+  <project name="S-trace/android_device_jsr_d10f"                   path="device/jsr/d10f"                remote="github" revision="cm-13.0-testing" />
   <project name="jsr-d10/android_kernel_jsr_msm8226"                path="kernel/jsr/msm8226"             remote="github" revision="mm" />
-  <project name="S-trace/android_vendor_jsr_d10f"                   path="vendor/jsr/d10f"                remote="github" revision="cm-13.0" />
+  <project name="S-trace/android_vendor_jsr_d10f"                   path="vendor/jsr/d10f"                remote="github" revision="cm-13.0-testing" />
 
   <project name="omnirom/android_packages_apps_OpenDelta"           path="packages/apps/OpenDelta"        remote="github" revision="android-6.0" />
 
