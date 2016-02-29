@@ -144,6 +144,7 @@ ifeq ($(RECOVERY_VARIANT), twrp)
 	TW_SECONDARY_BRIGHTNESS_PATH := /sys/class/leds/button-backlight/brightness
 	TW_THEME := portrait_hdpi
 	TW_NO_EXFAT_FUSE := true
+        TW_INCLUDE_NTFS_3G := true
 	PRODUCT_EXTRA_RECOVERY_KEYS += \
 		vendor/jsr/security/cm-12.1/releasekey \
 		vendor/jsr/security/cm-13.0/releasekey
