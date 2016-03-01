@@ -16,3 +16,5 @@
 /fsg              emmc   /dev/block/platform/msm_sdcc.1/by-name/fsg             flags=backup=1;subpartitionof=/efs1
 /fsc              emmc   /dev/block/platform/msm_sdcc.1/by-name/fsc             flags=backup=1;subpartitionof=/efs1
 
+/full             emmc   /dev/block/mmcblk0                                     flags=backup=1;display="eMMC"
+/rpmb             emmc   /dev/block/mmcblk0rpmb                                 flags=backup=1;subpartitionof=/full
