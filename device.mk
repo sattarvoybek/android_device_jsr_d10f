@@ -304,4 +304,4 @@ PRODUCT_PROPERTY_OVERRIDES += wifi.interface=wlan0
 #  $(LOCAL_PATH)/configs/qlog-conf.xml:system/etc/qlog-conf.xml 
 
 # Signing keys
-PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/security/releasekey
+PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/security/cm-12.1/releasekey
