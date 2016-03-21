@@ -44,7 +44,7 @@ mkdir ~/cm13.0
 cd ~/cm13.0
 git config --global user.email "user@gmail.com"
 git config --global user.name "github_account"
-repo init -u git://github.com/CyanogenMod/android.git -b cm-13.0
+repo init -u git://github.com/S-trace/android_device_jsr_d10f.git -b release_manifests -m cm-13.0-release1.xml
 mkdir -p .repo/local_manifests
 wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-13.0/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
 wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-13.0/cleanup.xml -O .repo/local_manifests/cleanup.xml
