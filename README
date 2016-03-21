@@ -47,6 +47,7 @@ git config --global user.name "github_account"
 repo init -u git://github.com/CyanogenMod/android.git -b cm-13.0
 mkdir -p .repo/local_manifests
 wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-13.0/jsr_d10f.xml -O .repo/local_manifests/jsr_d10f.xml
+wget https://raw.github.com/S-trace/android_device_jsr_d10f/cm-13.0/cleanup.xml -O .repo/local_manifests/cleanup.xml
 repo sync
 
 --------------------------
