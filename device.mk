@@ -264,8 +264,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.disableWifiApFirmwareReload=true \
     wlan.driver.config=/system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     persist.debug.wfd.enable=1 \
-    persist.sys.wfd.virtual=0 \
-    ro.telephony.default_network=0,1
+    persist.sys.wfd.virtual=0
 
 # This build information
 PRODUCT_COPY_FILES += \
