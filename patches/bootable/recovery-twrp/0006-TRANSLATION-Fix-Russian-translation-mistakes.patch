@@ -1,15 +1,15 @@
-From e6cdb57da6b72804e6adee78ffc64467863fab98 Mon Sep 17 00:00:00 2001
+From 16eebdbde6f20969bb3558770d481d01e8281eb8 Mon Sep 17 00:00:00 2001
 From: S-trace <S-trace@list.ru>
 Date: Sun, 28 Feb 2016 00:10:38 +0300
 Subject: [PATCH 6/6] [TRANSLATION] Fix Russian translation mistakes
 
 Change-Id: I0b509deee996ddb1d0083f8039289f3f551afb76
 ---
- gui/theme/common/languages/ru.xml | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ gui/theme/common/languages/ru.xml | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/gui/theme/common/languages/ru.xml b/gui/theme/common/languages/ru.xml
-index 57a9965..f1dd011 100755
+index 57a9965..0c3549a 100644
 --- a/gui/theme/common/languages/ru.xml
 +++ b/gui/theme/common/languages/ru.xml
 @@ -52,7 +52,7 @@
@@ -21,6 +21,33 @@ index 57a9965..f1dd011 100755
  		<string name="restore_btn">Восстановление</string>
  		<string name="mount_btn">Монтирование</string>
  		<string name="settings_btn">Настройки</string>
+@@ -64,7 +64,7 @@
+ 		<string name="install_zip_hdr">Установка Zip</string>
+ 		<string name="install_zip_btn">Установка Zip</string>
+ 		<string name="install_image_hdr">Установка образа</string>
+-		<string name="install_image_btn">Установка образа</string>
++		<string name="install_image_btn">Установка Img</string>
+ 		<string name="install_select_file_hdr">Выбор файла</string>
+ 		<string name="file_selector_folders_hdr">Папки</string>
+ 		<string name="select_file_from_storage">Выбор файла из %tw_storage_display_name% (%tw_storage_free_size% MB)</string>
+@@ -81,7 +81,7 @@
+ 		<string name="zip_back_clear">Нажмите назад для очистки очереди.</string>
+ 		<string name="folder">Папка:</string>
+ 		<string name="file">Файл:</string>
+-		<string name="zip_sig_chk">Проверка Zip сигнатуры</string>
++		<string name="zip_sig_chk">Проверка подписи Zip</string>
+ 		<string name="inject_twrp_chk">Интегрировать TWRP после установки</string>
+ 		<string name="options_hdr">Опции</string>
+ 		<string name="confirm_flash_hdr">Confirm Flash</string>
+@@ -207,7 +207,7 @@
+ 		<string name="enc_disabled">выключено - установите пароль для включения</string>
+ 		<string name="enc_enabled">включено</string>
+ 		<string name="enable_backup_comp_chk">Использовать сжатие</string>
+-		<string name="skip_md5_backup_chk">Пропустить вычисление MD5</string>
++		<string name="skip_md5_backup_chk">Пропустить создание MD5</string>
+ 		<string name="disable_backup_space_chk">Отключить проверку свободного места</string>
+ 		<string name="refresh_sizes_btn">Обновить размеры</string>
+ 		<string name="swipe_backup">Свайп для начала</string>
 @@ -259,12 +259,12 @@
  		<string name="decrypt_data_btn">Расшифровать данные</string>
  		<string name="disable_mtp_btn">Выключить MTP</string>
@@ -39,6 +66,28 @@ index 57a9965..f1dd011 100755
  		<string name="rb_system_btn">Система</string>
  		<string name="rb_poweroff_btn">Выключение</string>
  		<string name="rb_recovery_btn">Рекавери</string>
+@@ -300,7 +300,7 @@
+ 		<string name="ctr_navbar_rdo">Кнопки нав.панели по центру</string>
+ 		<string name="lft_navbar_rdo">Выровнять кнопки нав.панели слева</string>
+ 		<string name="rht_navbar_rdo">Выровнять кнопки нав.панели справа</string>
+-		<string name="restore_defaults_btn">Восстановить настр-ки</string>
++		<string name="restore_defaults_btn">Сброс настроек</string>
+ 		<string name="settings_tz_btn">Часовой пояс</string>
+ 		<string name="settings_screen_btn">Экран</string>
+ 		<string name="settings_screen_bright_btn">Яркость</string>
+@@ -623,9 +623,9 @@
+ 		<string name="no_updater_binary">'{1}' не найден в zip файле.</string>
+ 		<string name="check_for_md5">Проверка MD5-файлов...</string>
+ 		<string name="fail_sysmap">Failed to map file '{1}'</string>
+-		<string name="verify_zip_sig">Проверка zip сигнатуры...</string>
+-		<string name="verify_zip_fail">Zip сигнатура не прошла проверку!</string>
+-		<string name="verify_zip_done">Zip сигнатура проверена успешно.</string>
++		<string name="verify_zip_sig">Проверка подписи Zip...</string>
++		<string name="verify_zip_fail">Подпись Zip не прошла проверку!</string>
++		<string name="verify_zip_done">Подпись Zip проверена успешно.</string>
+ 		<string name="zip_corrupt">Zip-файл поврежден!</string>
+ 		<string name="no_md5">Пропуск проверки MD5: не найден MD5-файл</string>
+ 		<string name="md5_fail">MD5 не соответствует</string>
 -- 
 2.5.0
 
