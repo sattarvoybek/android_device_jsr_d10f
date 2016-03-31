@@ -1,0 +1,76 @@
+From 73d1108bb588766bd5a207dbfdbc22103493837d Mon Sep 17 00:00:00 2001
+From: Deepak Kundra <deepakkundra@gmail.com>
+Date: Fri, 11 Mar 2016 18:50:57 -0800
+Subject: [PATCH 2/2] Telephony: extphone service support
+
+Revert "Break MSIM dependency on qci-telephony-framework"
+
+Change-Id: I810268e81eb59ec2ed5d899b314c6753ab670e81
+Issue-id:CYNGNOS-2226
+http://review.cyanogenmod.org/#/c/136294/1
+---
+ src/com/android/services/telephony/TelecomAccountRegistry.java   | 9 +++------
+ .../android/services/telephony/TelephonyConnectionService.java   | 4 +++-
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/src/com/android/services/telephony/TelecomAccountRegistry.java b/src/com/android/services/telephony/TelecomAccountRegistry.java
+index bcaef71..f48e5eb 100644
+--- a/src/com/android/services/telephony/TelecomAccountRegistry.java
++++ b/src/com/android/services/telephony/TelecomAccountRegistry.java
+@@ -41,6 +41,7 @@ import android.telephony.SubscriptionManager.OnSubscriptionsChangedListener;
+ import android.telephony.TelephonyManager;
+ import android.text.TextUtils;
+ 
++import cyanogenmod.app.CMTelephonyManager;
+ import com.android.internal.telephony.IExtTelephony;
+ import com.android.internal.telephony.Phone;
+ import com.android.internal.telephony.PhoneFactory;
+@@ -464,9 +465,9 @@ final class TelecomAccountRegistry {
+             final int PROVISIONED = 1;
+             final int INVALID_STATE = -1;
+ 
++            final String extphone = CMTelephonyManager.getExtService(null);
+             IExtTelephony mExtTelephony =
+-                IExtTelephony.Stub.asInterface(ServiceManager.getService("extphone"));
+-
++                IExtTelephony.Stub.asInterface(ServiceManager.getService(extphone));
+             for (Phone phone : phones) {
+                 int provisionStatus = PROVISIONED;
+                 int subscriptionId = phone.getSubId();
+@@ -494,10 +495,6 @@ final class TelecomAccountRegistry {
+                         Log.w(this, "Failed to get status for, slotId: "+ slotId +" Exception: " + ex);
+                     }
+ 
+-                    if (provisionStatus == INVALID_STATE) {
+-                        provisionStatus = PROVISIONED;
+-                    }
+-
+                     Log.d(this, "Phone with subscription id: " + subscriptionId +
+                                     " slotId: " + slotId + " provisionStatus: " + provisionStatus);
+                 }
+diff --git a/src/com/android/services/telephony/TelephonyConnectionService.java b/src/com/android/services/telephony/TelephonyConnectionService.java
+index e4043bc..b1d6a20 100644
+--- a/src/com/android/services/telephony/TelephonyConnectionService.java
++++ b/src/com/android/services/telephony/TelephonyConnectionService.java
+@@ -37,6 +37,7 @@ import android.telephony.TelephonyManager;
+ import android.text.TextUtils;
+ import android.widget.Toast;
+ 
++import cyanogenmod.app.CMTelephonyManager;
+ import com.android.internal.telephony.Call;
+ import com.android.internal.telephony.CallStateException;
+ import com.android.internal.telephony.IccCard;
+@@ -634,8 +635,9 @@ public class TelephonyConnectionService extends ConnectionService {
+ 
+     private Phone getPhoneForAccount(PhoneAccountHandle accountHandle, boolean isEmergency) {
+         if (isEmergency) {
++            final String extphone = CMTelephonyManager.getExtService(null);
+             IExtTelephony mExtTelephony =
+-                    IExtTelephony.Stub.asInterface(ServiceManager.getService("extphone"));
++                    IExtTelephony.Stub.asInterface(ServiceManager.getService(extphone));
+             int phoneId = 0; // default phoneId
+             try {
+                 phoneId = mExtTelephony.getPhoneIdForECall();
+-- 
+2.5.0
+
