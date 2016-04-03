@@ -33,6 +33,17 @@ mmp.enable.3g2=true
 mm.enable.smoothstreaming=true
 mm.enable.qcom_parser=37491
 
+# Sensors
+ro.qc.sensors.step_detector=true
+ro.qc.sensors.step_counter=true
+ro.qc.sdk.sensors.gestures=true
+ro.qualcomm.sensors.georv=true
+ro.qualcomm.sensors.qmd=true
+ro.qualcomm.sensors.pedometer=true
+ro.qualcomm.sensors.pam=true
+ro.qualcomm.sensors.scrn_ortn=true
+ro.qualcomm.sensors.cmc=true
+
 # Telephony
 rild.libpath=/vendor/lib/libril-qc-qmi-1.so
 rild.libargs=-d /dev/smd0
