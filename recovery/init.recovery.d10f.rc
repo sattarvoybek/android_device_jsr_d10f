@@ -1,3 +1,6 @@
 on fs
-    symlink /dev/block/platform/msm_sdcc.2 /dev/block/platform/msm_sdcc.1
-    mount_all fstab.recovery.d10f
+    fstab /etc/recovery.fstab twrp generate
+    fstab /fstab.recovery.d10f recovery generate
+    mount_all /fstab.recovery.d10f
+    fstab /etc/recovery.fstab twrp update
+    fstab /fstab.recovery.d10f recovery update

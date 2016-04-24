@@ -40,9 +40,6 @@
 #define USBMSC_PRESENT_PROPERTY_NAME "ro.usbmsc.present"
 #define USBMSC_PARTITION_PATH "/dev/block/platform/msm_sdcc.1/by-name/usbmsc"
 
-#define TWRP_FSTAB_CLASSIC   "/etc/twrp.fstab"
-#define TWRP_FSTAB_DATAMEDIA "/etc/twrp_datamedia.fstab"
-
 void restart_vold(void){
 	struct service *svc = service_find_by_name(SERVICE_VOLD);
 	if (svc) {
@@ -160,6 +157,7 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	free (buffer);
 }
 
+// TODO: eliminate this!
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * board_type)
 {
 	UNUSED(msm_id);
@@ -224,28 +222,20 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		ERROR("Unable to open persistent property directory %s errno: %d\n", PERSISTENT_PROPERTY_DIR, errno);
 	}
 
-        unsigned long mount_flags=0;
-	struct statvfs statvfs_buf;
-	if (statvfs("/init", &statvfs_buf) != 0) {
-		ERROR("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
-	}
-	else {
-		mount_flags=statvfs_buf.f_flag;
-	}
-
-	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
-
 	errno=0;
-	if(access(USBMSC_PARTITION_PATH, F_OK) == 0) {
-		ERROR("access() successed, usbmsc present\n");
-		property_set(USBMSC_PRESENT_PROPERTY_NAME, "true");
-		unlink(TWRP_FSTAB_DATAMEDIA);
-	} else {
-		ERROR("statvfs() failed, usbmsc not present, errno: %d (%s)\n", errno, strerror(errno));
+
+        int usbmsc_present = FALSE;
+        if (access("/dev/block/platform/msm_sdcc_2/by-name/usbmsc", F_OK))
+            usbmsc_present = TRUE;
+        else if (access("/dev/block/platform/msm_sdcc_1/by-name/usbmsc", F_OK))
+            usbmsc_present = TRUE;
+        
+	if (usbmsc_present) {
+	    ERROR("usbmsc present\n");
+	    property_set(USBMSC_PRESENT_PROPERTY_NAME, "true");
+        } else {
+		ERROR("usbmsc NOT present\n");
 		property_set(USBMSC_PRESENT_PROPERTY_NAME, "false");
-		unlink(TWRP_FSTAB_CLASSIC);
-		link(TWRP_FSTAB_DATAMEDIA, TWRP_FSTAB_CLASSIC);
-		unlink(TWRP_FSTAB_DATAMEDIA);
 		isDatamedia = TRUE;
         }
 
@@ -253,19 +243,11 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	if (rc && ISMATCH(value, STORAGES_CONFIGURATION_DATAMEDIA)) {
 		// if datamedia
 		ERROR("Got datamedia storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
-		unlink("/fstab.d10f");
-		link("/fstab.d10f_int", "/fstab.d10f");
-		unlink("/fstab.d10f_sd");
-		unlink("/fstab.d10f_int");
 		isDatamedia = TRUE;
 	} else if (rc && ISMATCH(value, STORAGES_CONFIGURATION_INVERTED)) {
 		// if swapped
 		property_set("ro.vold.primary_physical", "1");
 		ERROR("Got inverted storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
-		unlink("/fstab.d10f");
-		link("/fstab.d10f_sd", "/fstab.d10f");
-		unlink("/fstab.d10f_sd");
-		unlink("/fstab.d10f_int");
 	} else {
 		// if classic (default case)
 		ERROR("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
@@ -274,23 +256,16 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 			strncpy(value, STORAGES_CONFIGURATION_DATAMEDIA, PROP_VALUE_MAX);
 			property_set(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value);
 			ERROR("No usbmsc partiton - overriding storage configuration to datamedia! (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
-			unlink("/fstab.d10f");
-			link("/fstab.d10f_int", "/fstab.d10f");
 		}
-		unlink("/fstab.d10f_sd");
-		unlink("/fstab.d10f_int");
 	}
 
-	mount("rootfs", "/", "rootfs", MS_REMOUNT|mount_flags, NULL);
-	ERROR("fstab configuration applied\n");
+        off_t size;
+        char *xml_config=open_xml_configuration(&size);
+	if (xml_config != NULL) {
+		update_xml_configuration(xml_config, size, isDatamedia);
+		munmap(xml_config, size);
+	}
 
-		off_t size;
-		char *xml_config=open_xml_configuration(&size);
-		if (xml_config != NULL) {
-			update_xml_configuration(xml_config, size, isDatamedia);
-			munmap(xml_config, size);
-		}
-
-		ERROR("Storages configuration applied\n");
-		restart_vold();
+	ERROR("Storages configuration applied\n");
+	restart_vold();
 }

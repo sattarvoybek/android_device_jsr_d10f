@@ -210,9 +210,6 @@ PRODUCT_PACKAGES += OpenDelta
 
 # Ramdisk
 PRODUCT_PACKAGES += \
-    fstab.d10f \
-    fstab.d10f_sd \
-    fstab.d10f_int \
     init.d10f.rc \
     init.d10f.usb.rc \
     ueventd.d10f.rc
@@ -232,9 +229,6 @@ PRODUCT_PACKAGES += \
 # TWRP
 ifeq ($(RECOVERY_VARIANT), twrp)
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/recovery/twrp.fstab:root/etc/twrp.fstab \
-    $(LOCAL_PATH)/recovery/twrp_datamedia.fstab:root/etc/twrp_datamedia.fstab \
-    $(LOCAL_PATH)/recovery/fstab.recovery.d10f:root/fstab.recovery.d10f \
     $(LOCAL_PATH)/recovery/init.recovery.d10f.rc:root/init.recovery.d10f.rc
 endif
 

@@ -45,9 +45,10 @@ on init
     export LD_SHIM_LIBS /system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so
 
 on fs
-    symlink /dev/block/platform/msm_sdcc.2 /dev/block/platform/msm_sdcc.1
     restorecon_recursive /dev
-    mount_all fstab.d10f
+    fstab /fstab.d10f regular generate
+    mount_all /fstab.d10f
+    fstab /fstab.d10f regular update
     restorecon_recursive /persist
 
 on early-boot
