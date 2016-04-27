@@ -1,0 +1,291 @@
+From 82a156964d053327d3cecf2018b3926a516677c8 Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Wed, 27 Apr 2016 13:30:23 +0300
+Subject: [PATCH] Move storage_list.xml from resource to disk
+
+New path: /data/system/storage_list.xml
+---
+ services/java/com/android/server/MountService.java | 225 ++++++++++++++++-----
+ 1 file changed, 173 insertions(+), 52 deletions(-)
+
+diff --git a/services/java/com/android/server/MountService.java b/services/java/com/android/server/MountService.java
+index 4c5a5c2..06ac3a8 100644
+--- a/services/java/com/android/server/MountService.java
++++ b/services/java/com/android/server/MountService.java
+@@ -99,6 +99,12 @@ import javax.crypto.SecretKey;
+ import javax.crypto.SecretKeyFactory;
+ import javax.crypto.spec.PBEKeySpec;
+ 
++import org.xmlpull.v1.XmlPullParser;
++import org.xmlpull.v1.XmlPullParserFactory;
++import java.io.FileInputStream; 
++import java.io.InputStream;
++import java.io.InputStreamReader;
++
+ /**
+  * MountService implements back-end services for platform storage
+  * management.
+@@ -1220,6 +1226,115 @@ class MountService extends IMountService.Stub
+         }
+     }
+ 
++    public class XmlContainer {
++        public Context mContext;
++        public XmlPullParser mParser;
++        
++        private XmlContainer(Context context, XmlPullParser parser)
++        {
++            this.mContext = context;
++            this.mParser = parser;
++        }
++
++        public String getString(String name, String defValue)
++        {
++            String value = mParser.getAttributeValue(null, name);
++            if (value == null)
++                return defValue;
++            return value;
++        }
++
++        public boolean getBoolean(String name, boolean defValue)
++        {
++            String value = mParser.getAttributeValue(null, name);
++            if (value == null)
++                return defValue;
++            if (value.equals("true"))
++                return true;
++            if (value.equals("false"))
++                return false;
++            return defValue;
++        }
++
++        public int getInt(String name, int defValue)
++        {
++            String value = mParser.getAttributeValue(null, name);
++            if (value == null)
++                return defValue;
++            int val = defValue;
++            try {
++                val = Integer.parseInt(value);
++            } catch (NumberFormatException e) {
++                val = defValue;
++            }
++            return val;
++        }
++
++        public int getResourceId(String name, int defValue)
++        {
++            int id = 0;
++            String value = mParser.getAttributeValue(null, name);
++            if (value == null)
++                return defValue;
++            if (value.charAt(0) == '@') {
++                int dpos = value.indexOf('/');
++                if (dpos > 1) {
++                    String tname = value.substring(1, dpos);
++                    String vname = value.substring(dpos+1);
++                    Resources res = mContext.getResources();
++                    id = res.getIdentifier(vname, tname, mContext.getPackageName());
++                }
++            }
++            if (id != 0)
++                return id;
++            return defValue;            
++        }
++
++        public String getText(String name, String defValue)
++        {
++            int id = getResourceId(name, 0);
++            if (id != 0)
++                return mContext.getResources().getString(id);
++            return defValue;
++        }
++    }
++
++    public class StorageItem extends XmlContainer {
++        public String path = null;
++        public int descriptionId = -1;
++        public String description = null;
++        public boolean primary = false;
++        public boolean removable = false;
++        public boolean emulated = false;
++        public int mtpReserve = 0;
++        public boolean allowMassStorage = false;
++        public long maxFileSize = 0;
++
++        private StorageItem(Context context, XmlPullParser parser)
++        {
++            super(context, parser);
++        }
++
++        public boolean loadNode() {
++            path = getString("mountPoint", null);
++            descriptionId = getResourceId("storageDescription", -1);
++            description = getText("storageDescription", null);
++            primary = getBoolean("primary", false);
++            removable = getBoolean("removable", false);
++            emulated = getBoolean("emulated", false);
++            mtpReserve = getInt("mtpReserve", 0);
++            allowMassStorage = getBoolean("allowMassStorage", false);
++            maxFileSize = getInt("maxFileSize", 0) * 1024L * 1024L;
++
++            if (path == null || descriptionId == -1)
++                return false;
++
++            return true;
++        }
++    }
++
++    private static final String FILE_STORAGE_LIST = "/data/system/storage_list.xml";
++
+     // Storage list XML tags
+     private static final String TAG_STORAGE_LIST = "StorageList";
+     private static final String TAG_STORAGE = "storage";
+@@ -1228,55 +1343,57 @@ class MountService extends IMountService.Stub
+         mVolumes.clear();
+         mVolumeStates.clear();
+ 
+-        Resources resources = mContext.getResources();
+-
+-        int id = com.android.internal.R.xml.storage_list;
+-        XmlResourceParser parser = resources.getXml(id);
+-        AttributeSet attrs = Xml.asAttributeSet(parser);
++        FileInputStream fis = null;
+ 
+         try {
+-            XmlUtils.beginDocument(parser, TAG_STORAGE_LIST);
+-            while (true) {
+-                XmlUtils.nextElement(parser);
+-
+-                String element = parser.getName();
+-                if (element == null) break;
+-
+-                if (TAG_STORAGE.equals(element)) {
+-                    TypedArray a = resources.obtainAttributes(attrs,
+-                            com.android.internal.R.styleable.Storage);
+-
+-                    String path = a.getString(
+-                            com.android.internal.R.styleable.Storage_mountPoint);
+-                    int descriptionId = a.getResourceId(
+-                            com.android.internal.R.styleable.Storage_storageDescription, -1);
+-                    CharSequence description = a.getText(
+-                            com.android.internal.R.styleable.Storage_storageDescription);
+-                    boolean primary = a.getBoolean(
+-                            com.android.internal.R.styleable.Storage_primary, false);
+-                    boolean removable = a.getBoolean(
+-                            com.android.internal.R.styleable.Storage_removable, false);
+-                    boolean emulated = a.getBoolean(
+-                            com.android.internal.R.styleable.Storage_emulated, false);
+-                    int mtpReserve = a.getInt(
+-                            com.android.internal.R.styleable.Storage_mtpReserve, 0);
+-                    boolean allowMassStorage = a.getBoolean(
+-                            com.android.internal.R.styleable.Storage_allowMassStorage, false);
+-                    // resource parser does not support longs, so XML value is in megabytes
+-                    long maxFileSize = a.getInt(
+-                            com.android.internal.R.styleable.Storage_maxFileSize, 0) * 1024L * 1024L;
+-
+-                    Slog.d(TAG, "got storage path: " + path + " description: " + description +
+-                            " primary: " + primary + " removable: " + removable +
+-                            " emulated: " + emulated +  " mtpReserve: " + mtpReserve +
+-                            " allowMassStorage: " + allowMassStorage +
+-                            " maxFileSize: " + maxFileSize);
+-
+-                    if (emulated && primary) {
++            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
++            XmlPullParser parser = factory.newPullParser();
++            File file = new File(FILE_STORAGE_LIST);
++            fis = new FileInputStream(file);
++            InputStreamReader reader = new InputStreamReader(fis, "UTF-8");
++            parser.setInput(reader);
++
++            String[] nodeList = new String[5];
++
++            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
++                int eventType = parser.getEventType();
++                int depth = parser.getDepth();
++                StorageItem s = null;
++
++                if (eventType == XmlPullParser.START_TAG) {
++                    nodeList[depth] = parser.getName();
++                    if (nodeList[1] != null && nodeList[1].equals(TAG_STORAGE_LIST)) {
++                        if (nodeList[2] != null && nodeList[2].equals(TAG_STORAGE)) {
++                            if (depth == 2) {
++                                s = new StorageItem(mContext, parser);
++                                if (s.loadNode() == false) {
++                                    Slog.d(TAG, "can't parse XML file (line = " + parser.getLineNumber() + ")");
++                                    s = null;
++                                }
++                            }
++                        }
++                    }
++                }
++
++                if (eventType == XmlPullParser.END_TAG) {
++                    nodeList[depth] = null;
++                    if (depth <= 1) {
++                        s = null;
++                    }
++                }
++
++                if (eventType == XmlPullParser.START_TAG && depth == 2 && s != null) {
++                    Slog.d(TAG, "got storage path: '" + s.path + "', description: '" + s.description +
++                            "', primary: " + s.primary + ", removable: " + s.removable +
++                            ", emulated: " + s.emulated +  ", mtpReserve: " + s.mtpReserve +
++                            ", allowMassStorage: " + s.allowMassStorage +
++                            ", maxFileSize: " + s.maxFileSize);
++
++                    if (s.emulated && s.primary) {
+                         // For devices with emulated primary storage,
+                         // we create separate volumes for each known user.
+-                        mEmulatedTemplate = new StorageVolume(null, descriptionId, true, false,
+-                                true, mtpReserve, false, maxFileSize, null);
++                        mEmulatedTemplate = new StorageVolume(null, s.descriptionId, true, false,
++                                true, s.mtpReserve, false, s.maxFileSize, null);
+ 
+                         final UserManagerService userManager = UserManagerService.getInstance();
+                         for (UserInfo user : userManager.getUsers(false)) {
+@@ -1284,12 +1401,12 @@ class MountService extends IMountService.Stub
+                         }
+ 
+                     } else {
+-                        if (path == null || description == null) {
++                        if (s.path == null || s.description == null) {
+                             Slog.e(TAG, "Missing storage path or description in readStorageList");
+                         } else {
+-                            final StorageVolume volume = new StorageVolume(new File(path),
+-                                    descriptionId, primary, removable, emulated, mtpReserve,
+-                                    allowMassStorage, maxFileSize, null);
++                            final StorageVolume volume = new StorageVolume(new File(s.path),
++                                    s.descriptionId, s.primary, s.removable, s.emulated, s.mtpReserve,
++                                    s.allowMassStorage, s.maxFileSize, null);
+                             addVolumeLocked(volume);
+ 
+                             // Until we hear otherwise, treat as unmounted
+@@ -1297,9 +1414,9 @@ class MountService extends IMountService.Stub
+                             volume.setState(Environment.MEDIA_UNMOUNTED);
+                         }
+                     }
+-
+-                    a.recycle();
+                 }
++
++                parser.next();
+             }
+         } catch (XmlPullParserException e) {
+             throw new RuntimeException(e);
+@@ -1314,7 +1431,11 @@ class MountService extends IMountService.Stub
+                     volume.setStorageId(index++);
+                 }
+             }
+-            parser.close();
++            try {
++                fis.close();
++            } catch (Exception e) {
++                // ignore
++            }
+         }
+     }
+ 
+-- 
+1.9.5.msysgit.0
+
