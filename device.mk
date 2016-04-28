@@ -229,8 +229,7 @@ PRODUCT_PACKAGES += OpenDelta
 # Ramdisk
 #PRODUCT_PACKAGES += chargeonlymode
 PRODUCT_PACKAGES += fstab.d10f
-PRODUCT_PACKAGES += fstab.int
-PRODUCT_PACKAGES += fstab.sd
+PRODUCT_PACKAGES += fstab.template
 PRODUCT_PACKAGES += init.qcom.rc
 PRODUCT_PACKAGES += init.qcom.usb.rc
 PRODUCT_PACKAGES += ueventd.qcom.rc
