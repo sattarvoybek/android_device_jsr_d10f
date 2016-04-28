@@ -217,7 +217,7 @@ PRODUCT_PACKAGES += OpenDelta
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.d10f \
-    fstab.d10f_sd \
+    fstab.template \
     init.d10f.rc \
     init.d10f.usb.rc \
     ueventd.d10f.rc
