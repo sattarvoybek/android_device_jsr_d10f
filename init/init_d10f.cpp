@@ -225,9 +225,9 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	errno=0;
 
         int usbmsc_present = FALSE;
-        if (access("/dev/block/platform/msm_sdcc.2/by-name/usbmsc", F_OK))
+        if (access("/dev/block/platform/msm_sdcc.2/by-name/usbmsc", F_OK) == 0)
             usbmsc_present = TRUE;
-        else if (access("/dev/block/platform/msm_sdcc.1/by-name/usbmsc", F_OK))
+        else if (access("/dev/block/platform/msm_sdcc.1/by-name/usbmsc", F_OK) == 0)
             usbmsc_present = TRUE;
         
 	if (usbmsc_present) {
