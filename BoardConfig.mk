@@ -46,9 +46,6 @@ TARGET_BOOTLOADER_BOARD_NAME := MSM8226
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
-# Update script without backup tool
-WITH_GMS := true
-
 # GCC BUILD FLAGS (only kernel)
 #TARGET_USE_O3 := true
 #OPT_MEMORY := true
