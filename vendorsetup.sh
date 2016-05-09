@@ -51,6 +51,7 @@ for patch in `find -type f -name '*.patch'|cut -d / -f 2-|sort`; do
 		if ! git am $absolute_patch_path; then
 			echo "Failed, aborting git am"
 			git am --abort
+			sleep 60
 		fi
 	fi
 	popd > /dev/null
