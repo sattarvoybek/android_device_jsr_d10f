@@ -1,4 +1,4 @@
-From 4b46f0d2f82a7670ec37a8d8ee03adcfd28fbf24 Mon Sep 17 00:00:00 2001
+From 1e5008d5d63784d4db704ee235e16d5b97e09fb0 Mon Sep 17 00:00:00 2001
 From: S-trace <S-trace@list.ru>
 Date: Sun, 24 Apr 2016 16:01:59 +0300
 Subject: [PATCH 2/2] [FSTABS] Dynamically generate fstabs using fstab [type]
@@ -29,10 +29,10 @@ index aa32236..7b9978f 100644
      keychords.cpp \
      property_service.cpp \
 diff --git a/init/builtins.cpp b/init/builtins.cpp
-index b290ce3..cce3395 100644
+index d0dbecc..93742b0 100644
 --- a/init/builtins.cpp
 +++ b/init/builtins.cpp
-@@ -21,6 +21,7 @@
+@@ -23,6 +23,7 @@
  #include <stdlib.h>
  #include <string.h>
  #include <sys/socket.h>
@@ -40,7 +40,7 @@ index b290ce3..cce3395 100644
  #include <sys/mount.h>
  #include <sys/resource.h>
  #include <sys/time.h>
-@@ -30,6 +31,7 @@
+@@ -32,6 +33,7 @@
  #include <unistd.h>
  #include <linux/loop.h>
  #include <ext4_crypt_init_extensions.h>
@@ -48,15 +48,15 @@ index b290ce3..cce3395 100644
  
  #include <selinux/selinux.h>
  #include <selinux/label.h>
-@@ -47,6 +49,7 @@
+@@ -50,6 +52,7 @@
  #include "init_parser.h"
  #include "util.h"
  #include "log.h"
 +#include "fstab.h"
  
  #define chmod DO_NOT_USE_CHMOD_USE_FCHMODAT_SYMLINK_NOFOLLOW
- 
-@@ -403,6 +406,32 @@ static int wipe_data_via_recovery()
+ #define UNMOUNT_CHECK_MS 5000
+@@ -469,6 +472,32 @@ static int wipe_data_via_recovery()
      while (1) { pause(); }  // never reached
  }
  
@@ -89,7 +89,7 @@ index b290ce3..cce3395 100644
  /*
   * This function might request a reboot, in which case it will
   * not return.
-@@ -465,7 +494,7 @@ int do_mount_all(int nargs, char **args)
+@@ -531,7 +560,7 @@ int do_mount_all(int nargs, char **args)
          property_set("ro.crypto.state", "unencrypted");
          /* If fs_mgr determined this is an unencrypted device and we are
           * not booting into ffbm(fast factory boot mode),then trigger
