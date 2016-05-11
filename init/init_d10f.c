@@ -319,6 +319,12 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
 
+	rc = property_get("ro.boot.llcon", value);
+	if (rc > 0) {
+		if (value[0] != '0')
+			property_set("debug.sf.nobootanimation", "1");
+	}
+
 	rc = property_get(PERSISTENT_PROPERTY_PLANNED_SWAP, value);
 	if (rc && atoi(value))
 		stor_swapped = 1;
