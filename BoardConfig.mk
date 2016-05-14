@@ -62,7 +62,6 @@ BOARD_KERNEL_CMDLINE += androidboot.hardware=qcom androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x37
 BOARD_KERNEL_CMDLINE += user_debug=31 debug ignore_loglevel
 BOARD_KERNEL_CMDLINE += pmemlog=9 panic_restart=4
-BOARD_KERNEL_CMDLINE += androidboot.llcon=2,100,0,0x00,24,1280,720,720,8,0
 
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
