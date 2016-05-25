@@ -753,7 +753,7 @@ dispatchSIM_IO (Parcel &p, RequestInfo *pRI) {
 
 #ifdef RIL_SUPPORTS_SEEK
     simIO.v6.cla = 0;
-#ifndef RIL_VARIANT_LEGACY
+#ifdef RILJ_USE_CLA
     if(pRI->pCI->requestNumber == RIL_REQUEST_SIM_TRANSMIT_BASIC ||
             pRI->pCI->requestNumber == RIL_REQUEST_SIM_TRANSMIT_CHANNEL ) {
         status = p.readInt32(&t);
