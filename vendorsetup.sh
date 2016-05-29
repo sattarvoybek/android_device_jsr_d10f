@@ -2,9 +2,6 @@ add_lunch_combo cm_d10f-eng
 add_lunch_combo cm_d10f-user
 add_lunch_combo cm_d10f-userdebug
 
-/bin/cp device/jsr/d10f/post_process_props_hook.py build/tools/
-chmod  0775 build/tools/post_process_props_hook.py
-
 sh device/jsr/d10f/patches/apply.sh
 croot
 
