@@ -1,3 +1,5 @@
+#!/system/bin/sh
+
 start_sensors()
 {
     if [ -c /dev/sensors ]; then
