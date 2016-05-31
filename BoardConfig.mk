@@ -61,7 +61,7 @@ BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0
 BOARD_KERNEL_CMDLINE += androidboot.hardware=qcom androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x37
 BOARD_KERNEL_CMDLINE += user_debug=31 debug ignore_loglevel
-BOARD_KERNEL_CMDLINE += pmemlog=9 panic_restart=4
+BOARD_KERNEL_CMDLINE += pmemlog=3 panic_restart=2
 
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
@@ -85,6 +85,7 @@ AUDIO_FEATURE_DISABLED_DS1_DOLBY_DDP := true
 AUDIO_FEATURE_DISABLED_SSR := true
 BOARD_USES_ALSA_AUDIO := true
 TARGET_QCOM_AUDIO_VARIANT := caf
+TARGET_AUDIO_HAL_PATH := hardware/qcom/audio-caf
 
 # RIL
 BOARD_PROVIDES_LIBRIL := true
@@ -93,7 +94,7 @@ ifeq ($(QCPATH),)
 COMMON_GLOBAL_CFLAGS += -DRIL_VARIANT_LEGACY
 else
 PROTOBUF_SUPPORTED := true
-COMMON_GLOBAL_CFLAGS += RILJ_USE_CLA
+COMMON_GLOBAL_CFLAGS += -DRILJ_USE_CLA
 endif
 
 # Bionic
@@ -128,6 +129,10 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
 TARGET_NO_RPC := true
 TARGET_GPS_HAL_PATH := hardware/qcom/gps
 TARGET_GPS_LOC_API_PATH := $(TARGET_GPS_HAL_PATH)/loc_api/loc_api_v02
+ifneq ($(QCPATH),)
+GPS_LOC_API_V02_ENABLED := true
+FEATURE_GNSS_BIT_API := true
+endif
 
 # CMHW (Hardware tunables)
 BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw/
