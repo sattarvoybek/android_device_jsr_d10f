@@ -276,7 +276,7 @@ service sensors /system/bin/sensors.qcom
     group root
     disabled
 
-service qcom-sensor-sh /system/bin/sh /init.qcom.sensor.sh
+service qcom-sensors-sh /system/bin/sh /init.qcom.sensors.sh
     class late_start
     user root
     oneshot
