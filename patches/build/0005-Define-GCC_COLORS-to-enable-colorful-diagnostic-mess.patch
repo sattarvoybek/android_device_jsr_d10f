@@ -1,0 +1,26 @@
+From 009a291df4b311f509d578d78c15d6d970c1b211 Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Mon, 30 May 2016 16:36:52 +0300
+Subject: [PATCH] Define GCC_COLORS to enable colorful diagnostic messages
+
+---
+ envsetup.sh | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/envsetup.sh b/envsetup.sh
+index c756c35..64bd457 100644
+--- a/envsetup.sh
++++ b/envsetup.sh
+@@ -228,6 +228,9 @@ function set_stuff_for_environment()
+     set_java_home
+     setpaths
+     set_sequence_number
++
++    # With this environment variable new GCC can apply colors to warnings/errors
++    export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+ }
+ 
+ function set_sequence_number()
+-- 
+1.9.5.msysgit.0
+
