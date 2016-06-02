@@ -129,18 +129,16 @@ PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.fm.sh:system/etc/init.
 PRODUCT_PACKAGES += gps.msm8226
 PRODUCT_PACKAGES += libgps.utils
 PRODUCT_PACKAGES += libloc_eng
+PRODUCT_PACKAGES += gps.conf
 ifeq ($(QCPATH),)
 PRODUCT_PACKAGES += libloc_adapter
-PRODUCT_PACKAGES += gps.conf
 PRODUCT_PACKAGES += sap.conf
 else
 PRODUCT_PACKAGES += libloc_core
 PRODUCT_PACKAGES += libloc_api_v02
 endif
 
-ifeq ($(QCPATH),)
 PRODUCT_COPY_FILES += $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf
-endif
 
 # IRSC
 PRODUCT_COPY_FILES += \
