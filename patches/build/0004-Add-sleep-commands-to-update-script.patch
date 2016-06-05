@@ -41,12 +41,9 @@ index a6baf64..ea43f81 100644
  
    def DeleteFiles(self, file_list):
      """Delete all files in file_list."""
-@@ -329,8 +333,9 @@ class EdifyGenerator(object):
- 
-   def UnmountAll(self):
+@@ -331,6 +335,7 @@ class EdifyGenerator(object):
      for p in sorted(self.mounts):
--      self.script.append('unmount("%s");' % (p,))
-+      self.script.append('unmount("%s");' % (p,))    
+       self.script.append('unmount("%s");' % (p,))
      self.mounts = set()
 +    self.script.append('sleep(6);')
  

@@ -46,14 +46,14 @@ index 0000000..5005061
 +# function. The prop object has get(name) and put(name,value) methods.
 +def mangle_build_prop_hook(prop, overrides):
 +  """call mangle_build_prop_hook"""
-+  
++
 +  prop.put("ro.com.android.dateformat", "yyyy-MM-dd")
-+  
++
 +  ver_inc = prop.get("ro.build.version.incremental")
 +
 +  prod_dev = prop.get("ro.product.device")
 +  outdir = "out/target/product/" + prod_dev + "/"
-+  
++
 +  cm_ver = prop.get("ro.cm.version")
 +  cm_ver_arr = cm_ver.split("-")
 +  build_type = prop.get("ro.build.type")
@@ -61,7 +61,7 @@ index 0000000..5005061
 +  time_str = time.strftime("%Y%m%d-%H%M", time_utc)
 +  rom_name = "cm-" + cm_ver_arr[0] + "-" + time_str + "-" + prod_dev
 +  prop.put("ro.ota.current_rom", rom_name)
-+  
++
 +  txt = open(outdir + "ro_ota_current_rom", "w")
 +  txt.write(rom_name)
 +  txt.close()
@@ -76,14 +76,14 @@ index 0000000..5005061
 +# function. The prop object has get(name) and put(name,value) methods.
 +def mangle_default_prop_hook(prop):
 +  """call mangle_default_prop_hook"""
-+  
++
 +  prop.put("ro.secure", "0")
 +  prop.put("ro.adb.secure", "0")
 +  prop.put("ro.allow.mock.location", "1")
 +  prop.put("ro.debuggable", "1")
 +  prop.put("persist.service.adb.enable", "1")
 +  prop.put("persist.sys.usb.config", "mtp,adb")
-+  
++
 +  pass
 -- 
 2.7.4
