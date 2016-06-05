@@ -16,3 +16,6 @@ croot
 rm -rf out/target/product/d10f/obj/PACKAGING/target_files_intermediates
 rm -f out/target/product/d10f/system/build.prop
 rm -f out/target/product/d10f/root/default.prop
+
+echo Sourcing vendor/qcom/proprietary/common/vendorsetup.sh
+. vendor/qcom/proprietary/common/vendorsetup.sh
