@@ -24,8 +24,8 @@ static const char * prop_skip_list[] = {
 };
 
 
+#define FILE_FSTAB           "/fstab.d10f"
 #define FILE_FSTAB_TEMPLATE  "/fstab.template"
-#define FILE_FSTAB_STORAGES  "/fstab.storages"
 #define FILE_STORAGE_LIST    "/data/system/storage_list.xml"
 
 #define STR_STORAGE_INTERNAL "@string/storage_internal"
@@ -264,9 +264,9 @@ int create_ftab_storage()
 		}
 	}
 
-	f = fopen(FILE_FSTAB_STORAGES, "w+");
+	f = fopen(FILE_FSTAB, "a");
 	if (f == NULL) {
-		ERROR("can not open '%s', err: %s\n", FILE_FSTAB_STORAGES, strerror(errno));
+		ERROR("can not open '%s', err: %s\n", FILE_FSTAB, strerror(errno));
 		return -10;
 	}
 	fputs(tmp, f);
@@ -374,8 +374,6 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		storage_list[STOR_SECONDARY].part_num = rc;
 
 	create_ftab_storage();
-	symlink(FILE_FSTAB_STORAGES, "/fstab.qcom");
-
 	create_storage_list();
 
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|MS_RDONLY, NULL);
