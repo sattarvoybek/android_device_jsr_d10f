@@ -1,0 +1,522 @@
+From cc376d336c4469ca359313c5e8c3617d8385963a Mon Sep 17 00:00:00 2001
+From: faust93 <monumentum@gmail.com>
+Date: Thu, 18 Dec 2014 15:52:41 -0200
+Subject: [PATCH 2/2] Wakelock Blocker [2/2]
+
+Change-Id: I42a09c5d3d657279ea0bc04f8bee04e05d29a6f4
+---
+ res/drawable/wakelock_circle_ripple_normal.xml     |  24 ++
+ res/drawable/wakelock_circle_shape_normal.xml      |  23 ++
+ res/layout/wakelock_blocker.xml                    |  33 +++
+ res/layout/wakelock_item.xml                       |  29 +++
+ res/values/cm_strings.xml                          |  10 +
+ res/xml/power_usage_summary.xml                    |   5 +
+ res/xml/wakelock_pref.xml                          |  27 ++
+ .../settings/cyanogenmod/WakeLockBlocker.java      | 285 +++++++++++++++++++++
+ 8 files changed, 436 insertions(+)
+ create mode 100644 res/drawable/wakelock_circle_ripple_normal.xml
+ create mode 100644 res/drawable/wakelock_circle_shape_normal.xml
+ create mode 100644 res/layout/wakelock_blocker.xml
+ create mode 100644 res/layout/wakelock_item.xml
+ create mode 100644 res/xml/wakelock_pref.xml
+ create mode 100644 src/com/android/settings/cyanogenmod/WakeLockBlocker.java
+
+diff --git a/res/drawable/wakelock_circle_ripple_normal.xml b/res/drawable/wakelock_circle_ripple_normal.xml
+new file mode 100644
+index 0000000..ef199de
+--- /dev/null
++++ b/res/drawable/wakelock_circle_ripple_normal.xml
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++~ Copyright (C) 2015 The MoKee OpenSource Project
++~
++~ This program is free software: you can redistribute it and/or modify
++~ it under the terms of the GNU General Public License as published by
++~ the Free Software Foundation, either version 3 of the License, or
++~ (at your option) any later version.
++~
++~ This program is distributed in the hope that it will be useful,
++~ but WITHOUT ANY WARRANTY; without even the implied warranty of
++~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++~ GNU General Public License for more details.
++~
++~ You should have received a copy of the GNU General Public License
++~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
++-->
++
++<ripple xmlns:android="http://schemas.android.com/apk/res/android"
++    android:color="?android:attr/colorControlHighlight">
++
++    <item android:drawable="@drawable/wakelock_circle_shape_normal" />
++
++</ripple>
+\ No newline at end of file
+diff --git a/res/drawable/wakelock_circle_shape_normal.xml b/res/drawable/wakelock_circle_shape_normal.xml
+new file mode 100644
+index 0000000..53eaf89
+--- /dev/null
++++ b/res/drawable/wakelock_circle_shape_normal.xml
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  ~ Copyright (C) 2015 The MoKee OpenSource Project
++  ~
++  ~ This program is free software: you can redistribute it and/or modify
++  ~ it under the terms of the GNU General Public License as published by
++  ~ the Free Software Foundation, either version 3 of the License, or
++  ~ (at your option) any later version.
++  ~
++  ~ This program is distributed in the hope that it will be useful,
++  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
++  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++  ~ GNU General Public License for more details.
++  ~
++  ~ You should have received a copy of the GNU General Public License
++  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  -->
++
++<shape xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <solid android:color="@android:color/white" />
++
++</shape>
+\ No newline at end of file
+diff --git a/res/layout/wakelock_blocker.xml b/res/layout/wakelock_blocker.xml
+new file mode 100644
+index 0000000..8cdc5b7
+--- /dev/null
++++ b/res/layout/wakelock_blocker.xml
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2013 The Android Open Source Project
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:gravity="center_vertical"
++    android:orientation="vertical">
++
++    <ListView
++        android:id="@android:id/list"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content" />
++
++    <ListView
++        android:id="@+id/wakelock_list"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"/>
++
++</LinearLayout>
+diff --git a/res/layout/wakelock_item.xml b/res/layout/wakelock_item.xml
+new file mode 100644
+index 0000000..404b2f2
+--- /dev/null
++++ b/res/layout/wakelock_item.xml
+@@ -0,0 +1,29 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2015 The MoKee OpenSource Project
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++
++<LinearLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content" >
++
++    <CheckBox
++        android:id="@+id/wakelock_blocked"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:textAppearance="?android:attr/textAppearanceSmall"
++        android:focusable="false" />
++
++</LinearLayout>
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index d02ba98..12f99c3 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -1424,6 +1424,16 @@
+ 
+     <string name="quick_settings_reset_message">Reset quick settings tiles?</string>
+ 
++    <!-- Wakelock blocker -->
++    <string name="battery_optimizer_title">Battery optimizer</string>
++    <string name="wakelock_blocker_title">Wakelock blocker</string>
++    <string name="wakelock_blocker_summary">Block system wakelocks</string>
++    <string name="wakelock_blocker_save">Save</string>
++    <string name="wakelock_list_header">Available wakelocks</string>
++    <string name="wakelock_blocker_reload">Reload</string>
++    <string name="wakelock_blocker_warning_title">Proceed with caution</string>
++    <string name="wakelock_blocker_warning">Blocking wakelocks have the potential to cause instability, crashes or data loss</string>
++
+     <string name="hardware_version_title">Hardware version</string>
+     <string name="hardware_version_value" translatable="false"></string>
+ </resources>
+diff --git a/res/xml/power_usage_summary.xml b/res/xml/power_usage_summary.xml
+index 87cee53..d2569f7 100644
+--- a/res/xml/power_usage_summary.xml
++++ b/res/xml/power_usage_summary.xml
+@@ -34,6 +34,11 @@
+             android:key="low_power"
+             android:title="@string/battery_saver"/>
+ 
++    <PreferenceScreen
++            android:key="wakelock_blocker"
++            android:fragment="com.android.settings.cyanogenmod.WakeLockBlocker"
++            android:title="@string/wakelock_blocker_title" />
++
+     <PreferenceCategory
+             android:title="@string/power_usage_history_title"
+             settings:keywords="@string/keywords_battery"
+diff --git a/res/xml/wakelock_pref.xml b/res/xml/wakelock_pref.xml
+new file mode 100644
+index 0000000..22b1dbd
+--- /dev/null
++++ b/res/xml/wakelock_pref.xml
+@@ -0,0 +1,27 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!-- Copyright (C) 2015 The MoKee OpenSource Project
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++
++<PreferenceScreen
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:title="@string/wakelock_blocker_title">
++
++    <SwitchPreference
++        android:key="wakelock_blocking_enabled"
++        android:title="@string/wakelock_blocker_title"
++        android:summary="@string/wakelock_blocker_summary"
++        android:defaultValue="false" />
++
++</PreferenceScreen>
+diff --git a/src/com/android/settings/cyanogenmod/WakeLockBlocker.java b/src/com/android/settings/cyanogenmod/WakeLockBlocker.java
+new file mode 100644
+index 0000000..0f31988
+--- /dev/null
++++ b/src/com/android/settings/cyanogenmod/WakeLockBlocker.java
+@@ -0,0 +1,285 @@
++/*
++ * Copyright (C) 2015 The MoKee OpenSource Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.cyanogenmod;
++
++import android.content.Context;
++import android.os.Bundle;
++import android.os.PowerManager;
++import android.view.View;
++import android.view.ViewGroup;
++import android.preference.Preference;
++import android.preference.Preference.OnPreferenceChangeListener;
++import android.preference.PreferenceCategory;
++import android.preference.PreferenceFragment;
++import android.preference.PreferenceScreen;
++import android.preference.SwitchPreference;
++import android.view.LayoutInflater;
++import android.widget.AdapterView.OnItemClickListener;
++import android.widget.CheckedTextView;
++import android.widget.Switch;
++import android.widget.ListView;
++import android.widget.ArrayAdapter;
++import android.widget.CheckBox;
++import android.widget.CompoundButton;
++import android.widget.AdapterView;
++import android.provider.Settings;
++import android.view.Menu;
++import android.view.MenuInflater;
++import android.view.MenuItem;
++import android.view.View.OnClickListener;
++import android.app.AlertDialog;
++import android.content.DialogInterface;
++
++import java.util.List;
++import java.util.Iterator;
++import java.util.ArrayList;
++import java.util.Map;
++import java.util.HashMap;
++import java.util.Collections;
++
++import com.android.settings.R;
++import com.android.settings.SettingsPreferenceFragment;
++
++public class WakeLockBlocker extends SettingsPreferenceFragment implements OnPreferenceChangeListener {
++
++    private static final String TAG = "WakeLockBlocker";
++    private static final String WAKELOCK_BLOCKING_ENABLED = "wakelock_blocking_enabled";
++
++    private SwitchPreference mBlockerEnabled;
++    private PreferenceCategory mPreferenceCategory;
++    PreferenceScreen mPreferenceRoot;
++    private ListView mWakeLockList;
++    private List<String> mSeenWakeLocks;
++    private List<String> mBlockedWakeLocks;
++    private LayoutInflater mInflater;
++    private Map<String, Boolean> mWakeLockState;
++    private WakeLockListAdapter mListAdapter;
++    private boolean mEnabled;
++    private AlertDialog mAlertDialog;
++    private boolean mAlertShown = false;
++
++    private static final int MENU_RELOAD = Menu.FIRST;
++    private static final int MENU_SAVE = Menu.FIRST + 1;
++
++    public class WakeLockListAdapter extends ArrayAdapter<String> {
++
++        public WakeLockListAdapter(Context context, int resource, List<String> values) {
++            super(context, resource, values);
++        }
++
++        @Override
++        public View getView(int position, View convertView, ViewGroup parent) {
++            View rowView = mInflater.inflate(android.R.layout.simple_list_item_multiple_choice, null);
++            rowView.setBackgroundResource(R.drawable.wakelock_circle_ripple_normal);
++            final CheckedTextView checkedTextView = (CheckedTextView)rowView.findViewById(android.R.id.text1);
++            String name = mSeenWakeLocks.get(position);
++            checkedTextView.setText(name);
++            checkedTextView.setChecked(mWakeLockState.get(name));
++            checkedTextView.setOnClickListener(new OnClickListener(){
++
++                @Override
++                public void onClick(View view) {
++                    boolean isChecked = !checkedTextView.isChecked();
++                    mWakeLockState.put(checkedTextView.getText().toString(), isChecked);
++                    checkedTextView.setChecked(isChecked);
++                }});
++            return rowView;
++        }
++    }
++
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        addPreferencesFromResource(R.xml.wakelock_pref);
++        setHasOptionsMenu(true);
++
++        mPreferenceRoot = getPreferenceScreen();
++        mBlockerEnabled = (SwitchPreference) mPreferenceRoot.findPreference(WAKELOCK_BLOCKING_ENABLED);
++        mBlockerEnabled.setOnPreferenceChangeListener(this);
++        mPreferenceCategory = new PreferenceCategory(mPreferenceRoot.getContext());
++        mPreferenceCategory.setTitle(R.string.wakelock_list_header);
++    }
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++            Bundle savedInstanceState) {
++        mInflater = inflater;
++        return inflater.inflate(R.layout.wakelock_blocker, container, false);
++    }
++
++    @Override
++    public boolean onPreferenceChange(Preference preference, Object objValue) {
++        if (preference == mBlockerEnabled) {
++            boolean checked = (Boolean) objValue;
++            if (checked && isFirstEnable() && !mAlertShown) {
++                showAlert();
++                mAlertShown = true;
++            }
++            Settings.System.putInt(getContentResolver(),
++                    Settings.System.WAKELOCK_BLOCKING_ENABLED, checked ? 1 : 0);
++            updateSwitches();
++            return true;
++        }
++        return false;
++    }
++
++
++    @Override
++    public void onActivityCreated(Bundle savedInstanceState) {
++        super.onActivityCreated(savedInstanceState);
++
++        mWakeLockState = new HashMap<String, Boolean>();
++        updateSeenWakeLocksList();
++        updateBlockedWakeLocksList();
++
++        mWakeLockList = (ListView) getActivity().findViewById(R.id.wakelock_list);
++
++        mListAdapter = new WakeLockListAdapter(getActivity(),
++                android.R.layout.simple_list_item_multiple_choice,
++                mSeenWakeLocks);
++        mWakeLockList.setAdapter(mListAdapter);
++
++        updateSwitches();
++    }
++
++    private boolean isFirstEnable() {
++        return Settings.System.getString(getActivity().getContentResolver(),
++                Settings.System.WAKELOCK_BLOCKING_ENABLED) == null;
++    }
++
++    private void updateSwitches() {
++        mBlockerEnabled.setChecked(Settings.System.getInt(getContentResolver(),
++                Settings.System.WAKELOCK_BLOCKING_ENABLED, 0) == 1 ? true : false);
++        mEnabled = mBlockerEnabled.isChecked();
++        // mWakeLockList.setEnabled(mEnabled);
++        if (mEnabled) {
++            mPreferenceRoot.addPreference(mPreferenceCategory);
++        } else {
++            mPreferenceRoot.removePreference(mPreferenceCategory);
++        }
++        mWakeLockList.setVisibility(mEnabled ? View.VISIBLE : View.INVISIBLE);
++    }
++
++    private void updateSeenWakeLocksList() {
++        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
++
++        String seenWakeLocks = pm.getSeenWakeLocks();
++        mSeenWakeLocks = new ArrayList<String>();
++
++        if (seenWakeLocks != null && seenWakeLocks.length() != 0) {
++            String[] parts = seenWakeLocks.split("\\|");
++            for (int i = 0; i < parts.length; i++) {
++                mSeenWakeLocks.add(parts[i]);
++                mWakeLockState.put(parts[i], new Boolean(false));
++            }
++        }
++    }
++
++    private void updateBlockedWakeLocksList() {
++        String blockedWakelockList = Settings.System.getString(getContentResolver(),
++                Settings.System.WAKELOCK_BLOCKING_LIST);
++
++        mBlockedWakeLocks = new ArrayList<String>();
++
++        if (blockedWakelockList != null && blockedWakelockList.length() != 0) {
++            String[] parts = blockedWakelockList.split("\\|");
++            for (int i = 0; i < parts.length; i++) {
++                mBlockedWakeLocks.add(parts[i]);
++
++                // add all blocked but not seen so far
++                if (!mSeenWakeLocks.contains(parts[i])) {
++                    mSeenWakeLocks.add(parts[i]);
++                }
++                mWakeLockState.put(parts[i], new Boolean(true));
++            }
++        }
++        Collections.sort(mSeenWakeLocks);
++    }
++
++    private void save() {
++        StringBuffer buffer = new StringBuffer();
++        Iterator<String> nextState = mWakeLockState.keySet().iterator();
++        while (nextState.hasNext()) {
++            String name = nextState.next();
++            Boolean state = mWakeLockState.get(name);
++            if (state.booleanValue()) {
++                buffer.append(name + "|");
++            }
++        }
++        if (buffer.length() > 0) {
++            buffer.deleteCharAt(buffer.length() - 1);
++        }
++        Settings.System.putString(getContentResolver(),
++                Settings.System.WAKELOCK_BLOCKING_LIST, buffer.toString());
++    }
++
++    private void reload() {
++        mWakeLockState = new HashMap<String, Boolean>();
++        updateSeenWakeLocksList();
++        updateBlockedWakeLocksList();
++
++        mListAdapter.notifyDataSetChanged();
++    }
++
++    @Override
++    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
++        menu.add(0, MENU_RELOAD, 0, R.string.wakelock_blocker_reload)
++                .setIcon(com.android.internal.R.drawable.ic_menu_refresh)
++                .setAlphabeticShortcut('r')
++                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
++                        MenuItem.SHOW_AS_ACTION_WITH_TEXT);
++        menu.add(0, MENU_SAVE, 0, R.string.wakelock_blocker_save)
++                .setIcon(com.android.internal.R.drawable.ic_menu_save)
++                .setAlphabeticShortcut('s')
++                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
++                        MenuItem.SHOW_AS_ACTION_WITH_TEXT);
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        switch (item.getItemId()) {
++            case MENU_RELOAD:
++                if (mEnabled) {
++                    reload();
++                }
++                return true;
++            case MENU_SAVE:
++                if (mEnabled) {
++                    save();
++                }
++                return true;
++            default:
++                return false;
++        }
++    }
++
++    private void showAlert() {
++        /* Display the warning dialog */
++        mAlertDialog = new AlertDialog.Builder(getActivity()).create();
++        mAlertDialog.setTitle(R.string.wakelock_blocker_warning_title);
++        mAlertDialog.setMessage(getResources().getString(R.string.wakelock_blocker_warning));
++        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
++                getResources().getString(com.android.internal.R.string.ok),
++                new DialogInterface.OnClickListener() {
++                    public void onClick(DialogInterface dialog, int which) {
++                        return;
++                    }
++                });
++        mAlertDialog.show();
++    }
++
++}
+-- 
+2.7.4
+
