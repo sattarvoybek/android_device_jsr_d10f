@@ -1,3 +1,5 @@
+export QCPATH=
+
 add_lunch_combo cm_d10f-eng
 add_lunch_combo cm_d10f-user
 add_lunch_combo cm_d10f-userdebug
