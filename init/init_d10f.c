@@ -19,7 +19,7 @@
 #define PERSISTENT_PROPERTY_PLANNED_SWAP    "persist.storages.planned_swap"
 #define PERSISTENT_PROPERTY_SWAPPED         "persist.storages.swapped"
 
-static const char * prop_skip_list[] = {
+static const char * prop_forced_list[] = {
 	PERSISTENT_PROPERTY_PLANNED_SWAP,
 };
 
@@ -102,13 +102,13 @@ int stor_swapped = 0;
 int swap_sdcc = 0;
 
 
-int check_skip_list(const char * prop_name)
+int check_prop_forced(const char * prop_name)
 {
 	size_t i;
 	size_t len = strlen(prop_name);
-	for (i = 0; i < ARRAY_SIZE(prop_skip_list); i++) {
-		if (prop_skip_list[i] && strlen(prop_skip_list[i]) == len) {
-			if (strcmp(prop_skip_list[i], prop_name) == 0) {
+	for (i = 0; i < ARRAY_SIZE(prop_forced_list); i++) {
+		if (prop_forced_list[i] && strlen(prop_forced_list[i]) == len) {
+			if (strcmp(prop_forced_list[i], prop_name) == 0) {
 				return 1; 
 			}
 		}
@@ -116,20 +116,21 @@ int check_skip_list(const char * prop_name)
 	return 0;
 }
 
-int init_prop_list(void)
+int init_prop_forced_list(void)
 {
 	char value[PROP_VALUE_MAX];
-	DIR * dir = opendir(PERSISTENT_PROPERTY_DIR);
+	DIR * dir;
 	int dir_fd;
 	struct dirent * entry;
 	int fd, length;
 	struct stat sb;
 
+	dir = opendir(PERSISTENT_PROPERTY_DIR);
 	if (dir) {
 		dir_fd = dirfd(dir);
 		while ((entry = readdir(dir)) != NULL) {
 			// we need to read this properties before load_persistent_properties()
-			if (check_skip_list(entry->d_name))
+			if (!check_prop_forced(entry->d_name))
 				continue;
 #if HAVE_DIRENT_D_TYPE
 			if (entry->d_type != DT_REG)
@@ -315,7 +316,7 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 	int rc;
 	char value[PROP_VALUE_MAX];
 
-	init_prop_list();
+	init_prop_forced_list();
 
 	mount("rootfs", "/", "rootfs", MS_REMOUNT|0, NULL);
 
