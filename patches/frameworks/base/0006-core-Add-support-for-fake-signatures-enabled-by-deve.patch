@@ -1,0 +1,120 @@
+From 68c0d5f801aec0fbd30bd9acb02f651dbe90a829 Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Fri, 10 Jun 2016 13:13:40 +0300
+Subject: [PATCH 6/6] core: Add support for fake signatures, enabled by
+ developer setting
+
+src: https://gerrit.omnirom.org/#/c/14898/
+---
+ core/java/android/provider/Settings.java            |  9 +++++++++
+ core/res/AndroidManifest.xml                        |  7 +++++++
+ core/res/res/values-ru/cm_strings.xml               |  4 ++++
+ core/res/res/values/cm_strings.xml                  |  5 +++++
+ .../android/server/pm/PackageManagerService.java    | 21 +++++++++++++++++++--
+ 5 files changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 843dc61..19b3039 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -4652,6 +4652,15 @@ public final class Settings {
+          */
+         public static final String LOCKSCREEN_TARGETS = "lockscreen_target_actions";
+ 
++         /**
++         * Whether applications can fake a signature.
++         *
++         * <p>1 = permit apps to fake signature
++         * <p>0 = disable this feature
++         * @hide
++         */
++        public static final String ALLOW_SIGNATURE_FAKE = "allow_signature_fake";
++
+         /**
+          * Comma-separated list of location providers that activities may access. Do not rely on
+          * this value being present in settings.db or on ContentObserver notifications on the
+diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
+index f5dd180..90f7bcd 100644
+--- a/core/res/AndroidManifest.xml
++++ b/core/res/AndroidManifest.xml
+@@ -1829,6 +1829,13 @@
+         android:label="@string/permlab_getPackageSize"
+         android:description="@string/permdesc_getPackageSize" />
+ 
++    <!-- Allows an application to change the package signature as seen by applications -->
++    <permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE"
++        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
++        android:protectionLevel="dangerous"
++        android:label="@string/permlab_fakePackageSignature"
++        android:description="@string/permdesc_fakePackageSignature" />
++
+     <!-- @deprecated No longer useful, see
+          {@link android.content.pm.PackageManager#addPackageToPreferred}
+          for details. -->
+diff --git a/core/res/res/values-ru/cm_strings.xml b/core/res/res/values-ru/cm_strings.xml
+index 623f39e..9ab3e9a 100644
+--- a/core/res/res/values-ru/cm_strings.xml
++++ b/core/res/res/values-ru/cm_strings.xml
+@@ -50,6 +50,10 @@
+   <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+   <string name="permdesc_writeThemesDesc">Приложение сможет осуществлять установку новых тем оформления и изменять текущую тему.</string>
+   <!-- [CHAR LIMIT=NONE] Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
++  <string name="permlab_fakePackageSignature">Подделка подписи APK</string>
++  <!-- [CHAR LIMIT=NONE] Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
++  <string name="permdesc_fakePackageSignature">Приложение сможет выдавать себя за другое приложение и обманывать системы безопасности.</string>
++  <!-- [CHAR LIMIT=NONE] Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+   <string name="permlab_readPhoneBlacklist">Просмотр чёрного списка</string>
+   <!-- [CHAR LIMIT=NONE] Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+   <string name="permdesc_readPhoneBlacklist">Приложение сможет считывать информацию о списке абонентов, от которых заблокированы входящие вызовы или сообщения.</string>
+diff --git a/core/res/res/values/cm_strings.xml b/core/res/res/values/cm_strings.xml
+index 8110c09..421ccf6 100644
+--- a/core/res/res/values/cm_strings.xml
++++ b/core/res/res/values/cm_strings.xml
+@@ -130,6 +130,11 @@
+     <string name="adb_active_custom_tile_usb">USB</string>
+     <string name="adb_active_custom_tile_net">Network</string>
+ 
++    <!-- Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
++    <string name="permlab_fakePackageSignature">Spoof package signature</string>
++    <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
++    <string name="permdesc_fakePackageSignature">Allows the app to pretend to be a different app and trick security systems.</string>
++
+     <!-- Title of an application permission, listed so the user can choose whether they want the application to do this. -->
+     <string name="permlab_interceptPackageLaunch">intercept app launch</string>
+     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+diff --git a/services/core/java/com/android/server/pm/PackageManagerService.java b/services/core/java/com/android/server/pm/PackageManagerService.java
+index c4616b3..c60dfaa 100755
+--- a/services/core/java/com/android/server/pm/PackageManagerService.java
++++ b/services/core/java/com/android/server/pm/PackageManagerService.java
+@@ -2090,9 +2090,26 @@ public class PackageManagerService extends IPackageManager.Stub {
+         }
+         final GrantedPermissions gp = ps.sharedUser != null ? ps.sharedUser : ps;
+         final PackageUserState state = ps.readUserState(userId);
+-        return PackageParser.generatePackageInfo(p, gp.gids, flags,
++        return mayFakeSignature(p, PackageParser.generatePackageInfo(p, gp.gids, flags,
+                 ps.firstInstallTime, ps.lastUpdateTime, gp.grantedPermissions,
+-                state, userId);
++                state, userId));
++    }
++
++    private PackageInfo mayFakeSignature(PackageParser.Package p, PackageInfo pi) {
++        try {
++            if (!p.requestedPermissions.contains("android.permission.FAKE_PACKAGE_SIGNATURE"))
++                return pi;
++            if (p.mAppMetaData == null || !(p.mAppMetaData.get("fake-signature") instanceof String))
++                return pi;
++            if (android.provider.Settings.Secure.getInt(mContext.getContentResolver(),
++                    android.provider.Settings.Secure.ALLOW_SIGNATURE_FAKE, 0) == 0)
++                return pi;
++            pi.signatures = new Signature[] {new Signature(p.mAppMetaData.getString("fake-signature"))};
++        } catch (Throwable t) {
++            // We should never die because of any failures, this is system code!
++            Log.w("PackageManagerService.FAKE_PACKAGE_SIGNATURE", t);
++        }
++        return pi;
+     }
+ 
+     @Override
+-- 
+2.7.4
+

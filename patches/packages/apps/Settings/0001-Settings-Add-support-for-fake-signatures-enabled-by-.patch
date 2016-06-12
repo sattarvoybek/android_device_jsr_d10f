@@ -1,0 +1,187 @@
+From 3f223a89ff2a8da00abbf8d97121352f3c4f3001 Mon Sep 17 00:00:00 2001
+From: remittor <remittor@gmail.com>
+Date: Fri, 10 Jun 2016 13:44:50 +0300
+Subject: [PATCH 1/2] Settings: Add support for fake signatures, enabled by
+ developer setting
+
+src: https://gerrit.omnirom.org/#/c/14899/
+---
+ res/values-ru/cm_strings.xml                      |  4 ++
+ res/values/cm_strings.xml                         |  5 +++
+ res/xml/development_prefs.xml                     |  5 +++
+ src/com/android/settings/DevelopmentSettings.java | 49 +++++++++++++++++++++++
+ 4 files changed, 63 insertions(+)
+
+diff --git a/res/values-ru/cm_strings.xml b/res/values-ru/cm_strings.xml
+index 58726d6..68182f3 100644
+--- a/res/values-ru/cm_strings.xml
++++ b/res/values-ru/cm_strings.xml
+@@ -1049,6 +1049,10 @@
+   <string name="lock_to_cyanogen_disable_msg">Отключение этой функции позволит другим пользователям выполнить на устройстве сброс до заводских настроек в случае его кражи. Ваши личные данные могут оказаться под угрозой. Действительно отключить эту функцию?</string>
+   <string name="lock_to_cyanogen_master_clear_warning">Защита устройства включена. Необходимо отключить её, чтобы выполнить сброс настроек на устройстве.</string>
+   <string name="bluetooth_pan_profile_summary_use_for_error">Ошибка подключения. Проверьте, включён ли Bluetooth-модем на указанном устройстве.</string>
++  <!-- Allow fake signature checkbox in developer settings -->
++  <string name="allow_signature_fake">Разрешить подмену подписи APK</string>
++  <string name="allow_signature_fake_summary">Разрешить приложениям обманывать системы безопасности, выдавая себя за другое приложение</string>
++  <string name="allow_signature_fake_warning">Разрешение приложениям обманывать системы безопасности может привести к серьезным проблемам безопасности и конфиденциальности! Убедитесь, что только доверенные приложения используют соответствующее разрешение.</string>
+   <!-- MSIM SIM status -->
+   <string name="sim_card_status_title">Статус SIM %d</string>
+   <string name="sim_card_lock_settings_title">Параметры блокировки SIM %d</string>
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index d8480b0..d02ba98 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -1238,6 +1238,11 @@
+     <string name="lock_to_cyanogen_disable_msg">Disabling this feature will allow unauthorized users to reset your phone to factory defaults if it is stolen. Your personal data may not be protected. Do you want to disable this feature?</string>
+     <string name="lock_to_cyanogen_master_clear_warning">Device Protection is enabled. Please disable to continue resetting your device.</string>
+ 
++    <!-- Allow fake signature checkbox in developer settings -->
++    <string name="allow_signature_fake">Allow signature spoofing</string>
++    <string name="allow_signature_fake_summary">Allow apps to bypass security systems by pretending to be a different app</string>
++    <string name="allow_signature_fake_warning">Allowing apps to bypass security systems can lead to serious security and privacy problems! Check that only benign apps use the corresponding permission when this is active.</string>
++
+     <string name="bluetooth_pan_profile_summary_use_for_error">Connection error; is Bluetooth tethering enabled on this device?</string>
+ 
+     <!-- MSIM SIM status -->
+diff --git a/res/xml/development_prefs.xml b/res/xml/development_prefs.xml
+index d00087d..10ddf12 100644
+--- a/res/xml/development_prefs.xml
++++ b/res/xml/development_prefs.xml
+@@ -309,6 +309,11 @@
+                 android:title="@string/disable_overlays"
+                 android:summary="@string/disable_overlays_summary"/>
+ 
++        <SwitchPreference
++            android:key="allow_signature_fake"
++            android:title="@string/allow_signature_fake"
++            android:summary="@string/allow_signature_fake_summary"/>
++
+         <ListPreference
+                 android:entries="@array/simulate_color_space_entries"
+                 android:entryValues="@array/simulate_color_space_values"
+diff --git a/src/com/android/settings/DevelopmentSettings.java b/src/com/android/settings/DevelopmentSettings.java
+index 61192b1..5893e4d 100644
+--- a/src/com/android/settings/DevelopmentSettings.java
++++ b/src/com/android/settings/DevelopmentSettings.java
+@@ -168,6 +168,9 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+ 
+     private static final String IMMEDIATELY_DESTROY_ACTIVITIES_KEY
+             = "immediately_destroy_activities";
++
++    private static final String ALLOW_SIGNATURE_FAKE_KEY = "allow_signature_fake";
++
+     private static final String APP_PROCESS_LIMIT_KEY = "app_process_limit";
+ 
+     private static final String SHOW_ALL_ANRS_KEY = "show_all_anrs";
+@@ -260,6 +263,8 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+     private SwitchPreference mUSBAudio;
+     private SwitchPreference mImmediatelyDestroyActivities;
+ 
++    private SwitchPreference mAllowSignatureFake;
++
+     private ListPreference mAppProcessLimit;
+ 
+     private SwitchPreference mShowAllANRs;
+@@ -293,6 +298,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+     private boolean mUnavailable;
+     private Dialog mRootDialog;
+     private Dialog mUpdateRecoveryDialog;
++    private Dialog mAllowSignatureFakeDialog;
+ 
+     @Override
+     public void onCreate(Bundle icicle) {
+@@ -430,6 +436,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+         mAllPrefs.add(mImmediatelyDestroyActivities);
+         mResetSwitchPrefs.add(mImmediatelyDestroyActivities);
+ 
++        mAllowSignatureFake = (SwitchPreference) findPreference(ALLOW_SIGNATURE_FAKE_KEY);
++        mAllPrefs.add(mAllowSignatureFake);
++        mResetSwitchPrefs.add(mAllowSignatureFake);
++
+         mAppProcessLimit = addListPreference(APP_PROCESS_LIMIT_KEY);
+ 
+         mShowAllANRs = (SwitchPreference) findPreference(
+@@ -650,6 +660,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+         updateOverlayDisplayDevicesOptions();
+         updateOpenGLTracesOptions();
+         updateImmediatelyDestroyActivitiesOptions();
++        updateAllowSignatureFakeOption();
+         updateAppProcessLimitOptions();
+         updateShowAllANRsOptions();
+         updateVerifyAppsOverUsbOptions();
+@@ -1423,6 +1434,11 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+                 getActivity().getContentResolver(), Settings.Global.ALWAYS_FINISH_ACTIVITIES, 0) != 0);
+     }
+ 
++    private void updateAllowSignatureFakeOption() {
++        updateSwitchPreference(mAllowSignatureFake, Settings.Secure.getInt(
++            getActivity().getContentResolver(), Settings.Secure.ALLOW_SIGNATURE_FAKE, 0) != 0);
++    }
++
+     private void updateAnimationScaleValue(int which, AnimationScalePreference pref) {
+         try {
+             float scale = mWindowManager.getAnimationScale(which);
+@@ -1758,6 +1774,24 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+             writeCpuUsageOptions();
+         } else if (preference == mImmediatelyDestroyActivities) {
+             writeImmediatelyDestroyActivitiesOptions();
++        } else if (preference == mAllowSignatureFake) {
++            if (mAllowSignatureFake.isChecked()) {
++                if (mAllowSignatureFakeDialog != null) {
++                    dismissDialogs();
++                }
++                mAllowSignatureFakeDialog = new AlertDialog.Builder(getActivity()).setMessage(
++                        getResources().getString(R.string.allow_signature_fake_warning))
++                        .setTitle(R.string.allow_signature_fake)
++                        .setIconAttribute(android.R.attr.alertDialogIcon)
++                        .setPositiveButton(android.R.string.yes, this)
++                        .setNegativeButton(android.R.string.no, this)
++                        .show();
++                mAllowSignatureFakeDialog.setOnDismissListener(this);
++            } else {
++                Settings.Secure.putInt(getActivity().getContentResolver(),
++                        Settings.Secure.ALLOW_SIGNATURE_FAKE, 0);
++                updateAllowSignatureFakeOption();
++            }
+         } else if (preference == mShowAllANRs) {
+             writeShowAllANRsOptions();
+         } else if (preference == mForceHardwareUi) {
+@@ -1918,6 +1952,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+             mUpdateRecoveryDialog.dismiss();
+             mUpdateRecoveryDialog = null;
+         }
++        if (mAllowSignatureFakeDialog != null) {
++            mAllowSignatureFakeDialog.dismiss();
++            mAllowSignatureFakeDialog = null;
++        }
+     }
+ 
+     public void onClick(DialogInterface dialog, int which) {
+@@ -1960,6 +1998,14 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+                     .putBoolean(PREF_SHOW, true)
+                     .apply();
+             }
++        } else if (dialog == mAllowSignatureFakeDialog) {
++            if (which == DialogInterface.BUTTON_POSITIVE) {
++                Settings.Secure.putInt(getActivity().getContentResolver(),
++                        Settings.Secure.ALLOW_SIGNATURE_FAKE, 1);
++            } else {
++                // Reset the toggle
++                mAllowSignatureFake.setChecked(false);
++            }
+         } else if (dialog == mRootDialog) {
+             if (which == DialogInterface.BUTTON_POSITIVE) {
+                 writeRootAccessOptions(mSelectedRootValue);
+@@ -1989,6 +2035,9 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+                 mSwitchBar.setChecked(false);
+             }
+             mEnableDialog = null;
++        } else if (dialog == mAllowSignatureFakeDialog) {
++            updateAllowSignatureFakeOption();
++            mAllowSignatureFakeDialog = null;
+         } else if (dialog == mUpdateRecoveryDialog) {
+             updateUpdateRecoveryOptions();
+             mUpdateRecoveryDialog = null;
+-- 
+2.7.4
+
