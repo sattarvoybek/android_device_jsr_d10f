@@ -348,6 +348,12 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		storage_list[STOR_SECONDARY].allowMassStorage = 0;
 	}
 
+	if (swap_sdcc) {
+		struct storage_item x = storage_list[STOR_PRIMARY];
+		storage_list[STOR_PRIMARY] = storage_list[STOR_SECONDARY];
+		storage_list[STOR_SECONDARY] = x;
+	}
+
 	if (stor_swapped) {
 		struct storage_item x = storage_list[STOR_PRIMARY];
 		storage_list[STOR_PRIMARY] = storage_list[STOR_SECONDARY];
