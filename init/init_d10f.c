@@ -78,7 +78,7 @@ static struct storage_item storage_list[] = {
 		.part_num = PATR_NUM_AUTO,
 		.storageDescription = STR_STORAGE_INTERNAL,
 		.removable = 0,
-		.allowMassStorage = 0,
+		.allowMassStorage = 1,
 		.allowMtp = 1,
 	},
 	{
@@ -349,7 +349,6 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char * boa
 		storage_list[STOR_SECONDARY].emmc = 1;
 		storage_list[STOR_SECONDARY].sdcc = 2;
 		storage_list[STOR_SECONDARY].removable = 0;
-		storage_list[STOR_SECONDARY].allowMassStorage = 0;
 	}
 
 	if (swap_sdcc) {
