@@ -180,6 +180,44 @@ int init_prop_forced_list(void)
 	return 0;
 }
 
+/*
+// frameworks/base/core/res/res/values/attrs.xml
+    <declare-styleable name="Storage">
+        <!-- path to mount point for the storage -->
+        <attr name="mountPoint" format="string" />
+        <!-- user visible description of the storage -->
+        <attr name="storageDescription" format="string" />
+        <!-- true if the storage is the primary external storage -->
+        <attr name="primary" format="boolean" />
+        <!-- true if the storage is removable -->
+        <attr name="removable" format="boolean" />
+        <!-- true if the storage is emulated via the FUSE sdcard daemon -->
+        <attr name="emulated" format="boolean" />
+        <!-- number of megabytes of storage MTP should reserve for free storage
+             (used for emulated storage that is shared with system's data partition) -->
+        <attr name="mtpReserve" format="integer" />
+        <!-- make false if don't want to get mounted on MTP -->
+        <attr name="allowMtp" format="boolean" />
+        <!-- true if the storage can be shared via USB mass storage -->
+        <attr name="allowMassStorage" format="boolean" />
+        <!-- maximum file size for the volume in megabytes, zero or unspecified if it is unbounded -->
+        <attr name="maxFileSize" format="integer" />
+    </declare-styleable>
+
+// frameworks/base/services/core/java/com/android/server/MountService.java
+        public String path = null;
+        public int descriptionId = -1;
+        public String description = null;
+        public boolean primary = false;
+        public boolean removable = false;
+        public boolean emulated = false;
+        public int mtpReserve = 0;
+        public boolean allowMassStorage = false;
+        public boolean allowMtp = false;
+        public long maxFileSize = 0;
+
+*/
+
 int create_storage_list(void)
 {
 	size_t i;
@@ -194,11 +232,11 @@ int create_storage_list(void)
 		struct storage_item * s = &storage_list[i];
 		fprintf(f, "  <storage mountPoint=\"%s\" \n", mnt_point[i].path);
 		fprintf(f, "    storageDescription=\"%s\" \n", s->storageDescription);
-		fprintf(f, "    primary=\"%s\" \n", (i == STOR_PRIMARY) ? "true" : "false");
-		fprintf(f, "    removable=\"%s\" \n", s->removable ? "true" : "false");
-		fprintf(f, "    emulated=\"%s\" \n", s->emulated ? "true" : "false");
-		fprintf(f, "    allowMassStorage=\"%s\" \n", s->allowMassStorage ? "true" : "false");
-		fprintf(f, "    allowMtp=\"%s\" \n", s->allowMtp ? "true" : "false");
+		if (i == STOR_PRIMARY) 		fprintf(f, "    primary=\"true\" \n");
+		if (s->removable) 		fprintf(f, "    removable=\"true\" \n");
+		if (s->emulated) 		fprintf(f, "    emulated=\"true\" \n");
+		if (s->allowMassStorage) 	fprintf(f, "    allowMassStorage=\"true\" \n");
+		if (s->allowMtp) 		fprintf(f, "    allowMtp=\"true\" \n");
 		fprintf(f, "  /> \n");
 	}
 	fprintf(f, "</StorageList>\n");
