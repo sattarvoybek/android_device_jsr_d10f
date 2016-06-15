@@ -66,7 +66,7 @@ struct storage_item {
 	const char * storageDescription;
 	int removable;
 	int emulated;
-	int mtpReserve;
+	int allowMtp;
 	int allowMassStorage;
 	int maxFileSize;
 };
@@ -79,6 +79,7 @@ static struct storage_item storage_list[] = {
 		.storageDescription = STR_STORAGE_INTERNAL,
 		.removable = 0,
 		.allowMassStorage = 0,
+		.allowMtp = 1,
 	},
 	{
 		.emmc = 0,
@@ -87,6 +88,7 @@ static struct storage_item storage_list[] = {
 		.storageDescription = STR_STORAGE_SDCARD,
 		.removable = 1,
 		.allowMassStorage = 1,
+		.allowMtp = 1,
 	},
 	{
 		.emmc = 0,
@@ -95,6 +97,7 @@ static struct storage_item storage_list[] = {
 		.storageDescription = STR_STORAGE_USB,
 		.removable = 1,
 		.allowMassStorage = 0,
+		.allowMtp = 0,
 	},
 };
 
@@ -195,6 +198,7 @@ int create_storage_list(void)
 		fprintf(f, "    removable=\"%s\" \n", s->removable ? "true" : "false");
 		fprintf(f, "    emulated=\"%s\" \n", s->emulated ? "true" : "false");
 		fprintf(f, "    allowMassStorage=\"%s\" \n", s->allowMassStorage ? "true" : "false");
+		fprintf(f, "    allowMtp=\"%s\" \n", s->allowMtp ? "true" : "false");
 		fprintf(f, "  /> \n");
 	}
 	fprintf(f, "</StorageList>\n");
