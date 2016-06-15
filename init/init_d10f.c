@@ -262,7 +262,7 @@ int create_ftab_storage()
 	fclose(f);
 
 	for (i = 0; i < ARRAY_SIZE(storage_list); i++) {
-		if (i >= STOR_PRIMARY && i <= STOR_SECONDARY) {
+		if (i <= STOR_SECONDARY) {
 			get_voldmanaged(vm, i);
 			str_replace(tmp, '%', storage_list[i].sdcc, vm);
 			ERROR("%s: msm_sdcc.%d voldmanaged=%s\n", __func__, storage_list[i].sdcc, vm);
