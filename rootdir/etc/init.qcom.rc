@@ -274,9 +274,15 @@ service netmgrd /system/bin/netmgrd
     class main
 
 service sensors /system/bin/sensors.qcom
-    class late_start
+    class main
     user root
     group root
+    disabled
+
+service qcom-sensors-sh /system/bin/sh /init.qcom.sensors.sh
+    class late_start
+    user root
+    oneshot
 
 service p2p_supplicant /system/bin/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \

@@ -241,6 +241,7 @@ PRODUCT_PACKAGES += ueventd.qcom.rc
 PRODUCT_PACKAGES += init.qcom.bt.sh
 PRODUCT_PACKAGES += init.qcom.fm.sh
 PRODUCT_PACKAGES += init.qcom.usb.sh
+PRODUCT_PACKAGES += init.qcom.sensors.sh
 PRODUCT_PACKAGES += init.qcom.gps.sh
 
 # Recovery

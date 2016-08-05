@@ -61,6 +61,23 @@ persist.camera.sof_timeout=5000
 persist.camera.stats_port_skip=0
 persist.camera.feature.gyro=0
 
+# Sensors
+ro.qc.sensors.step_detector=true
+ro.qc.sensors.step_counter=true
+ro.qualcomm.sensors.smd=false 
+ro.qualcomm.sensors.georv=true
+ro.qc.sdk.sensors.gestures=false
+ro.qualcomm.sensors.qmd=false
+ro.qualcomm.sensors.vmd=false
+ro.qualcomm.sensors.pedometer=false
+ro.qualcomm.sensors.pam=false
+ro.qualcomm.sensors.scrn_ortn=false
+ro.qualcomm.sensors.fns=false
+ro.qualcomm.sensors.bte=false
+ro.qualcomm.sensors.cmc=false
+ro.qc.sensors.init_svc_timeout=200
+ro.qc.sensors.skip_svc_list=3,17,18,19,20,28,30,34,35,43
+
 # Enable/disable cabl (Content Adaptive Backlight)
 ro.qualcomm.cabl=0
 ro.qualcomm.svi=0 
