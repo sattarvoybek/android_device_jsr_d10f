@@ -124,14 +124,17 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.fm.sh:system/etc/init.qcom.fm.sh
 
 # GPS
-PRODUCT_PACKAGES += \
-    gps.msm8226 \
-    libgps.utils \
-    libloc_adapter \
-    libloc_eng
-
-PRODUCT_PROPERTY_OVERRIDES += ro.gps.agps_provider=1
-PRODUCT_PROPERTY_OVERRIDES += persist.gps.qc_nlp_in_use=0
+PRODUCT_PACKAGES += gps.msm8226
+PRODUCT_PACKAGES += libgps.utils
+PRODUCT_PACKAGES += libloc_eng
+PRODUCT_PACKAGES += gps.conf
+ifeq ($(QCPATH),)
+PRODUCT_PACKAGES += libloc_adapter
+PRODUCT_PACKAGES += sap.conf
+else
+PRODUCT_PACKAGES += libloc_core
+PRODUCT_PACKAGES += libloc_api_v02
+endif
 
 PRODUCT_COPY_FILES += $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf
 
@@ -236,6 +239,7 @@ PRODUCT_PACKAGES += ueventd.qcom.rc
 PRODUCT_PACKAGES += init.qcom.bt.sh
 PRODUCT_PACKAGES += init.qcom.fm.sh
 PRODUCT_PACKAGES += init.qcom.usb.sh
+PRODUCT_PACKAGES += init.qcom.gps.sh
 
 # Recovery
 PRODUCT_PROPERTY_OVERRIDES += ro.cwm.enable_key_repeat=true

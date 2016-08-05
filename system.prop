@@ -48,6 +48,13 @@ persist.radio.multisim.config=dsds
 ro.telephony.call_ring.multiple=false
 telephony.lteOnCdmaDevice=0
 
+# GPS
+ro.gps.agps_provider=1
+ro.qc.sdk.izat.premium_enabled=1
+ro.qc.sdk.izat.service_mask=0x5
+persist.gps.qc_nlp_in_use=1
+persist.loc.nlp_name=com.qualcomm.services.location
+
 # Enable/disable cabl (Content Adaptive Backlight)
 ro.qualcomm.cabl=0
 ro.qualcomm.svi=0 

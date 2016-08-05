@@ -179,6 +179,23 @@ on post-fs-data
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
 
+    # Create the directories used by CnE subsystem
+    mkdir /data/connectivity 0771 system system
+    chown system system /data/connectivity
+    mkdir /data/connectivity/nsrm 0771 system system
+    chown system system /data/connectivity/nsrm
+
+    # Create directories for Location services
+    mkdir /data/misc/location 0770 gps gps
+    mkdir /data/misc/location/gpsone_d 0770 system gps
+    mkdir /data/misc/location/quipc 0770 gps system
+    mkdir /data/misc/location/mq 0770 gps gps
+    mkdir /data/misc/location/xtwifi 0770 gps gps
+
+    # Create directory from IMS services
+    mkdir /data/shared 0755
+    chown system system /data/shared
+
     # Create directory used by audio subsystem
     mkdir /data/misc/audio 0770 audio audio
 
@@ -351,6 +368,53 @@ service dhcpcd_bnep3 /system/bin/dhcpcd -BKLG
 
 service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
     disabled
+    oneshot
+
+service gpsone_daemon /system/bin/gpsone_daemon
+    class late_start
+    user gps
+    group gps qcom_oncrpc inet net_raw
+    disabled
+
+service quipc_igsn /system/bin/quipc_igsn
+    class late_start
+    user gps
+    group inet gps qcom_diag
+    disabled
+
+service quipc_main /system/bin/quipc_main
+    class late_start
+    user gps
+    group gps net_admin wifi inet qcom_diag
+    disabled
+
+service location_mq /system/bin/location-mq
+    class late_start
+    user gps
+    group gps
+    disabled
+
+service xtwifi_inet /system/bin/xtwifi-inet-agent
+    class late_start
+    user gps
+    group inet gps
+    disabled
+
+service xtwifi_client /system/bin/xtwifi-client
+    class late_start
+    user gps
+    group net_admin wifi inet gps
+    disabled
+
+service lowi-server /system/bin/lowi-server
+    class late_start
+    user gps
+    group gps net_admin wifi inet qcom_diag
+    disabled
+
+service qcom-gps-sh /system/bin/sh /init.qcom.gps.sh
+    class late_start
+    user root
     oneshot
 
 service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
