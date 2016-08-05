@@ -1,4 +1,5 @@
-export QCPATH=
+echo Sourcing vendor/qcom/proprietary/common/vendorsetup.sh
+. vendor/qcom/proprietary/common/vendorsetup.sh
 
 add_lunch_combo cm_d10f-eng
 add_lunch_combo cm_d10f-user
