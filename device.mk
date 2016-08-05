@@ -75,8 +75,10 @@ PRODUCT_PROPERTY_OVERRIDES += bluetooth.hfp.client=1
 PRODUCT_COPY_FILES += $(LOCAL_PATH)/rootdir/etc/init.qcom.bt.sh:system/etc/init.qcom.bt.sh
 
 # Camera
-PRODUCT_PACKAGES += \
-    libxml2
+PRODUCT_PACKAGES += libxml2
+ifneq ($(QCPATH),)
+PRODUCT_PACKAGES += camera.msm8226
+endif
 
 # Charger
 PRODUCT_PACKAGES += \

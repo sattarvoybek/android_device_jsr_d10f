@@ -55,6 +55,12 @@ ro.qc.sdk.izat.service_mask=0x5
 persist.gps.qc_nlp_in_use=1
 persist.loc.nlp_name=com.qualcomm.services.location
 
+# Camera
+persist.camera.logs=0
+persist.camera.sof_timeout=5000
+persist.camera.stats_port_skip=0
+persist.camera.feature.gyro=0
+
 # Enable/disable cabl (Content Adaptive Backlight)
 ro.qualcomm.cabl=0
 ro.qualcomm.svi=0 
